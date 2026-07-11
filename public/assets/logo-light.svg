@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="44" viewBox="0 0 220 44" role="img" aria-label="Aberdeen Advisors">
+  <g>
+    <path d="M8 36 L20 8 L32 36 L26.5 36 L20 19.5 L13.5 36 Z" fill="#FFFFFF"/>
+    <path d="M20 8 L32 36 L26.5 36 L20 19.5 Z" fill="#44B0B1"/>
+  </g>
+  <text x="42" y="26" font-family="Poppins, 'Segoe UI', sans-serif" font-size="19" font-weight="700" fill="#FFFFFF" letter-spacing="0.5">Aberdeen</text>
+  <text x="43" y="38" font-family="Poppins, 'Segoe UI', sans-serif" font-size="9.5" font-weight="600" fill="#44B0B1" letter-spacing="4.2">ADVISORS</text>
+</svg>
