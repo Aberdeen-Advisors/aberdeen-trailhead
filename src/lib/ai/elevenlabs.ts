@@ -6,10 +6,10 @@ const API = "https://api.elevenlabs.io/v1";
 
 export const hasElevenLabs = (): boolean => !!process.env.ELEVENLABS_API_KEY;
 
-// Defaults are ElevenLabs premade voices; override per host via env.
+// Host voices (override via env).
 const VOICES: Record<string, () => string> = {
-  JORDAN: () => process.env.ELEVENLABS_VOICE_JORDAN ?? "pNInz6obpgDQGcFmaJgB", // Adam
-  CASEY: () => process.env.ELEVENLABS_VOICE_CASEY ?? "21m00Tcm4TlvDq8ikWAM", // Rachel
+  MARK: () => process.env.ELEVENLABS_VOICE_MARK ?? "UgBBYS2sOqTuMpoF3BR0", // Mark
+  ELLEN: () => process.env.ELEVENLABS_VOICE_ELLEN ?? "BIvP0GN1cAtSRTxNHnWS", // Ellen
 };
 
 export interface ScriptLine { speaker: string; text: string }
@@ -48,7 +48,7 @@ export async function renderPodcast(script: string, maxLines = 24): Promise<Buff
   if (!lines.length) throw new Error("Script contained no speakable lines.");
   const chunks: Buffer[] = [];
   for (const line of lines) {
-    const voice = (VOICES[line.speaker] ?? VOICES.JORDAN)();
+    const voice = (VOICES[line.speaker] ?? VOICES.MARK)();
     chunks.push(await tts(line.text, voice));
   }
   return Buffer.concat(chunks);

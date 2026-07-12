@@ -1,6 +1,8 @@
 import { getProjects } from "@/lib/data/provider";
 import { Panel } from "@/components/ui";
 import { GenerateDeckButton } from "@/components/generate-deck-button";
+import { PodcastPanel } from "@/components/podcast-panel";
+import { tierHasPodcasts } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +25,14 @@ export default async function ReportsPage() {
           recommended actions, milestones, decisions), and a consolidated decisions table.
         </p>
         <GenerateDeckButton label="Generate Portfolio Deck" />
+      </Panel>
+
+      <Panel title="Portfolio Podcast Briefing">
+        <p className="mb-4 text-sm text-hv-muted">
+          A two-host audio rundown of the entire portfolio — health, standout projects, overdue
+          items, and open decisions — rendered to MP3 with ElevenLabs voices.
+        </p>
+        <PodcastPanel enabled={tierHasPodcasts()} />
       </Panel>
 
       <Panel title="Single-Project Decks">
