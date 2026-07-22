@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aberdeen Advisors — SAP ECC to S/4HANA Transformation</title>
+  <meta name="description" content="Aberdeen Advisors leads SAP ECC to S/4HANA transitions — target architecture, cloud operating model, program governance, data & integration, and delivery through go-live." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Page-local styles: placeholder visuals + SAP section layout */
+    .sap-hero {
+      background: linear-gradient(135deg, #09375F 0%, #0072AD 60%, #00B3B2 100%);
+      color: #fff; padding: 96px 0 80px;
+    }
+    .sap-hero .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+    .sap-hero .eyebrow {
+      display: inline-block; font-size: .78rem; letter-spacing: .18em; text-transform: uppercase;
+      background: rgba(255,255,255,.14); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px;
+    }
+    .sap-hero h1 { color: #fff; font-size: clamp(2rem, 4vw, 3.2rem); margin: 0 0 18px; max-width: 900px; }
+    .sap-hero p.lede { font-size: 1.15rem; max-width: 780px; opacity: .95; margin: 0 0 28px; }
+    .sap-hero .hero-actions a { margin-right: 12px; }
+
+    .sap-section { padding: 72px 0; }
+    .sap-section .container { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+    .sap-section.alt { background: #F5F9FB; }
+    .sap-section h2 { font-size: clamp(1.6rem, 2.4vw, 2.1rem); margin: 0 0 12px; }
+    .sap-section .section-sub { color: #55707F; max-width: 780px; margin: 0 0 36px; }
+
+    .sap-grid { display: grid; gap: 22px; }
+    .sap-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .sap-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 900px) { .sap-grid.cols-2, .sap-grid.cols-3 { grid-template-columns: 1fr; } }
+
+    .sap-card {
+      background: #fff; border: 1px solid #E1EAF0; border-radius: 14px;
+      padding: 24px 24px 22px; box-shadow: 0 1px 2px rgba(9,55,95,.04);
+    }
+    .sap-card h3 { margin: 0 0 8px; font-size: 1.05rem; color: var(--navy); }
+    .sap-card p, .sap-card li { color: #37525F; font-size: .95rem; line-height: 1.55; }
+    .sap-card ul { margin: 8px 0 0; padding-left: 18px; }
+
+    .sap-pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .sap-pill {
+      background: #EAF3F7; color: #09375F; border: 1px solid #D3E4ED;
+      padding: 5px 12px; border-radius: 999px; font-size: .82rem; font-weight: 500;
+    }
+    .sap-pill.hl { background: #D9F0F0; border-color: #A9DDDD; color: #003862; }
+
+    /* Visual placeholder tiles */
+    .viz-placeholder {
+      display: flex; align-items: center; justify-content: center;
+      background: repeating-linear-gradient(45deg, #F5F9FB, #F5F9FB 10px, #EAF3F7 10px, #EAF3F7 20px);
+      border: 2px dashed #9FB9C6; border-radius: 12px;
+      min-height: 240px; padding: 24px; text-align: center;
+      color: #345363; font-size: .92rem;
+    }
+    .viz-placeholder .viz-inner { max-width: 460px; }
+    .viz-placeholder .viz-tag {
+      display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: #0072AD; background: #fff; padding: 4px 10px;
+      border-radius: 999px; border: 1px solid #C6D8E2; margin-bottom: 10px;
+    }
+    .viz-placeholder .viz-title { font-weight: 600; color: var(--navy); margin: 0 0 4px; font-size: 1rem; }
+    .viz-placeholder .viz-desc { margin: 0; color: #55707F; }
+    .viz-placeholder.tall { min-height: 320px; }
+
+    /* Roadmap strip */
+    .roadmap {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 20px;
+    }
+    @media (max-width: 900px) { .roadmap { grid-template-columns: 1fr 1fr; } }
+    .rmap-step {
+      background: #fff; border: 1px solid #E1EAF0; border-left: 4px solid var(--teal-bright);
+      border-radius: 10px; padding: 16px 16px 14px;
+    }
+    .rmap-step .rmap-when {
+      font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: #0072AD; font-weight: 700;
+    }
+    .rmap-step h4 { margin: 6px 0 4px; color: var(--navy); font-size: 1rem; }
+    .rmap-step p { margin: 0; font-size: .88rem; color: #37525F; }
+
+    .callout {
+      background: #fff; border: 1px solid #E1EAF0; border-radius: 14px;
+      padding: 22px 24px; display: flex; gap: 18px; align-items: center; justify-content: space-between;
+      margin-top: 32px; flex-wrap: wrap;
+    }
+    .callout p { margin: 0; color: #37525F; }
+    .callout .btn { margin: 0; }
+
+    /* ---------- Cutover Status Report mock ---------- */
+    .cutover-mock {
+      display: block; margin-top: 24px; text-decoration: none; color: inherit;
+      background: #F5F7FA; border: 1px solid #D6DEE6; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 4px 14px rgba(9,55,95,.08);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .cutover-mock:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(9,55,95,.14); }
+    .cm-header {
+      background: #23324A; color: #fff; padding: 14px 22px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 3px solid #4CA6D9;
+    }
+    .cm-title { font-size: 1.25rem; letter-spacing: .01em; }
+    .cm-title strong { font-weight: 700; color: #fff; }
+    .cm-title-accent { color: #E88A3F; font-weight: 600; }
+    .cm-live-pill {
+      font-size: .78rem; background: #4CA6D9; color: #fff; padding: 6px 12px;
+      border-radius: 999px; font-weight: 600; white-space: nowrap;
+    }
+    .cm-body { padding: 18px 20px 22px; background: #F5F7FA; }
+
+    .cm-filters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
+    .cm-filter { background: #fff; border: 1px solid #E1E7EE; border-radius: 6px; padding: 10px 14px; }
+    .cm-filter label { display: block; font-size: .72rem; color: #64798A; font-weight: 600; margin-bottom: 4px; }
+    .cm-select { font-size: .88rem; color: #23324A; display: flex; justify-content: space-between; }
+
+    .cm-kpis { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; margin-bottom: 16px; }
+    .cm-kpi {
+      background: #fff; border: 1px solid #E1E7EE; border-left: 4px solid #ccc; border-radius: 4px;
+      padding: 10px 10px 8px; text-align: left;
+    }
+    .cm-kpi .kpi-num { font-size: 1.35rem; font-weight: 700; color: #23324A; line-height: 1.1; }
+    .cm-kpi .kpi-lbl { font-size: .72rem; color: #64798A; margin-top: 2px; }
+    .kpi-teal { border-left-color: #3EB2A6; }
+    .kpi-navy { border-left-color: #23324A; }
+    .kpi-blue { border-left-color: #4CA6D9; }
+    .kpi-red  { border-left-color: #D94D3B; }
+    .kpi-grey { border-left-color: #9AAAB8; }
+    .kpi-orange { border-left-color: #E88A3F; }
+    .kpi-amber { border-left-color: #F2B24A; }
+    .kpi-danger { border: 1.5px solid #D94D3B; border-left: 4px solid #D94D3B; }
+    .kpi-danger .kpi-lbl { color: #D94D3B; }
+
+    .cm-charts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .cm-charts.cm-charts-2 { grid-template-columns: repeat(2, 1fr); margin-top: 12px; }
+    .cm-chart { background: #fff; border: 1px solid #E1E7EE; border-radius: 4px; overflow: hidden; }
+    .cm-chart-h { background: #E88A3F; color: #fff; font-size: .82rem; font-weight: 600; padding: 8px 12px; }
+    .cm-chart-b { padding: 14px 14px 16px; }
+
+    .bar-row { display: grid; grid-template-columns: 110px 1fr 40px; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .bar-lbl { font-size: .78rem; color: #37525F; text-align: right; }
+    .bar { background: #EEF2F6; height: 14px; border-radius: 2px; overflow: hidden; }
+    .bar-fill { display: block; height: 100%; }
+    .bar-navy { background: #23324A; }
+    .bar-teal { background: #3EB2A6; }
+    .bar-blue { background: #4CA6D9; }
+    .bar-val { font-size: .78rem; color: #23324A; font-weight: 600; }
+    .bar-legend { display: flex; gap: 18px; font-size: .72rem; color: #55707F; margin-top: 8px; }
+    .bar-legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+    .bar-legend .dot-navy { background: #23324A; }
+    .bar-legend .dot-teal { background: #3EB2A6; }
+
+    .cm-donut-row { display: flex; gap: 18px; align-items: center; }
+    .cm-donut { width: 140px; height: 140px; flex-shrink: 0; }
+    .cm-legend { list-style: none; padding: 0; margin: 0; font-size: .82rem; color: #37525F; }
+    .cm-legend li { display: flex; align-items: center; margin-bottom: 6px; }
+    .cm-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 8px; }
+    .cm-legend b { margin-left: 6px; color: #23324A; font-weight: 600; }
+
+    .cm-fake-note {
+      margin: 16px 0 0; font-size: .78rem; color: #64798A; text-align: center; font-style: italic;
+    }
+
+    /* Cutover Tasks table */
+    .cm-table-scroll { overflow-x: auto; }
+    .cm-table { width: 100%; border-collapse: collapse; font-size: .8rem; background: #fff; }
+    .cm-table thead th {
+      background: #23324A; color: #fff; text-align: left; padding: 8px 10px;
+      font-weight: 600; font-size: .75rem; white-space: nowrap; border-right: 1px solid #33445E;
+    }
+    .cm-table thead th:last-child { border-right: 0; }
+    .cm-table tbody td {
+      padding: 7px 10px; border-bottom: 1px solid #EEF2F6; color: #37525F; white-space: nowrap;
+    }
+    .cm-table tbody tr:nth-child(even) td { background: #F8FAFC; }
+    .cm-table tbody tr:hover td { background: #EEF5FA; }
+    .cm-table .num { text-align: right; }
+
+    @media (max-width: 900px) {
+      .cm-filters { grid-template-columns: repeat(2, 1fr); }
+      .cm-kpis { grid-template-columns: repeat(3, 1fr); }
+      .cm-charts, .cm-charts.cm-charts-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER (mirrors home.html) ============ -->
+  <header class="nav" id="top">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Aberdeen Advisors home">
+        <img src="assets/aberdeen-logo.png" alt="Aberdeen Advisors" class="nav-logo-corp">
+        <span class="nav-logo-sep" aria-hidden="true"></span>
+        <img src="assets/trailheadlogo.png" alt="trAIlhead" class="nav-logo-product">
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="#scope">Scope</a>
+        <a href="#workstreams">Workstreams</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#engage" class="nav-cta">Start a Conversation</a>
+        <a href="/portal" class="nav-cta nav-portal">Enter HorizonView Portal</a>
+        <form action="/signout" method="post" class="nav-signout-form">
+          <button type="submit" class="nav-cta nav-signout">Sign out</button>
+        </form>
+      </nav>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="sap-hero">
+    <div class="container">
+      <span class="eyebrow">SAP ECC → S/4HANA · Cloud Transformation</span>
+      <h1>End-to-end SAP transformation — from strategy through go-live.</h1>
+      <p class="lede">
+        Aberdeen leads the ECC to S/4HANA transition strategy, target architecture, cloud operating model design,
+        program governance, and integrated delivery — representing the client and working alongside system integrators
+        across Finance, Supply Chain, and HR.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#scope">See the Scope</a>
+        <a class="btn btn-ghost" href="#engage" style="background:rgba(255,255,255,.12); color:#fff; border-color:rgba(255,255,255,.35);">Talk to Our Team</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TARGET ARCHITECTURE VISUAL ============ -->
+  <section class="sap-section">
+    <div class="container">
+      <h2>Target architecture &amp; cloud landscape</h2>
+      <p class="section-sub">
+        Migration from on-premises SAP ECC to SAP S/4HANA on RISE, with a modern data &amp; integration fabric
+        spanning Azure ADLS, Boomi, Snowflake, and downstream reporting.
+      </p>
+      <div class="viz-placeholder tall">
+        <div class="viz-inner">
+          <span class="viz-tag">Visual placeholder</span>
+          <p class="viz-title">Target Architecture Diagram</p>
+          <p class="viz-desc">
+            Recommended: annotated diagram showing SAP S/4HANA (RISE) at the core, surrounded by ADLS, Boomi,
+            Snowflake, middleware, satellite systems, and consumption layers (Power BI, custom apps).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABERDEEN'S SCOPE ============ -->
+  <section id="scope" class="sap-section alt">
+    <div class="container">
+      <h2>Aberdeen's scope</h2>
+      <p class="section-sub">
+        We own the transformation from the strategy layer down to integrated delivery — not a single workstream,
+        but the connective tissue that makes SIs, platform teams, and the business move together.
+      </p>
+      <div class="sap-grid cols-3">
+        <div class="sap-card">
+          <h3>Strategy &amp; Architecture</h3>
+          <p>Transition strategy, target architecture, and cloud operating model design for the move from on-prem SAP ECC to S/4HANA.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Scoping &amp; Roadmap</h3>
+          <p>Initial scoping, multi-release roadmap development, and dependency mapping across workstreams.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Program Mobilization</h3>
+          <p>Governance design, run-organization design, new-project intake, and due-diligence &amp; approval processes.</p>
+        </div>
+        <div class="sap-card">
+          <h3>TMO Establishment</h3>
+          <p>Transformation Management Office stand-up — governance and oversight structure creation across the program.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Integrated Delivery</h3>
+          <p>Program delivery and cross-workstream dependency management, representing the client alongside system integrators.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Technology Advisory</h3>
+          <p>Enterprise architecture, technology strategy advisory, and technology-management office design.</p>
+        </div>
+      </div>
+
+      <div class="viz-placeholder" style="margin-top:32px;">
+        <div class="viz-inner">
+          <span class="viz-tag">Visual placeholder</span>
+          <p class="viz-title">TMO / Program Governance Org Chart</p>
+          <p class="viz-desc">
+            Recommended: layered chart showing steering committee, TMO, workstream leads (Finance, SC, HR, Data, Integration),
+            and SI/vendor partner lanes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COVERAGE AREAS ============ -->
+  <section class="sap-section">
+    <div class="container">
+      <h2>Coverage areas</h2>
+      <p class="section-sub">
+        The transformation spans three enterprise domains, each with its own module footprint,
+        legal-entity complexity, and downstream reporting dependencies.
+      </p>
+      <div class="sap-grid cols-3">
+        <div class="sap-card">
+          <h3>Finance</h3>
+          <p>GL, AP/AR, close, consolidations, intercompany, multi-bank connectivity, payroll costing and cross-company charging.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Supply Chain</h3>
+          <p>Procure-to-Pay, Plan-to-Deliver, master data alignment, and integration to logistics/satellite systems.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Human Resources</h3>
+          <p>Payroll archiving, role cleanup, and HR data structure changes tied into the S/4HANA target model.</p>
+        </div>
+      </div>
+
+      <div class="viz-placeholder" style="margin-top:32px;">
+        <div class="viz-inner">
+          <span class="viz-tag">Visual placeholder</span>
+          <p class="viz-title">Process Coverage Heatmap</p>
+          <p class="viz-desc">
+            Recommended: matrix of L1/L2 processes (O2C, P2P, R2R, H2R, PTD) × legal entities / geographies,
+            shaded by wave.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ KEY WORKSTREAMS ============ -->
+  <section id="workstreams" class="sap-section alt">
+    <div class="container">
+      <h2>Key workstreams</h2>
+      <p class="section-sub">
+        The invisible 60% of any SAP transformation — data, integration, decommissioning, and cleanup — is where
+        we invest disproportionate attention.
+      </p>
+
+      <div class="sap-grid cols-2">
+        <div class="sap-card">
+          <h3>ERP Core Upgrade</h3>
+          <p>SAP ECC → SAP S/4HANA migration, data structure changes, and clean-core alignment.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Data &amp; Reporting Architecture</h3>
+          <p>Azure ADLS, Snowflake-related data work, data ingestion &amp; consumption, and data replication tooling.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Integration Fabric</h3>
+          <p>ODS / Boomi integrations, middleware migration, multi-bank connectivity.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Decommissioning &amp; Cleanup</h3>
+          <p>SAP unused-code decommissioning, satellite-system decommissioning, payroll archiving, role cleanup.</p>
+        </div>
+      </div>
+
+      <div class="sap-pill-row" style="margin-top:24px;">
+        <span class="sap-pill">SAP RISE</span>
+        <span class="sap-pill">ADLS</span>
+        <span class="sap-pill">Snowflake</span>
+        <span class="sap-pill">Boomi</span>
+        <span class="sap-pill">Middleware</span>
+        <span class="sap-pill">Data replication</span>
+        <span class="sap-pill">Payroll archiving</span>
+        <span class="sap-pill">Role cleanup</span>
+        <span class="sap-pill">Multi-bank connectivity</span>
+        <span class="sap-pill hl">Cross-company charging research</span>
+      </div>
+
+      <div class="viz-placeholder" style="margin-top:32px;">
+        <div class="viz-inner">
+          <span class="viz-tag">Visual placeholder</span>
+          <p class="viz-title">Data &amp; Integration Landscape</p>
+          <p class="viz-desc">
+            Recommended: end-to-end flow — source systems → Boomi / middleware → SAP S/4HANA → ADLS → Snowflake →
+            Power BI / consumers, with governance and replication overlays.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRANSFORMATION WORKSTREAMS ============ -->
+  <section class="sap-section">
+    <div class="container">
+      <h2>Transformation workstreams</h2>
+      <p class="section-sub">The advisory layer wrapped around the technical delivery.</p>
+      <div class="sap-grid cols-3">
+        <div class="sap-card"><h3>Cloud Migration Strategy</h3><p>On-prem to cloud assessment, options analysis, and target-state decisioning.</p></div>
+        <div class="sap-card"><h3>Transformation Governance</h3><p>Steering rhythm, decision rights, escalation paths, and program KPIs.</p></div>
+        <div class="sap-card"><h3>Enterprise Architecture</h3><p>Operating model design and reference architectures for the future state.</p></div>
+        <div class="sap-card"><h3>Portfolio Management</h3><p>Intake, prioritization, and dependency management across concurrent initiatives.</p></div>
+        <div class="sap-card"><h3>Program Oversight</h3><p>Delivery health, risk &amp; issue management, and vendor performance oversight.</p></div>
+        <div class="sap-card"><h3>Technology Management Office</h3><p>Standards, patterns, and reusable capabilities across the tech estate.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMMERCE TRACK ============ -->
+  <section class="sap-section alt">
+    <div class="container">
+      <h2>SAP Commerce track</h2>
+      <p class="section-sub">
+        Where custom-build was on the table, we recommended a modern commercial platform — with SAP Commerce as the
+        preferred choice — and led the selection and roadmap through platform stand-up.
+      </p>
+      <div class="sap-grid cols-2">
+        <div class="sap-card">
+          <h3>Platform Selection</h3>
+          <ul>
+            <li>SAP Commerce platform selection &amp; recommendation</li>
+            <li>Platform-selection RFP support</li>
+            <li>SAP licensure negotiation support</li>
+          </ul>
+        </div>
+        <div class="sap-card">
+          <h3>eCommerce Transformation</h3>
+          <ul>
+            <li>eCommerce transformation roadmap</li>
+            <li>Product enrichment &amp; customer onboarding</li>
+            <li>Analytics &amp; dashboards, data &amp; technology governance</li>
+            <li>Change management &amp; program governance</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="viz-placeholder" style="margin-top:32px;">
+        <div class="viz-inner">
+          <span class="viz-tag">Visual placeholder</span>
+          <p class="viz-title">Platform Selection Scorecard</p>
+          <p class="viz-desc">
+            Recommended: weighted-criteria scorecard comparing SAP Commerce vs. alternatives across capability,
+            TCO, time-to-value, and ecosystem fit.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROADMAP / MILESTONES ============ -->
+  <section id="roadmap" class="sap-section">
+    <div class="container">
+      <h2>Program roadmap &amp; milestones</h2>
+      <p class="section-sub">A two-year transformation with a multi-release roadmap and a disciplined cutover cadence.</p>
+
+      <div class="roadmap">
+        <div class="rmap-step">
+          <span class="rmap-when">Aug 2023</span>
+          <h4>Program Kickoff</h4>
+          <p>Aberdeen mobilized ~10–15 team members to lead strategy, governance, and delivery.</p>
+        </div>
+        <div class="rmap-step">
+          <span class="rmap-when">2024–2025</span>
+          <h4>Build &amp; Integrate</h4>
+          <p>Target architecture built out, data &amp; integration workstreams executed, satellite decommissioning underway.</p>
+        </div>
+        <div class="rmap-step">
+          <span class="rmap-when">RISE E4Q</span>
+          <h4>Environment Delivered</h4>
+          <p>SAP RISE E4Q environment successfully stood up for downstream testing.</p>
+        </div>
+        <div class="rmap-step">
+          <span class="rmap-when">Through Feb 2026</span>
+          <h4>UAT &amp; Mock Cutovers</h4>
+          <p>User Acceptance Testing and Mock Cutover 3 executed, dress rehearsal planning in flight.</p>
+        </div>
+        <div class="rmap-step">
+          <span class="rmap-when">May 2026</span>
+          <h4>Production Go-Live</h4>
+          <p>Planned production cutover to SAP S/4HANA on RISE.</p>
+        </div>
+      </div>
+
+      <div class="viz-placeholder" style="margin-top:32px;">
+        <div class="viz-inner">
+          <span class="viz-tag">Visual placeholder</span>
+          <p class="viz-title">Multi-Release Roadmap Timeline</p>
+          <p class="viz-desc">
+            Recommended: swim-lane Gantt across workstreams (Core, Data, Integration, Decommissioning, Commerce)
+            with mock cutovers, UAT windows, and go-live pinned.
+          </p>
+        </div>
+      </div>
+
+      <a class="cutover-mock" href="https://app.powerbi.com/groups/me/reports/0a265639-75b5-43c4-b28e-02be285e0485/f17a90b2c3d4e5f6000b?experience=power-bi" target="_blank" rel="noopener" aria-label="Open the live Cutover Status Report in Power BI">
+        <div class="cm-header">
+          <span class="cm-title"><strong>Cutover</strong> <span class="cm-title-accent">Status Report</span></span>
+          <span class="cm-live-pill">Open live dashboard ↗</span>
+        </div>
+
+        <div class="cm-body">
+          <!-- Filters -->
+          <div class="cm-filters">
+            <div class="cm-filter"><label>Wave</label><div class="cm-select">All ▾</div></div>
+            <div class="cm-filter"><label>Cutover Cycle</label><div class="cm-select">All ▾</div></div>
+            <div class="cm-filter"><label>Team</label><div class="cm-select">All ▾</div></div>
+            <div class="cm-filter"><label>Status</label><div class="cm-select">All ▾</div></div>
+          </div>
+
+          <!-- KPI tiles -->
+          <div class="cm-kpis">
+            <div class="cm-kpi kpi-teal"><div class="kpi-num">68%</div><div class="kpi-lbl">Completed</div></div>
+            <div class="cm-kpi kpi-navy"><div class="kpi-num">245</div><div class="kpi-lbl">Total</div></div>
+            <div class="cm-kpi kpi-teal"><div class="kpi-num">167</div><div class="kpi-lbl">Complete</div></div>
+            <div class="cm-kpi kpi-blue"><div class="kpi-num">34</div><div class="kpi-lbl">In Progress</div></div>
+            <div class="cm-kpi kpi-red"><div class="kpi-num">6</div><div class="kpi-lbl">Blocked</div></div>
+            <div class="cm-kpi kpi-grey"><div class="kpi-num">22</div><div class="kpi-lbl">Not Started</div></div>
+            <div class="cm-kpi kpi-orange"><div class="kpi-num">78</div><div class="kpi-lbl">Past Due</div></div>
+            <div class="cm-kpi kpi-amber"><div class="kpi-num">39</div><div class="kpi-lbl">Time Restri…</div></div>
+            <div class="cm-kpi kpi-danger"><div class="kpi-num">82</div><div class="kpi-lbl">Open Defects</div></div>
+          </div>
+
+          <!-- Charts row 1 -->
+          <div class="cm-charts">
+            <div class="cm-chart">
+              <div class="cm-chart-h">Planned % vs Completed %</div>
+              <div class="cm-chart-b">
+                <div class="bar-row"><span class="bar-lbl">Planned</span><div class="bar"><span class="bar-fill bar-navy" style="width:100%"></span></div><span class="bar-val">100%</span></div>
+                <div class="bar-row"><span class="bar-lbl">Completed</span><div class="bar"><span class="bar-fill bar-teal" style="width:68%"></span></div><span class="bar-val">68%</span></div>
+                <div class="bar-legend"><span><i class="dot dot-navy"></i>Cutover Planned %</span><span><i class="dot dot-teal"></i>Cutover Completed %</span></div>
+              </div>
+            </div>
+            <div class="cm-chart">
+              <div class="cm-chart-h">Blocked Tasks by Team</div>
+              <div class="cm-chart-b">
+                <div class="bar-row"><span class="bar-lbl">Cutover Team</span><div class="bar"><span class="bar-fill bar-blue" style="width:80%"></span></div><span class="bar-val">4</span></div>
+                <div class="bar-row"><span class="bar-lbl">Leadership</span><div class="bar"><span class="bar-fill bar-blue" style="width:40%"></span></div><span class="bar-val">2</span></div>
+                <div class="bar-row"><span class="bar-lbl">Data &amp; Int.</span><div class="bar"><span class="bar-fill bar-blue" style="width:20%"></span></div><span class="bar-val">1</span></div>
+              </div>
+            </div>
+            <div class="cm-chart">
+              <div class="cm-chart-h">Past Due by Team</div>
+              <div class="cm-chart-b">
+                <div class="bar-row"><span class="bar-lbl">Cutover Team</span><div class="bar"><span class="bar-fill bar-blue" style="width:90%"></span></div><span class="bar-val">42</span></div>
+                <div class="bar-row"><span class="bar-lbl">Finance &amp; Bill.</span><div class="bar"><span class="bar-fill bar-blue" style="width:30%"></span></div><span class="bar-val">12</span></div>
+                <div class="bar-row"><span class="bar-lbl">EWM</span><div class="bar"><span class="bar-fill bar-blue" style="width:20%"></span></div><span class="bar-val">8</span></div>
+                <div class="bar-row"><span class="bar-lbl">CVI</span><div class="bar"><span class="bar-fill bar-blue" style="width:17%"></span></div><span class="bar-val">7</span></div>
+                <div class="bar-row"><span class="bar-lbl">ETM.next</span><div class="bar"><span class="bar-fill bar-blue" style="width:13%"></span></div><span class="bar-val">5</span></div>
+                <div class="bar-row"><span class="bar-lbl">HXM</span><div class="bar"><span class="bar-fill bar-blue" style="width:10%"></span></div><span class="bar-val">4</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Donuts row -->
+          <div class="cm-charts cm-charts-2">
+            <div class="cm-chart">
+              <div class="cm-chart-h">Open Defects by Severity</div>
+              <div class="cm-chart-b cm-donut-row">
+                <svg viewBox="0 0 42 42" class="cm-donut" role="img" aria-label="Open Defects by Severity donut chart">
+                  <circle cx="21" cy="21" r="15.9155" fill="#fff"></circle>
+                  <!-- segments: Medium 45%, Low 30%, High 18%, Critical 7% -->
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#F2B24A" stroke-width="8" stroke-dasharray="45 55" stroke-dashoffset="25"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#3EB2A6" stroke-width="8" stroke-dasharray="30 70" stroke-dashoffset="-20"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#E88A3F" stroke-width="8" stroke-dasharray="18 82" stroke-dashoffset="-50"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#D94D3B" stroke-width="8" stroke-dasharray="7 93" stroke-dashoffset="-68"></circle>
+                </svg>
+                <ul class="cm-legend">
+                  <li><i style="background:#D94D3B"></i>Critical <b>6 (7%)</b></li>
+                  <li><i style="background:#E88A3F"></i>High <b>15 (18%)</b></li>
+                  <li><i style="background:#3EB2A6"></i>Low <b>25 (30%)</b></li>
+                  <li><i style="background:#F2B24A"></i>Medium <b>36 (45%)</b></li>
+                </ul>
+              </div>
+            </div>
+            <div class="cm-chart">
+              <div class="cm-chart-h">Open Defects by Status</div>
+              <div class="cm-chart-b cm-donut-row">
+                <svg viewBox="0 0 42 42" class="cm-donut" role="img" aria-label="Open Defects by Status donut chart">
+                  <circle cx="21" cy="21" r="15.9155" fill="#fff"></circle>
+                  <!-- Closed 40%, In Progress 35%, Open 25% -->
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#4C9BE0" stroke-width="8" stroke-dasharray="40 60" stroke-dashoffset="25"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#2E6FAE" stroke-width="8" stroke-dasharray="35 65" stroke-dashoffset="-15"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#E88A3F" stroke-width="8" stroke-dasharray="25 75" stroke-dashoffset="-50"></circle>
+                </svg>
+                <ul class="cm-legend">
+                  <li><i style="background:#4C9BE0"></i>Closed <b>33 (40%)</b></li>
+                  <li><i style="background:#2E6FAE"></i>In Progress <b>29 (35%)</b></li>
+                  <li><i style="background:#E88A3F"></i>Open <b>20 (25%)</b></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cutover Tasks table -->
+          <div class="cm-chart cm-table-wrap" style="margin-top:12px;">
+            <div class="cm-chart-h">Cutover Tasks (by Sequence)</div>
+            <div class="cm-table-scroll">
+              <table class="cm-table">
+                <thead>
+                  <tr>
+                    <th>Task ID</th><th>WBS</th><th>Email Notification Sent</th><th>Task Name</th>
+                    <th>Status</th><th>Team</th><th>Cutover Cycle</th>
+                    <th>Start Date</th><th>End Date</th><th>System Ready</th><th>Business Ready</th><th class="num">Sequence</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>C-0101</td><td>002.001.001</td><td>Y</td><td>Extract Master Data Snapshot</td><td>Complete</td><td>Cutover Team</td><td>MC1</td><td>2026-03-18</td><td>2026-03-22</td><td>Y</td><td>Y</td><td class="num">1.00</td></tr>
+                  <tr><td>C-0102</td><td>002.001.002</td><td>Y</td><td>Freeze Legacy Transactions</td><td>Complete</td><td>Finance &amp; Billings</td><td>MC1</td><td>2026-03-22</td><td>2026-03-22</td><td>Y</td><td>Y</td><td class="num">2.00</td></tr>
+                  <tr><td>C-0103</td><td>002.001.003</td><td>Y</td><td>Validate ADLS Landing Zone</td><td>Complete</td><td>Data &amp; Int.</td><td>FC</td><td>2026-03-24</td><td>2026-03-25</td><td>Y</td><td>Y</td><td class="num">3.00</td></tr>
+                  <tr><td>C-0104</td><td>002.001.004</td><td>N</td><td>Boomi Integration Regression</td><td>Planned</td><td>Data &amp; Int.</td><td>FC</td><td>2026-04-02</td><td>2026-04-05</td><td>N</td><td>N</td><td class="num">4.00</td></tr>
+                  <tr><td>C-0105</td><td>002.001.005</td><td>Y</td><td>Snowflake Replication Cutover</td><td>In Progress</td><td>Data &amp; Int.</td><td>FC</td><td>2026-04-05</td><td>2026-04-08</td><td>Y</td><td>N</td><td class="num">5.00</td></tr>
+                  <tr><td>C-0106</td><td>002.001.006</td><td>N</td><td>Payroll Archive Handoff</td><td>Time Restricted</td><td>HXM</td><td>FC</td><td>2026-04-08</td><td>2026-04-10</td><td>N</td><td>N</td><td class="num">6.00</td></tr>
+                  <tr><td>C-0107</td><td>002.001.007</td><td>Y</td><td>Role Cleanup Validation</td><td>Complete</td><td>HXM</td><td>DR</td><td>2026-04-10</td><td>2026-04-11</td><td>Y</td><td>Y</td><td class="num">7.00</td></tr>
+                  <tr><td>C-0108</td><td>002.001.008</td><td>Y</td><td>Multi-Bank Connectivity Test</td><td>Complete</td><td>Finance &amp; Billings</td><td>DR</td><td>2026-04-12</td><td>2026-04-13</td><td>Y</td><td>Y</td><td class="num">8.00</td></tr>
+                  <tr><td>C-0109</td><td>002.001.009</td><td>N</td><td>Middleware Failover Rehearsal</td><td>Blocked</td><td>Cutover Team</td><td>DR</td><td>2026-04-14</td><td>2026-04-15</td><td>N</td><td>N</td><td class="num">9.00</td></tr>
+                  <tr><td>C-0110</td><td>002.001.010</td><td>Y</td><td>EWM Warehouse Cutover</td><td>In Progress</td><td>EWM</td><td>DR</td><td>2026-04-16</td><td>2026-04-18</td><td>Y</td><td>N</td><td class="num">10.00</td></tr>
+                  <tr><td>C-0111</td><td>002.001.011</td><td>N</td><td>Hypercare Command Center Standup</td><td>Not Started</td><td>Cutover Team</td><td>GO</td><td>2026-04-28</td><td>2026-04-30</td><td>N</td><td>N</td><td class="num">11.00</td></tr>
+                  <tr><td>C-0112</td><td>002.001.012</td><td>Y</td><td>Business Sign-off — Go/No-Go</td><td>Planned</td><td>Leadership</td><td>GO</td><td>2026-05-01</td><td>2026-05-01</td><td>N</td><td>N</td><td class="num">12.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <p class="cm-fake-note">Illustrative dashboard mock — values shown are representative, not actual program data. Click to view the live Power BI report.</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ DELIVERY MODEL ============ -->
+  <section class="sap-section alt">
+    <div class="container">
+      <h2>Delivery model</h2>
+      <p class="section-sub">
+        A two-year transformation delivered through a hybrid onshore/offshore support model and a stable core team.
+      </p>
+      <div class="sap-grid cols-3">
+        <div class="sap-card">
+          <h3>~10–15 Team Members</h3>
+          <p>A right-sized senior team spanning strategy, architecture, data, integration, and program leadership.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Hybrid Onshore / Offshore</h3>
+          <p>Blended delivery for coverage, cost discipline, and follow-the-sun execution during cutover windows.</p>
+        </div>
+        <div class="sap-card">
+          <h3>Two-Year Runway</h3>
+          <p>Multi-release roadmap, governance &amp; operating-model redesign, and steady-state operating readiness.</p>
+        </div>
+      </div>
+
+      <div class="viz-placeholder" style="margin-top:32px;">
+        <div class="viz-inner">
+          <span class="viz-tag">Visual placeholder</span>
+          <p class="viz-title">Delivery Model Diagram</p>
+          <p class="viz-desc">
+            Recommended: staffing ramp curve across the two-year program, with onshore/offshore split and role families
+            (architect, PM, data, integration, functional leads).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA / ENGAGE ============ -->
+  <section id="engage" class="sap-section">
+    <div class="container">
+      <div class="callout">
+        <div>
+          <h2 style="margin:0 0 6px;">Planning your SAP transformation?</h2>
+          <p>We'd be glad to walk through target architecture options, program governance patterns, and delivery models tailored to your landscape.</p>
+        </div>
+        <a class="btn btn-primary" href="/#engage">Start a Conversation</a>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

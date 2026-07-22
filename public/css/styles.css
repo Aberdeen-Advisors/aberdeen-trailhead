@@ -69,21 +69,49 @@ h1, h2, h3 { line-height: 1.2; color: var(--navy); }
   .nav-logo-product { height: 36px; }
   .nav-logo-sep { height: 24px; }
 }
-.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links { display: flex; align-items: center; gap: 20px; }
 .nav-links a {
-  text-decoration: none; color: var(--navy); font-size: 0.92rem; font-weight: 500;
+  text-decoration: none; color: var(--navy); font-size: 0.88rem; font-weight: 500;
   transition: color .2s;
 }
 .nav-links a:hover { color: var(--teal-bright); }
 .nav-links .nav-cta {
-  background: var(--navy); color: #fff; padding: 9px 18px; border-radius: 999px;
-  transition: background .2s; white-space: nowrap;
+  background: var(--navy); color: #fff; padding: 6px 12px; border-radius: 999px;
+  font-size: 0.8rem; transition: background .2s; white-space: nowrap;
 }
 .nav-links .nav-cta:hover { background: var(--blue); color: #fff; }
 .nav-links .nav-portal {
   background: var(--blue); font-weight: 600;
 }
 .nav-links .nav-portal:hover { background: var(--navy); }
+.nav-links .nav-sap {
+  background: var(--teal-bright); color: #fff; font-weight: 600;
+}
+.nav-links .nav-sap:hover { background: var(--navy); color: #fff; }
+.nav-links .nav-signout-form { margin: 0; padding: 0; display: inline-flex; }
+.nav-links .nav-signout {
+  background: transparent; color: var(--navy); border: 1px solid var(--line);
+  font: inherit; font-weight: 500; cursor: pointer;
+}
+.nav-links .nav-signout:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+/* Header layout hardening: the combined logo cluster + 4 text links + 3 pill CTAs
+   overflows the 1200px nav-inner; shrink the trAIlhead product logo and force the
+   nav-logo cluster not to grow so the pills have room. */
+.nav-logo { min-width: 0; flex-shrink: 0; gap: 10px; }
+.nav-links { min-width: 0; flex-wrap: nowrap; margin-left: auto; }
+.nav-logo-product { height: 28px; }
+.nav-logo-sep { height: 22px; }
+@media (max-width: 1240px) {
+  .nav-links { gap: 18px; }
+  .nav-links a { font-size: 0.86rem; }
+  .nav-links .nav-cta { padding: 8px 13px; }
+}
+@media (max-width: 1080px) {
+  .nav-links { gap: 12px; }
+  .nav-links a { font-size: 0.8rem; }
+  .nav-links .nav-cta { padding: 7px 11px; font-size: 0.78rem; }
+}
 .nav-burger { display: none; background: none; border: 0; cursor: pointer; padding: 6px; }
 .nav-burger span { display: block; width: 22px; height: 2px; background: var(--navy); margin: 5px 0; border-radius: 2px; transition: .25s; }
 
