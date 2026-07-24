@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aberdeen Advisors — SAP ECC to S/4HANA Transformation</title>
-  <meta name="description" content="Aberdeen Advisors leads SAP ECC to S/4HANA transitions — target architecture, cloud operating model, program governance, data & integration, and delivery through go-live." />
+  <title>Aberdeen Advisors | SAP ECC to S/4HANA Transformation</title>
+  <meta name="description" content="Aberdeen Advisors leads SAP ECC to S/4HANA transitions: target architecture, cloud operating model, program governance, data and integration, and delivery through go-live." />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -91,6 +91,43 @@
     }
     .callout p { margin: 0; color: #37525F; }
     .callout .btn { margin: 0; }
+
+    /* Capability filter (Scope section) */
+    .cap-filter {
+      display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 8px;
+    }
+    .cap-pill {
+      font: inherit; font-size: .82rem; font-weight: 500;
+      background: #fff; color: #23324A; border: 1px solid #C6D8E2;
+      padding: 7px 14px; border-radius: 999px; cursor: pointer;
+      transition: background .18s, color .18s, border-color .18s, transform .1s;
+    }
+    .cap-pill:hover { border-color: var(--teal-bright); color: var(--teal-bright); }
+    .cap-pill.is-active {
+      background: var(--teal-bright); color: #fff; border-color: var(--teal-bright);
+    }
+    .cap-filter-hint {
+      font-size: .8rem; color: #64798A; margin: 0 0 20px; font-style: italic;
+    }
+    .cap-grid .sap-card { transition: opacity .2s, transform .2s, box-shadow .2s, border-color .2s; }
+    .cap-grid.is-filtered .sap-card { opacity: .35; }
+    .cap-grid .sap-card.is-match {
+      opacity: 1; border-color: var(--teal-bright);
+      box-shadow: 0 6px 18px rgba(0, 179, 178, .18);
+      transform: translateY(-2px);
+    }
+
+    /* Practice Overview differentiator callout */
+    .sap-differentiator {
+      margin: 28px 0 0; padding: 18px 22px;
+      background: #fff; border: 1px solid #E1EAF0; border-left: 4px solid var(--teal-bright);
+      border-radius: 10px; color: #23324A; font-size: 1rem; line-height: 1.55;
+    }
+    .sap-differentiator .diff-label {
+      display: block; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--teal-bright); font-weight: 700; margin-bottom: 6px;
+    }
+    .sap-differentiator strong { color: var(--navy); }
 
     /* ---------- Cutover Status Report mock ---------- */
     .cutover-mock {
@@ -219,10 +256,10 @@
   <section class="sap-hero">
     <div class="container">
       <span class="eyebrow">SAP ECC → S/4HANA · Cloud Transformation</span>
-      <h1>End-to-end SAP transformation — from strategy through go-live.</h1>
+      <h1>End-to-end SAP transformation, from strategy through go-live.</h1>
       <p class="lede">
         Aberdeen leads the ECC to S/4HANA transition strategy, target architecture, cloud operating model design,
-        program governance, and integrated delivery — representing the client and working alongside system integrators
+        program governance, and integrated delivery, representing the client and working alongside system integrators
         across Finance, Supply Chain, and HR.
       </p>
       <div class="hero-actions">
@@ -247,7 +284,7 @@
         <div class="sap-card">
           <h3>Where we sit</h3>
           <p>
-            We represent the client — sitting between executive sponsors and the system integrators executing
+            We represent the client, sitting between executive sponsors and the system integrators executing
             configuration and code. Our accountability is the outcome of the program, not billable hours on it.
           </p>
         </div>
@@ -255,26 +292,22 @@
           <h3>What we own</h3>
           <p>
             Transition strategy, target architecture, cloud operating model, TMO stand-up, program governance,
-            portfolio &amp; dependency management, and integrated delivery through go-live and hypercare.
+            portfolio and dependency management, and integrated delivery through go-live and hypercare.
           </p>
         </div>
         <div class="sap-card">
           <h3>How we deliver</h3>
           <p>
-            A senior, right-sized team operating in a hybrid onshore/offshore model — small enough to move fast,
+            A senior, right-sized team operating in a hybrid onshore/offshore model. Small enough to move fast,
             experienced enough to hold SIs, vendors, and the business to a single roadmap.
           </p>
         </div>
       </div>
 
-      <div class="sap-pill-row" style="margin-top:22px;">
-        <span class="sap-pill hl">Transformation advisory</span>
-        <span class="sap-pill">SAP S/4HANA migrations</span>
-        <span class="sap-pill">Governance &amp; TMO</span>
-        <span class="sap-pill">Operating-model design</span>
-        <span class="sap-pill">Cloud strategy (RISE)</span>
-        <span class="sap-pill">SAP Commerce modernization</span>
-      </div>
+      <p class="sap-differentiator">
+        <span class="diff-label">What sets us apart</span>
+        A dedicated <strong>Transformation Management Office (TMO)</strong> that owns program-level governance, cross-workstream dependencies, and business readiness end to end, rather than a PMO that tracks tasks.
+      </p>
     </div>
   </section>
 
@@ -283,31 +316,43 @@
     <div class="container">
       <h2>Aberdeen's scope</h2>
       <p class="section-sub">
-        We own the transformation from the strategy layer down to integrated delivery — not a single workstream,
+        We own the transformation from the strategy layer down to integrated delivery. Not a single workstream,
         but the connective tissue that makes SIs, platform teams, and the business move together.
       </p>
-      <div class="sap-grid cols-3">
-        <div class="sap-card">
+
+      <div class="cap-filter" role="tablist" aria-label="Filter pillars by capability">
+        <button type="button" class="cap-pill is-active" data-cap="all">All capabilities</button>
+        <button type="button" class="cap-pill" data-cap="advisory-cap">Transformation advisory</button>
+        <button type="button" class="cap-pill" data-cap="migration">SAP S/4HANA migrations</button>
+        <button type="button" class="cap-pill" data-cap="governance">Governance &amp; TMO</button>
+        <button type="button" class="cap-pill" data-cap="opmodel">Operating-model design</button>
+        <button type="button" class="cap-pill" data-cap="cloud">Cloud strategy (RISE)</button>
+        <button type="button" class="cap-pill" data-cap="commerce">SAP Commerce modernization</button>
+      </div>
+      <p class="cap-filter-hint">Click a capability to see which pillars deliver it.</p>
+
+      <div class="sap-grid cols-3 cap-grid">
+        <div class="sap-card" data-caps="advisory-cap migration opmodel cloud">
           <h3>Strategy &amp; Architecture</h3>
           <p>Transition strategy, target architecture, and cloud operating model design for the move from on-prem SAP ECC to S/4HANA.</p>
         </div>
-        <div class="sap-card">
+        <div class="sap-card" data-caps="advisory-cap migration cloud commerce">
           <h3>Scoping &amp; Roadmap</h3>
           <p>Initial scoping, multi-release roadmap development, and dependency mapping across workstreams.</p>
         </div>
-        <div class="sap-card">
+        <div class="sap-card" data-caps="advisory-cap governance">
           <h3>Program Mobilization</h3>
-          <p>Governance design, run-organization design, new-project intake, and due-diligence &amp; approval processes.</p>
+          <p>Governance design, run-organization design, new-project intake, and due-diligence and approval processes.</p>
         </div>
-        <div class="sap-card">
+        <div class="sap-card" data-caps="advisory-cap governance opmodel">
           <h3>TMO Establishment</h3>
-          <p>Transformation Management Office stand-up — governance and oversight structure creation across the program.</p>
+          <p>Transformation Management Office stand-up: governance and oversight structure creation across the program.</p>
         </div>
-        <div class="sap-card">
+        <div class="sap-card" data-caps="advisory-cap migration commerce">
           <h3>Integrated Delivery</h3>
           <p>Program delivery and cross-workstream dependency management, representing the client alongside system integrators.</p>
         </div>
-        <div class="sap-card">
+        <div class="sap-card" data-caps="advisory-cap opmodel commerce">
           <h3>Technology Advisory</h3>
           <p>Enterprise architecture, technology strategy advisory, and technology-management office design.</p>
         </div>
@@ -367,7 +412,7 @@
     <div class="container">
       <h2>Key workstreams</h2>
       <p class="section-sub">
-        The invisible 60% of any SAP transformation — data, integration, decommissioning, and cleanup — is where
+        The invisible 60% of any SAP transformation (data, integration, decommissioning, and cleanup) is where
         we invest disproportionate attention.
       </p>
 
@@ -408,8 +453,8 @@
           <span class="viz-tag">Visual placeholder</span>
           <p class="viz-title">Data &amp; Integration Landscape</p>
           <p class="viz-desc">
-            Recommended: end-to-end flow — source systems → Boomi / middleware → SAP S/4HANA → ADLS → Snowflake →
-            Power BI / consumers, with governance and replication overlays.
+            Recommended: end-to-end flow showing source systems, Boomi / middleware, SAP S/4HANA, ADLS, Snowflake,
+            and Power BI / consumers, with governance and replication overlays.
           </p>
         </div>
       </div>
@@ -437,8 +482,8 @@
     <div class="container">
       <h2>Target architecture &amp; cloud landscape</h2>
       <p class="section-sub">
-        The technical blueprint underpinning delivery — migration from on-premises SAP ECC to SAP S/4HANA on RISE,
-        with a modern data &amp; integration fabric spanning Azure ADLS, Boomi, Snowflake, and downstream reporting.
+        The technical blueprint underpinning delivery. Migration from on-premises SAP ECC to SAP S/4HANA on RISE,
+        with a modern data and integration fabric spanning Azure ADLS, Boomi, Snowflake, and downstream reporting.
       </p>
       <div class="viz-placeholder tall">
         <div class="viz-inner">
@@ -458,8 +503,8 @@
     <div class="container">
       <h2>SAP Commerce track</h2>
       <p class="section-sub">
-        Where custom-build was on the table, we recommended a modern commercial platform — with SAP Commerce as the
-        preferred choice — and led the selection and roadmap through platform stand-up.
+        Where custom-build was on the table, we recommended a modern commercial platform (with SAP Commerce as the
+        preferred choice) and led the selection and roadmap through platform stand-up.
       </p>
       <div class="sap-grid cols-2">
         <div class="sap-card">
@@ -504,10 +549,10 @@
         <div class="rmap-step">
           <span class="rmap-when">Aug 2023</span>
           <h4>Program Kickoff</h4>
-          <p>Aberdeen mobilized ~10–15 team members to lead strategy, governance, and delivery.</p>
+          <p>Aberdeen mobilized 10 to 15 team members to lead strategy, governance, and delivery.</p>
         </div>
         <div class="rmap-step">
-          <span class="rmap-when">2024–2025</span>
+          <span class="rmap-when">2024 to 2025</span>
           <h4>Build &amp; Integrate</h4>
           <p>Target architecture built out, data &amp; integration workstreams executed, satellite decommissioning underway.</p>
         </div>
@@ -662,13 +707,13 @@
                   <tr><td>C-0109</td><td>002.001.009</td><td>N</td><td>Middleware Failover Rehearsal</td><td>Blocked</td><td>Cutover Team</td><td>DR</td><td>2026-04-14</td><td>2026-04-15</td><td>N</td><td>N</td><td class="num">9.00</td></tr>
                   <tr><td>C-0110</td><td>002.001.010</td><td>Y</td><td>EWM Warehouse Cutover</td><td>In Progress</td><td>EWM</td><td>DR</td><td>2026-04-16</td><td>2026-04-18</td><td>Y</td><td>N</td><td class="num">10.00</td></tr>
                   <tr><td>C-0111</td><td>002.001.011</td><td>N</td><td>Hypercare Command Center Standup</td><td>Not Started</td><td>Cutover Team</td><td>GO</td><td>2026-04-28</td><td>2026-04-30</td><td>N</td><td>N</td><td class="num">11.00</td></tr>
-                  <tr><td>C-0112</td><td>002.001.012</td><td>Y</td><td>Business Sign-off — Go/No-Go</td><td>Planned</td><td>Leadership</td><td>GO</td><td>2026-05-01</td><td>2026-05-01</td><td>N</td><td>N</td><td class="num">12.00</td></tr>
+                  <tr><td>C-0112</td><td>002.001.012</td><td>Y</td><td>Business Sign-off: Go/No-Go</td><td>Planned</td><td>Leadership</td><td>GO</td><td>2026-05-01</td><td>2026-05-01</td><td>N</td><td>N</td><td class="num">12.00</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
 
-          <p class="cm-fake-note">Illustrative dashboard mock — values shown are representative, not actual program data. Click to view the live Power BI report.</p>
+          <p class="cm-fake-note">Illustrative dashboard mock. Values shown are representative, not actual program data. Click to view the live Power BI report.</p>
         </div>
       </a>
     </div>
@@ -683,7 +728,7 @@
       </p>
       <div class="sap-grid cols-3">
         <div class="sap-card">
-          <h3>~10–15 Team Members</h3>
+          <h3>10 to 15 Team Members</h3>
           <p>A right-sized senior team spanning strategy, architecture, data, integration, and program leadership.</p>
         </div>
         <div class="sap-card">
@@ -722,5 +767,34 @@
     </div>
   </section>
 
+  <script>
+    (function () {
+      var filter = document.querySelector('.cap-filter');
+      var grid = document.querySelector('.cap-grid');
+      if (!filter || !grid) return;
+      var cards = grid.querySelectorAll('.sap-card');
+      var pills = filter.querySelectorAll('.cap-pill');
+
+      function apply(cap) {
+        pills.forEach(function (p) { p.classList.toggle('is-active', p.dataset.cap === cap); });
+        if (cap === 'all') {
+          grid.classList.remove('is-filtered');
+          cards.forEach(function (c) { c.classList.remove('is-match'); });
+          return;
+        }
+        grid.classList.add('is-filtered');
+        cards.forEach(function (c) {
+          var caps = (c.dataset.caps || '').split(/\s+/);
+          c.classList.toggle('is-match', caps.indexOf(cap) !== -1);
+        });
+      }
+
+      filter.addEventListener('click', function (e) {
+        var pill = e.target.closest('.cap-pill');
+        if (!pill) return;
+        apply(pill.dataset.cap);
+      });
+    })();
+  </script>
 </body>
 </html>
