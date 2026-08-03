@@ -25,10 +25,9 @@
         <a href="#capabilities">Capabilities</a>
         <a href="#dashboards">Dashboards</a>
         <a href="#platform">Platform</a>
-        <a href="#domains">Domains</a>
         <a href="#engage" class="nav-cta">Start a Conversation</a>
-        <a href="/sap-transformation.html" class="nav-cta nav-sap">SAP Transformation</a>
-        <a href="/portal" class="nav-cta nav-portal">Enter HorizonView Portal</a>
+        <a href="/portal/transformation" class="nav-cta nav-portal">Transformation Portal</a>
+        <a href="/portal" class="nav-cta nav-portal">HorizonView Portal</a>
       </nav>
       <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -40,629 +39,676 @@
   <section class="hero">
     <div class="hero-inner">
       <div class="hero-copy">
-<h1>From disparate data to<br><span class="accent">executive actionable insights.</span></h1>
-        <p class="hero-sub">Aberdeen Advisors owns the full analytics stack — from the acquisition sites that capture your data and the source systems that produce it, up through certified semantic models, executive dashboards, document intelligence, and AI agents that put answers where your leaders already work.</p>
+        <h1>Run, measure, and land<br><span class="accent">every transformation program.</span></h1>
+        <p class="hero-sub">Aberdeen Advisors runs enterprise transformation programs client-side, and activates <strong>HorizonView</strong> on top: one governed platform where the work is delivered, its progress is seen, and its adoption sticks. We don't ship dashboards that gather dust. Embedded training, enablement, and change management are built into every engagement, so leaders and teams actually use the solutions we build, every day.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#dashboards">See Live Dashboard Demos</a>
-          <a class="btn btn-ghost" href="#platform">Explore the Platform</a>
+          <a class="btn btn-primary" href="/portal">See what HorizonView does</a>
+          <a class="btn btn-ghost" href="#practice">Explore the Platform</a>
         </div>
         <div class="hero-stats">
-          <div class="hero-stat"><span class="stat-num" data-count="6">0</span><span class="stat-label">Industry domains served</span></div>
-          <div class="hero-stat"><span class="stat-num" data-count="6">0</span><span class="stat-label">Platform layers, one architecture</span></div>
-          <div class="hero-stat"><span class="stat-num" data-count="100" data-suffix="%">0</span><span class="stat-label">Microsoft 365–native security</span></div>
+          <div class="hero-stat"><span class="stat-num" data-count="40" data-suffix="+">0</span><span class="stat-label">Enterprise programs delivered</span></div>
+          <div class="hero-stat"><span class="stat-num" data-count="10" data-suffix="+">0</span><span class="stat-label">Live executive dashboards</span></div>
+          <div class="hero-stat"><span class="stat-num" data-count="74" data-suffix="%">0</span><span class="stat-label">Weekly active users at hypercare</span></div>
         </div>
       </div>
       <div class="hero-visual" aria-hidden="true">
+        <!-- DELIVERY: workstream health as segmented bar -->
         <div class="float-card fc-1">
-          <div class="fc-title">SAY / DO RATIO</div>
+          <div class="fc-title"><span class="fc-chip fc-chip-delivery">DELIVERY</span> WORKSTREAM HEALTH</div>
+          <div class="fc-seg-bar">
+            <span class="fc-seg fc-seg-green" style="width:55%"></span>
+            <span class="fc-seg fc-seg-amber" style="width:36%"></span>
+            <span class="fc-seg fc-seg-red" style="width:9%"></span>
+          </div>
+          <div class="fc-seg-legend">
+            <span><i class="fc-dot fc-dot-green"></i>6 Green</span>
+            <span><i class="fc-dot fc-dot-amber"></i>4 Amber</span>
+            <span><i class="fc-dot fc-dot-red"></i>1 Red</span>
+          </div>
+        </div>
+
+        <!-- INTEL: say/do ratio with sparkline -->
+        <div class="float-card fc-4">
+          <div class="fc-title"><span class="fc-chip fc-chip-intel">INTEL</span> SAY / DO RATIO</div>
           <div class="fc-value">92.4%</div>
           <svg viewBox="0 0 120 36" class="fc-spark"><polyline points="0,28 15,24 30,26 45,18 60,20 75,12 90,14 105,8 120,6" fill="none" stroke="#44B0B1" stroke-width="2.5" stroke-linecap="round"/></svg>
           <div class="fc-delta">▲ 3.1 pts vs prior sprint</div>
         </div>
-        <div class="float-card fc-4">
-          <div class="fc-title">TOTAL EBC FUNDING</div>
-          <div class="fc-value">$25.9M</div>
-          <div class="fc-delta">▲ $1.8M vs plan · 20 initiatives</div>
-        </div>
+
+        <!-- DELIVERY: phase gates timeline -->
         <div class="float-card fc-5">
-          <div class="fc-title"><span class="fc-chip">AI</span> DELIVERY SCORE</div>
-          <div class="fc-value">8.4 <span style="font-size:1rem;color:var(--pbi-muted)">/10</span></div>
-          <div class="fc-delta">▲ 0.6 vs last PI</div>
+          <div class="fc-title"><span class="fc-chip fc-chip-delivery">DELIVERY</span> PHASE GATES</div>
+          <div class="fc-phase-track">
+            <span class="fc-phase-node fc-phase-done">Disc</span>
+            <span class="fc-phase-line fc-phase-line-done"></span>
+            <span class="fc-phase-node fc-phase-done">Build</span>
+            <span class="fc-phase-line fc-phase-line-active"></span>
+            <span class="fc-phase-node fc-phase-active">Test</span>
+            <span class="fc-phase-line"></span>
+            <span class="fc-phase-node">Deploy</span>
+            <span class="fc-phase-line"></span>
+            <span class="fc-phase-node">Hyper</span>
+          </div>
+          <div class="fc-delta">Currently in Test · MC3 in flight</div>
         </div>
+
+        <!-- INTEL: mini bar chart, program progress by workstream -->
         <div class="float-card fc-2">
-          <div class="fc-title">ACTIVE PRODUCERS</div>
-          <div class="fc-value">3,391</div>
-          <div class="fc-delta">▲ 4.2% vs last quarter</div>
+          <div class="fc-title"><span class="fc-chip fc-chip-intel">INTEL</span> PROGRAM PROGRESS</div>
+          <svg viewBox="0 0 130 44" class="fc-mini-bars" preserveAspectRatio="none">
+            <rect x="0"   y="8"  width="14" height="36" fill="#44B0B1"/>
+            <rect x="18"  y="16" width="14" height="28" fill="#44B0B1"/>
+            <rect x="36"  y="20" width="14" height="24" fill="#F7CE01"/>
+            <rect x="54"  y="12" width="14" height="32" fill="#44B0B1"/>
+            <rect x="72"  y="22" width="14" height="22" fill="#F7CE01"/>
+            <rect x="90"  y="28" width="14" height="16" fill="#DB504A"/>
+            <rect x="108" y="14" width="14" height="30" fill="#44B0B1"/>
+          </svg>
+          <div class="fc-delta">6 workstreams · 68% avg</div>
         </div>
+
+        <!-- ADOPT: change impact heatmap (mini) -->
         <div class="float-card fc-3">
-          <div class="fc-title">ONSHORE MIX · 734 RESOURCES</div>
-          <div class="fc-value">71.8%</div>
-          <div class="fc-mix"><span class="fc-mix-on" style="width:71.8%"></span><span class="fc-mix-off" style="width:28.2%"></span></div>
-          <div class="fc-delta muted">Offshore 28.2% · 109 teams</div>
+          <div class="fc-title"><span class="fc-chip fc-chip-adoption">ADOPT</span> CHANGE IMPACT</div>
+          <div class="fc-heat">
+            <span class="fc-heat-cell fc-heat-1"></span><span class="fc-heat-cell fc-heat-3"></span><span class="fc-heat-cell fc-heat-3"></span><span class="fc-heat-cell fc-heat-2"></span><span class="fc-heat-cell fc-heat-2"></span>
+            <span class="fc-heat-cell fc-heat-1"></span><span class="fc-heat-cell fc-heat-2"></span><span class="fc-heat-cell fc-heat-3"></span><span class="fc-heat-cell fc-heat-3"></span><span class="fc-heat-cell fc-heat-2"></span>
+            <span class="fc-heat-cell fc-heat-2"></span><span class="fc-heat-cell fc-heat-3"></span><span class="fc-heat-cell fc-heat-2"></span><span class="fc-heat-cell fc-heat-1"></span><span class="fc-heat-cell fc-heat-2"></span>
+            <span class="fc-heat-cell fc-heat-1"></span><span class="fc-heat-cell fc-heat-2"></span><span class="fc-heat-cell fc-heat-3"></span><span class="fc-heat-cell fc-heat-3"></span><span class="fc-heat-cell fc-heat-2"></span>
+          </div>
+          <div class="fc-delta muted">5 processes × 4 role bands</div>
         </div>
+
+        <!-- ADOPT: weekly active users trend -->
         <div class="float-card fc-6">
-          <div class="fc-title"><span class="fc-chip">ML</span> BREACHES · NEXT 30D</div>
-          <div class="fc-value warn">39</div>
-          <div class="fc-delta warn">Forecast · 92% recall</div>
+          <div class="fc-title"><span class="fc-chip fc-chip-adoption">ADOPT</span> WEEKLY ACTIVE USERS</div>
+          <div class="fc-value">74%</div>
+          <svg viewBox="0 0 120 40" class="fc-spark">
+            <polyline points="0,32 15,28 30,22 45,25 60,18 75,20 90,12 105,15 120,8" fill="none" stroke="#00B3B2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="0,36 15,34 30,30 45,32 60,26 75,28 90,22 105,24 120,18" fill="none" stroke="#0072AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+          </svg>
+          <div class="fc-delta">Exec 74 · PM 82 · IC 64</div>
         </div>
         <div class="hero-grid-bg"></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ CAPABILITIES ============ -->
-  <section class="section capabilities" id="capabilities">
+  <!-- ============ ABERDEEN'S PRACTICE + HORIZONVIEW (single merged section) ============ -->
+  <section class="cap-hub" id="practice">
     <div class="section-inner">
-      <p class="section-kicker">What we build</p>
-      <h2>One team, the full analytics stack.</h2>
-      <p class="section-sub">We don't hand off between data engineers, BI developers, and AI teams — the same Aberdeen team takes your data from source systems to the boardroom.</p>
-      <div class="cap-grid">
-        <div class="cap-card reveal">
-          <div class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3C7 3 3.5 4.6 3.5 6.5v11C3.5 19.4 7 21 12 21s8.5-1.6 8.5-3.5v-11C20.5 4.6 17 3 12 3zm0 2c4.2 0 6.5 1.2 6.5 1.5S16.2 8 12 8 5.5 6.8 5.5 6.5 7.8 5 12 5zm6.5 12.5c0 .3-2.3 1.5-6.5 1.5s-6.5-1.2-6.5-1.5v-2.9C6.9 15.4 9.3 16 12 16s5.1-.6 6.5-1.4v2.9zm0-5.5c0 .3-2.3 1.5-6.5 1.5S5.5 12.3 5.5 12V9.1C6.9 9.9 9.3 10.5 12 10.5s5.1-.6 6.5-1.4V12z"/></svg></div>
-          <h3>Fabric Data Engineering</h3>
-          <p>Lakehouse architecture, pipelines and dataflows that unify Jira, ADO, Smartsheet, ServiceNow, finance, HR and line-of-business systems into one governed model.</p>
+
+      <!-- Aberdeen's Practice: the stage-setting -->
+      <p class="section-kicker">Aberdeen's Practice</p>
+      <h2>We run transformation programs. We measure them. We make them stick.</h2>
+      <p class="cap-hub-lede">Aberdeen leads enterprise transformation programs client-side. On top of every engagement we activate <strong>HorizonView</strong>, the program management platform. <strong>HorizonView runs, measures, and lands your transformation programs</strong>: one governed surface, one program of record, three capabilities that show up across every engagement, whether Enterprise Transformation, Enterprise Analytics, ML/AI Delivery, Agentic Delivery, or Dashboarding.</p>
+
+      <span id="offerings" class="anchor-only" aria-hidden="true"></span>
+
+      <!-- Three richer capability tiles -->
+      <div class="cap-tile-grid">
+        <div class="cap-tile cap-tile-delivery">
+          <div class="cap-tile-head">
+            <span class="cap-tile-num">01</span>
+            <div class="cap-tile-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4V4zm0 10h6v6H4v-6zm10-10h6v6h-6V4zm0 10h6v6h-6v-6z"/></svg>
+            </div>
+          </div>
+          <h3>Delivery</h3>
+          <p>Run SAP and Oracle transformation programs end to end. Workstreams, RAID, phase gates, cutover, and process redesign across ERP landscapes.</p>
+          <div class="cap-tile-visual">
+            <div class="cap-vis-row"><span class="cap-vis-badge cap-vis-good">Green</span><span class="cap-vis-label">SAP ECC &rarr; Cloud Migration</span><span class="cap-vis-val">92%</span></div>
+            <div class="cap-vis-row"><span class="cap-vis-badge cap-vis-warn">Amber</span><span class="cap-vis-label">Oracle Fusion Testing</span><span class="cap-vis-val">68%</span></div>
+            <div class="cap-vis-row"><span class="cap-vis-badge cap-vis-bad">Red</span><span class="cap-vis-label">Legacy Decommissioning</span><span class="cap-vis-val">44%</span></div>
+          </div>
+          <div class="cap-tile-chips">
+            <span class="cap-tile-chip">SAP / Oracle Programs</span>
+            <span class="cap-tile-chip">Workstreams</span>
+            <span class="cap-tile-chip">Cutover</span>
+            <span class="cap-tile-chip">Process Redesign</span>
+          </div>
+          <div class="cap-tile-journeys" aria-label="Journeys covered">
+            <span class="cap-tile-journey-label">Serves</span>
+            <span class="cap-tile-journey">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+              Enterprise Transformation
+            </span>
+          </div>
         </div>
-        <div class="cap-card reveal">
-          <div class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V10h3v10H4zm6.5 0V4h3v16h-3zM17 20v-7h3v7h-3z"/></svg></div>
-          <h3>Certified Semantic Models</h3>
-          <p>Power BI semantic layers with certified KPIs, portfolio health logic and executive measures — one version of the truth, reused by every report.</p>
+
+        <div class="cap-tile cap-tile-intel">
+          <div class="cap-tile-head">
+            <span class="cap-tile-num">02</span>
+            <div class="cap-tile-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 20V10h3v10H4zm6.5 0V4h3v16h-3zM17 20v-7h3v7h-3z"/></svg>
+            </div>
+          </div>
+          <h3>Intelligence</h3>
+          <p>See the program in real time across SAP, Oracle, and third-party systems. Certified data, executive dashboards, ML, agents.</p>
+          <div class="cap-tile-visual">
+            <svg class="cap-vis-spark" viewBox="0 0 120 40" aria-hidden="true">
+              <polyline points="0,32 15,28 30,22 45,25 60,18 75,20 90,12 105,15 120,8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="0,36 15,34 30,30 45,32 60,26 75,28 90,22 105,24 120,18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+            </svg>
+            <div class="cap-vis-row"><span class="cap-vis-label">Say / Do this sprint</span><span class="cap-vis-val">92.4%</span></div>
+            <div class="cap-vis-row"><span class="cap-vis-label">Cross-system reconciliation</span><span class="cap-vis-val">98%</span></div>
+          </div>
+          <div class="cap-tile-chips">
+            <span class="cap-tile-chip">Certified data</span>
+            <span class="cap-tile-chip">Dashboards</span>
+            <span class="cap-tile-chip">ML models</span>
+            <span class="cap-tile-chip">Agents</span>
+          </div>
+          <div class="cap-tile-journeys" aria-label="Journeys covered">
+            <span class="cap-tile-journey-label">Serves</span>
+            <span class="cap-tile-journey">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="0.5"/><rect x="12" y="8" width="3" height="10" rx="0.5"/><rect x="17" y="5" width="3" height="13" rx="0.5"/></svg>
+              Enterprise Analytics
+            </span>
+            <span class="cap-tile-journey">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v1a4 4 0 0 0-2 3.4V13a4 4 0 0 0 2 3.5V17a5 5 0 0 0 10 0v-.5A4 4 0 0 0 19 13v-1.6A4 4 0 0 0 17 8V7a5 5 0 0 0-5-5z"/><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M9 15c1.5 1 4.5 1 6 0"/></svg>
+              ML/AI
+            </span>
+            <span class="cap-tile-journey">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 4v4"/><circle cx="12" cy="3" r="1"/><path d="M8 14h.01"/><path d="M16 14h.01"/><path d="M9 18h6"/></svg>
+              Agentic
+            </span>
+            <span class="cap-tile-journey">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="10" rx="1"/><rect x="13" y="3" width="8" height="6" rx="1"/><rect x="13" y="11" width="8" height="10" rx="1"/><rect x="3" y="15" width="8" height="6" rx="1"/></svg>
+              Dashboarding
+            </span>
+          </div>
         </div>
-        <div class="cap-card reveal">
-          <div class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h18v12H3V4zm2 2v8h14V6H5zm3 14h8v2H8v-2zm-1.5-9 2.5 2.5L11.5 9l3 3.5 2-2 2 2.5H6.5l1-2.5z"/></svg></div>
-          <h3>Executive Dashboards</h3>
-          <p>Power BI and custom HTML dashboards engineered for the C-suite — from agile delivery command centers to onboarding and compliance cockpits.</p>
-        </div>
-        <div class="cap-card reveal">
-          <div class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6V2zm8 1.5V8h4.5L14 3.5zM8 12h8v1.5H8V12zm0 3h8v1.5H8V15zm0-6h4v1.5H8V9z"/></svg></div>
-          <h3>Document Intelligence</h3>
-          <p>RAG layers that index charters, status reports, meeting notes and lessons learned — so answers cite the documents behind the numbers.</p>
-        </div>
-        <div class="cap-card reveal">
-          <div class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .7-.4 1.4-1 1.7V7h4a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3h4V5.7c-.6-.3-1-1-1-1.7a2 2 0 0 1 2-2zM7 9a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1H7zm2.5 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/></svg></div>
-          <h3>AI Agents &amp; Automation</h3>
-          <p>Ask-your-portfolio agents, notebook-driven ML models, and PowerPoint report generators — insight delivered to Teams and email, not just a portal.</p>
-        </div>
-        <div class="cap-card reveal">
-          <div class="cap-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 8.4 8 10 4.6-1.6 8-5 8-10V6l-8-4zm0 2.2 6 3v4.8c0 4-2.6 6.7-6 8-3.4-1.3-6-4-6-8V7.2l6-3zM11 14l-2.5-2.5L7 13l4 4 6-6-1.5-1.5L11 14z"/></svg></div>
-          <h3>Microsoft 365 Governance</h3>
-          <p>Security and permissions inherited from Microsoft 365 — SharePoint project sites, document libraries, and role-based access from day one.</p>
+
+        <div class="cap-tile cap-tile-adoption">
+          <div class="cap-tile-head">
+            <span class="cap-tile-num">03</span>
+            <div class="cap-tile-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm0 2c-2.7 0-8 1.3-8 4v2h16v-2c0-2.7-5.3-4-8-4z"/></svg>
+            </div>
+          </div>
+          <h3>Adoption</h3>
+          <p>Land the program with people. Change impact across SAP and Oracle end-users, stakeholder posture, training completion, and leadership viewership.</p>
+          <div class="cap-tile-visual">
+            <div class="cap-vis-heat">
+              <span class="cap-vis-cell cap-vis-cell-1"></span><span class="cap-vis-cell cap-vis-cell-3"></span><span class="cap-vis-cell cap-vis-cell-3"></span><span class="cap-vis-cell cap-vis-cell-2"></span>
+              <span class="cap-vis-cell cap-vis-cell-1"></span><span class="cap-vis-cell cap-vis-cell-2"></span><span class="cap-vis-cell cap-vis-cell-3"></span><span class="cap-vis-cell cap-vis-cell-2"></span>
+              <span class="cap-vis-cell cap-vis-cell-2"></span><span class="cap-vis-cell cap-vis-cell-3"></span><span class="cap-vis-cell cap-vis-cell-1"></span><span class="cap-vis-cell cap-vis-cell-2"></span>
+            </div>
+            <div class="cap-vis-row"><span class="cap-vis-label">Weekly active users</span><span class="cap-vis-val">74%</span></div>
+          </div>
+          <div class="cap-tile-chips">
+            <span class="cap-tile-chip">Change impact</span>
+            <span class="cap-tile-chip">Stakeholders</span>
+            <span class="cap-tile-chip">Training</span>
+            <span class="cap-tile-chip">Leadership</span>
+          </div>
+          <div class="cap-tile-journeys" aria-label="Journeys covered">
+            <span class="cap-tile-journey-label">Serves</span>
+            <span class="cap-tile-journey cap-tile-journey-all">Every engagement type</span>
+          </div>
         </div>
       </div>
+
+      <!-- Coverage areas: icon tiles (clickable, jump to matching demo dashboard) -->
+      <div class="cap-hub-coverage">
+        <p class="cap-hub-cov-label">Covering every domain a transformation touches, click any domain to see the live dashboard</p>
+        <div class="cov-tile-grid">
+          <button type="button" class="cov-tile" data-dashboard="fin" aria-label="View Finance dashboard">
+            <div class="cov-tile-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <span class="cov-tile-label">Finance</span>
+            <span class="cov-tile-hint">Portfolio Financials &nearr;</span>
+          </button>
+          <button type="button" class="cov-tile" data-dashboard="sc" aria-label="View Supply Chain dashboard">
+            <div class="cov-tile-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 17h1a2 2 0 0 0 2-2v-3.34a2 2 0 0 0-.59-1.42L13 6.83A2 2 0 0 0 11.59 6.24H7a2 2 0 0 0-2 2V15a2 2 0 0 0 2 2h1"/><circle cx="9" cy="19" r="2"/><circle cx="16" cy="19" r="2"/><path d="M17 12h5v3"/></svg>
+            </div>
+            <span class="cov-tile-label">Supply Chain</span>
+            <span class="cov-tile-hint">Supply Chain &nearr;</span>
+          </button>
+          <button type="button" class="cov-tile" data-dashboard="wfm" aria-label="View Workforce dashboard">
+            <div class="cov-tile-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span class="cov-tile-label">Human Resources</span>
+            <span class="cov-tile-hint">Workforce Mgmt &nearr;</span>
+          </button>
+          <button type="button" class="cov-tile" data-dashboard="cio" aria-label="View CIO Hub dashboard">
+            <div class="cov-tile-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg>
+            </div>
+            <span class="cov-tile-label">Portfolio and Delivery</span>
+            <span class="cov-tile-hint">CIO Hub &nearr;</span>
+          </button>
+          <button type="button" class="cov-tile" data-dashboard="inc" aria-label="View Customer Experience dashboard">
+            <div class="cov-tile-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15.09 8.26 22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="cov-tile-label">Customer Experience</span>
+            <span class="cov-tile-hint">Demand &amp; Incident &nearr;</span>
+          </button>
+        </div>
+      </div>
+
     </div>
   </section>
 
-  <!-- ============ VIDEO SHOWCASE ============ -->
-  <section class="section video-showcase">
+  <span id="intelligence" class="anchor-only" aria-hidden="true"></span>
+  <span id="transformation" class="anchor-only" aria-hidden="true"></span>
+
+  <!-- Current vs Future architecture (inspired by Slide 3) -->
+  <section class="section arch-shift">
     <div class="section-inner">
-      <p class="section-kicker">See it in action</p>
-      <h2>The CIO Hub, live.</h2>
-      <p class="section-sub">Watch Aberdeen's CIO Hub dashboard in action — portfolio intelligence built for the executive team.</p>
-      <div class="video-wrap reveal">
-        <video src="CIOHubBrandingFinal.mp4" controls playsinline preload="metadata"></video>
+      <p class="section-kicker">From fragmented tools to a governed platform</p>
+      <h2>Current state, future state.</h2>
+      <p class="section-sub">Any transformation program, whether ERP modernization, analytics build, or ML deployment, tends to sprawl into sidecar integrations, duplicated pipelines, and inconsistent outputs across consumer surfaces. HorizonView collapses that into a governed orchestration layer with unified consumption.</p>
+      <div class="arch-shift-grid">
+        <div class="arch-shift-panel arch-shift-current">
+          <div class="arch-shift-title">Current state</div>
+          <div class="arch-shift-body">
+            <div class="arch-shift-row arch-shift-row-sources">
+              <span class="arch-shift-box arch-shift-src">Deck files</span>
+              <span class="arch-shift-box arch-shift-src">Sheet trackers</span>
+              <span class="arch-shift-box arch-shift-src">DevOps boards</span>
+              <span class="arch-shift-box arch-shift-src">SharePoint</span>
+              <span class="arch-shift-box arch-shift-src">Standalone BI</span>
+              <span class="arch-shift-box arch-shift-src">ERP / Source systems</span>
+            </div>
+            <div class="arch-shift-arrows arch-shift-arrows-messy">
+              <span>↘</span><span>↓</span><span>↙</span><span>↗</span>
+            </div>
+            <div class="arch-shift-row">
+              <span class="arch-shift-box arch-shift-box-alt">Sidecar integrations</span>
+              <span class="arch-shift-box arch-shift-box-alt">Duplicated pipelines</span>
+              <span class="arch-shift-box arch-shift-box-alt">Point APIs</span>
+            </div>
+            <div class="arch-shift-arrows arch-shift-arrows-messy">
+              <span>↘</span><span>↓</span><span>↙</span>
+            </div>
+            <div class="arch-shift-row">
+              <span class="arch-shift-box arch-shift-box-out">Static decks</span>
+              <span class="arch-shift-box arch-shift-box-out">Sheet reports</span>
+              <span class="arch-shift-box arch-shift-box-out">Standalone BI</span>
+              <span class="arch-shift-box arch-shift-box-out">Silo portals</span>
+            </div>
+          </div>
+        </div>
+        <div class="arch-shift-arrow" aria-hidden="true">→</div>
+        <div class="arch-shift-panel arch-shift-future">
+          <div class="arch-shift-title">Future state</div>
+          <div class="arch-shift-body">
+            <div class="arch-shift-row arch-shift-row-sources">
+              <span class="arch-shift-box arch-shift-src">Deck files</span>
+              <span class="arch-shift-box arch-shift-src">Sheet trackers</span>
+              <span class="arch-shift-box arch-shift-src">DevOps boards</span>
+              <span class="arch-shift-box arch-shift-src">SharePoint</span>
+              <span class="arch-shift-box arch-shift-src">Standalone BI</span>
+              <span class="arch-shift-box arch-shift-src">ERP / Source systems</span>
+            </div>
+            <div class="arch-shift-arrows">
+              <span>↓</span><span>↓</span><span>↓</span><span>↓</span>
+            </div>
+            <div class="arch-shift-row">
+              <a class="arch-shift-orch" href="#phase-matrix" aria-label="Jump to the phase-tool matrix">HorizonView Orchestration and Governance <span class="arch-shift-orch-chev" aria-hidden="true">↓</span></a>
+            </div>
+            <div class="arch-shift-arrows">
+              <span>↓</span><span>↓</span><span>↓</span><span>↓</span>
+            </div>
+            <div class="arch-shift-row">
+              <span class="arch-shift-box arch-shift-box-good">Dashboards</span>
+              <span class="arch-shift-box arch-shift-box-good">Reports</span>
+              <span class="arch-shift-box arch-shift-box-good">Agents</span>
+              <span class="arch-shift-box arch-shift-box-good">Portal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="arch-shift-benefits">
+        <div class="arch-shift-benefit"><span aria-hidden="true">◈</span> Single source of truth</div>
+        <div class="arch-shift-benefit"><span aria-hidden="true">◇</span> Consistent decisions</div>
+        <div class="arch-shift-benefit"><span aria-hidden="true">◭</span> Auditable governance</div>
       </div>
     </div>
   </section>
 
-  <!-- ============ DASHBOARD SHOWCASE ============ -->
-  <section class="section showcase" id="dashboards">
-    <div class="section-inner wide">
-      <p class="section-kicker">See it, don't imagine it</p>
-      <h2>Live dashboard demonstrations.</h2>
-      <p class="section-sub">Recreations of dashboards we've delivered on Microsoft Fabric — rebuilt here in HTML with synthetic data. Every visual below is rendered live in your browser.</p>
+  <!-- Phase-tool matrix (4-column, each column stacks Traditional → HV Delivery + Intelligence) -->
+  <section class="section phase-matrix" id="phase-matrix">
+    <div class="section-inner">
+      <p class="section-kicker">One platform, every phase</p>
+      <h2>HorizonView replaces the tool sprawl, phase by phase.</h2>
+      <p class="section-sub">A sequenced engagement across SAP and Oracle ERP modernization, commerce transformation, analytics builds, and process redesign. Under the hood at every step: HorizonView on the delivery and intelligence sides, with adoption, training, and enablement threaded through every phase so the platform lands with people who actually use it.</p>
 
-      <div class="tabbar" role="tablist" aria-label="Dashboard demos">
-        <button class="tab active" role="tab" aria-selected="true" data-tab="cio">
-          <span class="tab-title">CIO Hub</span>
-          <span class="tab-sub">Portfolio &amp; Agile Delivery</span>
-        </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="pmo">
-          <span class="tab-title">PMO Stage Gates</span>
-          <span class="tab-sub">Intake to Closure Pipeline</span>
-        </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="cc">
-          <span class="tab-title">Cost Control</span>
-          <span class="tab-sub">Budget · Capital · Expense</span>
-        </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="fin">
-          <span class="tab-title">Portfolio Financials</span>
-          <span class="tab-sub">Budget vs Delivery Performance</span>
-        </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="wfm">
-          <span class="tab-title">Workforce Management</span>
-          <span class="tab-sub">Roster · Contracts · Utilization</span>
-        </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="onb">
-          <span class="tab-title">Onboarding &amp; Licensing</span>
-          <span class="tab-sub">Executive Command Center</span>
-        </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="ai">
-          <span class="tab-title">AI Delivery Insights</span>
-          <span class="tab-sub">Agents &amp; Narrative Analytics</span>
-        </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="inc">
-          <span class="tab-title">Demand &amp; Incident Mgmt</span>
-          <span class="tab-sub">Portfolio Intake &amp; Triage</span>
-        </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="prc">
-          <span class="tab-title">Price &amp; Materials Intel</span>
-          <span class="tab-sub">AI-Driven Sourcing Savings</span>
-        </button>
-        <button class="tab" role="tab" aria-selected="false" data-tab="sc">
-          <span class="tab-title">Supply Chain</span>
-          <span class="tab-sub">Customer Experience &amp; Vendor Payables</span>
-        </button>
+      <!-- Cross-phase OCM ribbon (moved above inputs, threads through every phase) -->
+      <div class="pm-ocm-ribbon" id="ocm-ribbon" aria-label="Adoption and enablement threads across every phase">
+        <div class="pm-ocm-side">
+          <span class="pm-ocm-side-kicker">Adoption and enablement</span>
+          <span class="pm-ocm-side-desc">Threaded through every phase</span>
+        </div>
+        <div class="pm-ocm-segments">
+          <div class="pm-ocm-seg">
+            <span class="pm-ocm-seg-icon" aria-hidden="true">◈</span>
+            <div>
+              <span class="pm-ocm-seg-phase">Discovery</span>
+              <span class="pm-ocm-seg-detail">Change impact assessment · Stakeholder mapping</span>
+            </div>
+          </div>
+          <div class="pm-ocm-seg">
+            <span class="pm-ocm-seg-icon" aria-hidden="true">◇</span>
+            <div>
+              <span class="pm-ocm-seg-phase">Build &amp; Test</span>
+              <span class="pm-ocm-seg-detail">Training design · Super-user network · Communications rollout</span>
+            </div>
+          </div>
+          <div class="pm-ocm-seg">
+            <span class="pm-ocm-seg-icon" aria-hidden="true">◭</span>
+            <div>
+              <span class="pm-ocm-seg-phase">Deploy</span>
+              <span class="pm-ocm-seg-detail">Adoption tracking · Hypercare readiness · Training completion</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- CIO HUB -->
-      <div class="dash-frame" id="panel-cio" data-panel="cio" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+      <!-- INPUTS + PERSONA RAIL -->
+      <div class="pm-grid-inputs">
+        <!-- One outer INPUTS card wrapping three phase columns -->
+        <div class="pm-inputs-card">
+          <div class="pm-inputs-card-header">
+            <span class="pm-inputs-badge">Inputs</span>
+            <span class="pm-inputs-card-title">Artifacts, tools, and trackers flowing into HorizonView</span>
           </div>
-          <div class="dash-chrome-title">CIO Hub — Initiative, Team &amp; Domain View</div>
-          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
+          <div class="pm-inputs-card-body">
+            <div class="pm-inputs-col">
+              <div class="pm-inputs-header">
+                <span class="pm-phase">Discovery</span>
+              </div>
+              <p class="pm-phase-activities"><strong>Align:</strong> governance, roadmap, sponsor alignment. <strong>Discover:</strong> workshops, requirements, stakeholder mapping, RAID baseline.</p>
+              <div class="pm-inputs-box">
+                <span class="pm-tool">📊 Workshop decks</span>
+                <span class="pm-tool">📝 As-is / to-be requirements</span>
+                <span class="pm-tool">🗺 Signavio process maps</span>
+                <span class="pm-tool">🗂 Jira · ServiceNow · ADO</span>
+                <span class="pm-tool">📊 Excel trackers · Beeline</span>
+                <span class="pm-tool">📄 RAID and stakeholder logs</span>
+              </div>
+            </div>
+
+            <div class="pm-inputs-col">
+              <div class="pm-inputs-header">
+                <span class="pm-phase">Build &amp; Test</span>
+              </div>
+              <p class="pm-phase-activities"><strong>Build and validate:</strong> configuration, integration, unit test, iteration.</p>
+              <div class="pm-inputs-box">
+                <span class="pm-tool">📘 SAP / Oracle config workbooks</span>
+                <span class="pm-tool">🔧 OCC / API integration specs</span>
+                <span class="pm-tool">📊 Power BI / Tableau dashboards</span>
+                <span class="pm-tool">📓 ML notebooks (forecast, classify, cluster)</span>
+                <span class="pm-tool">📈 Model training and evaluation</span>
+                <span class="pm-tool">🧾 SAP / Oracle UAT scripts</span>
+                <span class="pm-tool">🔄 Cross-system reconciliation</span>
+                <span class="pm-tool">🐛 Defect trackers and status reports</span>
+              </div>
+            </div>
+
+            <div class="pm-inputs-col">
+              <div class="pm-inputs-header">
+                <span class="pm-phase">Deploy</span>
+              </div>
+              <p class="pm-phase-activities"><strong>Pilot and launch:</strong> cutover rehearsal, business readiness, go-live. <strong>Evolve:</strong> hypercare, secondary waves, continuous improvement.</p>
+              <div class="pm-inputs-box">
+                <span class="pm-tool">📊 SAP / Oracle cutover runbook</span>
+                <span class="pm-tool">📅 Milestone tracker</span>
+                <span class="pm-tool">☑ Go/No-Go checklist</span>
+                <span class="pm-tool">🔁 Data migration validation</span>
+                <span class="pm-tool">📈 Adoption sheets</span>
+                <span class="pm-tool">📂 Training folders</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="pbi" id="dash-cio">
-          <div class="pbi-header">
-            <div class="pbi-title">CIO Hub <span class="pbi-title-sep">|</span> Summary View</div>
-            <div class="pbi-slicers">
-              <span class="slicer">Portfolio: <b>All</b></span>
-              <span class="slicer">PI: <b>2026.1</b></span>
-              <span class="slicer">Sprint: <b>26.2.6 (Latest)</b></span>
-              <span class="slicer">Team: <b>Multiple selections</b></span>
-            </div>
-          </div>
-          <div class="pbi-kpis" id="cio-kpis"></div>
-          <div class="pbi-grid pbi-grid-cio">
-            <div class="pbi-card span-7">
-              <div class="pbi-card-title">Say / Do by Sprint <span class="pbi-card-sub">Committed vs completed story points (in-sprint)</span></div>
-              <div id="cio-saydo" class="chart"></div>
-            </div>
-            <div class="pbi-card span-5">
-              <div class="pbi-card-title">Initiative Health Status <span class="pbi-card-sub">Based on most recent completed PI</span></div>
-              <div id="cio-health" class="chart"></div>
-            </div>
-            <div class="pbi-card span-5">
-              <div class="pbi-card-title">Burn Up — Story Points <span class="pbi-card-sub">Max of remaining points within sprint</span></div>
-              <div id="cio-burnup" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Avg Cycle Time by Sprint <span class="pbi-card-sub">Days, completed stories</span></div>
-              <div id="cio-cycle" class="chart"></div>
-            </div>
-            <div class="pbi-card span-3">
-              <div class="pbi-card-title">Scope Changes (Churn) <span class="pbi-card-sub">During active sprints</span></div>
-              <div id="cio-churn" class="chart"></div>
-            </div>
-            <div class="pbi-card span-12 pbi-ai">
-              <div class="pbi-card-title"><span class="ai-chip">AI</span> Executive Highlights <span class="pbi-card-sub">Generated from RAID log &amp; delivery telemetry</span></div>
-              <ul class="ai-list" id="cio-ai"></ul>
-            </div>
-          </div>
-        </div>
-        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with Azure DevOps &amp; Jira pipelines, a certified Power BI semantic model, and AI-generated executive narratives.</div>
+
+        <!-- Persona nav on right -->
+        <aside class="pm-personas" aria-label="Jump to your role's view">
+          <p class="pm-personas-label">Jump to your role</p>
+          <button type="button" class="pm-persona-btn" data-persona-dashboard="cio" data-persona-domain="it">
+            <span class="pm-persona-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <span class="pm-persona-name">CIO</span>
+            <span class="pm-persona-chev" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="pm-persona-btn" data-persona-dashboard="pmo" data-persona-domain="it">
+            <span class="pm-persona-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/></svg>
+            </span>
+            <span class="pm-persona-name">PMO Lead</span>
+            <span class="pm-persona-chev" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="pm-persona-btn" data-persona-dashboard="cio" data-persona-domain="it" data-persona-scroll=".cutover-mock">
+            <span class="pm-persona-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-9 4 18 3-9h6"/></svg>
+            </span>
+            <span class="pm-persona-name">Program Lead</span>
+            <span class="pm-persona-chev" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="pm-persona-btn" data-persona-dashboard="fin" data-persona-domain="fin">
+            <span class="pm-persona-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </span>
+            <span class="pm-persona-name">Financial Controller</span>
+            <span class="pm-persona-chev" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="pm-persona-btn" data-persona-dashboard="wfm" data-persona-domain="wfm">
+            <span class="pm-persona-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
+            <span class="pm-persona-name">Workforce Manager</span>
+            <span class="pm-persona-chev" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="pm-persona-btn" data-persona-jump="#platform">
+            <span class="pm-persona-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="0.5"/><rect x="12" y="8" width="3" height="10" rx="0.5"/><rect x="17" y="5" width="3" height="13" rx="0.5"/></svg>
+            </span>
+            <span class="pm-persona-name">Data &amp; Analytics Lead</span>
+            <span class="pm-persona-chev" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="pm-persona-btn" data-persona-jump="#ocm-ribbon">
+            <span class="pm-persona-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            <span class="pm-persona-name">Change Mgmt Lead</span>
+            <span class="pm-persona-chev" aria-hidden="true">→</span>
+          </button>
+        </aside>
       </div>
 
-      <!-- PMO STAGE GATES -->
-      <div class="dash-frame hidden" id="panel-pmo" data-panel="pmo" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
-          </div>
-          <div class="dash-chrome-title">PMO Stage Gates — Intake to Closure Pipeline</div>
-          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
+      <!-- OUTPUTS: 6 business-outcome cards with mini-visuals -->
+      <div class="pm-outputs-card">
+        <div class="pm-outputs-card-header">
+          <span class="pm-outputs-badge">Outputs</span>
+          <span class="pm-outputs-card-title">Business outcomes HorizonView delivers</span>
         </div>
-        <div class="pbi" id="dash-pmo">
-          <div class="pbi-header">
-            <div class="pbi-title">Project Portfolio Dashboard <span class="pbi-title-sep">|</span> Delivery View</div>
-            <div class="pbi-slicers">
-              <span class="slicer">Region: <b>All</b></span>
-              <span class="slicer">Delivery Dept: <b>All</b></span>
-              <span class="slicer">Sponsor: <b>All</b></span>
-              <span class="slicer">Intake Stage: <b>All</b></span>
-            </div>
+        <div class="pm-outputs-grid">
+        <div class="pm-output-card pm-output-delivery">
+          <div class="pm-output-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/><path d="M18 15l3 3-3 3"/></svg>
           </div>
-          <div class="pbi-kpis" id="pmo-kpis"></div>
-          <div class="pbi-grid pbi-grid-pmo">
-            <div class="pbi-card span-12">
-              <div class="pbi-card-title">Project Pipeline by Work Status <span class="pbi-card-sub">Count &amp; share of portfolio across intake stages</span></div>
-              <div id="pmo-pipeline" class="chart"></div>
-            </div>
-            <div class="pbi-card span-9">
-              <div class="pbi-card-title">Project Tracking <span class="pbi-card-sub">Timeline · Open/Active · Closed · On Hold · Intake</span></div>
-              <div id="pmo-gantt" class="chart"></div>
-            </div>
-            <div class="pbi-card span-3">
-              <div class="pbi-card-title">Delivery Region Mix <span class="pbi-card-sub">Active projects by PPM region</span></div>
-              <div id="pmo-region" class="chart"></div>
-            </div>
-            <div class="pbi-card span-12">
-              <div class="pbi-card-title">Project Details <span class="pbi-card-sub">Top active projects · department, region, budget</span></div>
-              <div id="pmo-table" class="chart pmo-table-wrap"></div>
-            </div>
+          <h4>Process Maps</h4>
+          <p>Governed process documentation, kept living as the transformation evolves.</p>
+          <div class="pm-output-visual" aria-hidden="true">
+            <svg viewBox="0 0 220 60" width="100%" height="60" role="img">
+              <line x1="26" y1="30" x2="80" y2="30" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+              <line x1="102" y1="30" x2="156" y2="30" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+              <line x1="178" y1="30" x2="200" y2="30" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+              <line x1="91" y1="30" x2="91" y2="52" stroke="rgba(255,255,255,.5)" stroke-width="1.2" stroke-dasharray="3 3"/>
+              <ellipse cx="14" cy="30" rx="12" ry="8" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.85)" stroke-width="1.2"/>
+              <rect x="68" y="20" width="34" height="20" rx="3" fill="rgba(255,255,255,.14)" stroke="rgba(255,255,255,.85)" stroke-width="1.2"/>
+              <polygon points="167,20 178,30 167,40 156,30" fill="rgba(255,255,255,.14)" stroke="rgba(255,255,255,.85)" stroke-width="1.2"/>
+              <ellipse cx="212" cy="30" rx="8" ry="7" fill="rgba(255,255,255,.85)"/>
+              <rect x="72" y="46" width="38" height="12" rx="2" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-dasharray="2 2"/>
+            </svg>
+          </div>
+          <div class="pm-output-meta">
+            <span class="pm-output-personas">For: Process Transformation · PMO</span>
+            <span class="pm-output-modules">Modules: Discovery Hub · Signavio</span>
           </div>
         </div>
-        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with a PPM lakehouse spanning intake, gate approvals, delivery status, and closure — one certified model across every stage.</div>
-      </div>
 
-      <!-- COST CONTROL -->
-      <div class="dash-frame hidden" id="panel-cc" data-panel="cc" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+        <div class="pm-output-card pm-output-intel">
+          <div class="pm-output-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="0.5"/><rect x="12" y="8" width="3" height="10" rx="0.5"/><rect x="17" y="5" width="3" height="13" rx="0.5"/></svg>
           </div>
-          <div class="dash-chrome-title">Cost Control — Budget, Capital &amp; Expense Estimates</div>
-          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
-        </div>
-        <div class="pbi" id="dash-cc">
-          <div class="pbi-header">
-            <div class="pbi-title">Project Portfolio Dashboard <span class="pbi-title-sep">|</span> Cost Control View</div>
-            <div class="pbi-slicers">
-              <span class="slicer">Timeline: <b>2/1/2024 – 1/11/2028</b></span>
-              <span class="slicer">Region: <b>All</b></span>
-              <span class="slicer">Providing Org: <b>All</b></span>
-              <span class="slicer">Gatekeeper: <b>All</b></span>
-            </div>
+          <h4>Executive Dashboards</h4>
+          <p>Certified, live dashboards for the C-suite, powered by one semantic model.</p>
+          <div class="pm-output-visual" aria-hidden="true">
+            <svg viewBox="0 0 220 60" width="100%" height="60" role="img">
+              <rect x="0" y="0" width="60" height="26" rx="3" fill="rgba(255,255,255,.14)"/>
+              <text x="6" y="12" fill="rgba(255,255,255,.7)" font-size="6" font-family="system-ui">On budget</text>
+              <text x="6" y="22" fill="#fff" font-size="10" font-weight="700" font-family="system-ui">94%</text>
+              <rect x="66" y="0" width="60" height="26" rx="3" fill="rgba(255,255,255,.14)"/>
+              <text x="72" y="12" fill="rgba(255,255,255,.7)" font-size="6" font-family="system-ui">Gates cleared</text>
+              <text x="72" y="22" fill="#fff" font-size="10" font-weight="700" font-family="system-ui">12/14</text>
+              <rect x="132" y="0" width="88" height="26" rx="3" fill="rgba(255,255,255,.10)"/>
+              <polyline points="138,20 152,14 166,17 180,10 194,12 208,6" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="208" cy="6" r="2" fill="#fff"/>
+              <rect x="0" y="32" width="30" height="28" rx="2" fill="rgba(255,255,255,.72)"/>
+              <rect x="36" y="40" width="30" height="20" rx="2" fill="rgba(255,255,255,.55)"/>
+              <rect x="72" y="28" width="30" height="32" rx="2" fill="rgba(255,255,255,.82)"/>
+              <rect x="108" y="36" width="30" height="24" rx="2" fill="rgba(255,255,255,.6)"/>
+              <rect x="144" y="30" width="30" height="30" rx="2" fill="rgba(255,255,255,.8)"/>
+              <rect x="180" y="42" width="30" height="18" rx="2" fill="rgba(255,255,255,.5)"/>
+            </svg>
           </div>
-          <div class="pbi-kpis" id="cc-kpis"></div>
-          <div class="pbi-grid pbi-grid-cc">
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Resource Cost (Capital) Estimate <span class="pbi-card-sub">By providing organization ($K)</span></div>
-              <div id="cc-org" class="chart"></div>
-            </div>
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Total Cost Estimate <span class="pbi-card-sub">By budget classification ($K)</span></div>
-              <div id="cc-class" class="chart"></div>
-            </div>
-            <div class="pbi-card span-12">
-              <div class="pbi-card-title">Project Details <span class="pbi-card-sub">Top projects · manager, department, region, budget</span></div>
-              <div id="cc-table" class="chart"></div>
-            </div>
+          <div class="pm-output-meta">
+            <span class="pm-output-personas">For: CIO · PMO · Financial Controller</span>
+            <span class="pm-output-modules">Modules: Semantic Model · Experience Layer</span>
           </div>
         </div>
-        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric — resource vs. non-resource, capital vs. expense, one certified financial model across the portfolio.</div>
-      </div>
 
-      <!-- PORTFOLIO FINANCIALS -->
-      <div class="dash-frame hidden" id="panel-fin" data-panel="fin" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+        <div class="pm-output-card pm-output-intel">
+          <div class="pm-output-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 4v4"/><circle cx="12" cy="3" r="1"/><path d="M8 14h.01"/><path d="M16 14h.01"/><path d="M9 18h6"/></svg>
           </div>
-          <div class="dash-chrome-title">CIO Hub — Portfolio Financials · Budget vs. Delivery Performance</div>
-          <div class="dash-chrome-right">Microsoft Fabric · Power BI · Azure OpenAI</div>
-        </div>
-        <div class="pbi" id="dash-fin">
-          <div class="pbi-header">
-            <div class="pbi-title">Financials View <span class="pbi-title-sep">|</span> EBC Funding &amp; Delivery Score</div>
-            <div class="pbi-slicers">
-              <span class="slicer">Initiative: <b>All</b></span>
-              <span class="slicer">EBC Funding: <b>All</b></span>
-              <span class="slicer">Heuristic: <b>All</b></span>
-              <a class="ai-agent-chip" href="#">💬 Ask our AI Agent</a>
-            </div>
+          <h4>AI Agents</h4>
+          <p>Ask Horizon and in-workflow copilots that surface answers with citations.</p>
+          <div class="pm-output-visual" aria-hidden="true">
+            <svg viewBox="0 0 220 60" width="100%" height="60" role="img">
+              <rect x="6" y="6" width="132" height="18" rx="9" fill="rgba(255,255,255,.16)"/>
+              <text x="16" y="18" fill="#fff" font-size="8" font-family="system-ui">Which cutover tasks are blocked?</text>
+              <path d="M20 24 L14 30 L28 24 Z" fill="rgba(255,255,255,.16)"/>
+              <rect x="80" y="34" width="134" height="20" rx="9" fill="#fff"/>
+              <text x="90" y="46" fill="#0B4A7E" font-size="8" font-weight="600" font-family="system-ui">4 blocked · Cutover Team [1]</text>
+              <path d="M204 54 L214 60 L198 54 Z" fill="#fff"/>
+              <circle cx="70" cy="44" r="6" fill="rgba(255,255,255,.28)"/>
+              <path d="M65 43 Q70 39 75 43 Q75 47 70 47 Q65 47 65 43 Z" fill="#fff" opacity=".9"/>
+            </svg>
           </div>
-          <div class="pbi-kpis" id="fin-kpis"></div>
-          <div class="pbi-grid pbi-grid-fin">
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Budget by Funding Source <span class="pbi-card-sub">EBC $ share by initiative</span></div>
-              <div id="fin-donut" class="chart"></div>
-            </div>
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Budget vs Performance <span class="pbi-card-sub">EBC funding · Say/Do · Cycle time by initiative</span></div>
-              <div id="fin-table" class="chart pmo-table-wrap"></div>
-            </div>
-            <div class="pbi-card span-12 pbi-ai">
-              <div class="pbi-card-title"><span class="ai-chip">AI</span> Delivery Insights <span class="pbi-card-sub">Initiative-level executive summary from RAID, financials &amp; sprint telemetry</span></div>
-              <div id="fin-ai" class="chart pmo-table-wrap"></div>
-            </div>
+          <div class="pm-output-meta">
+            <span class="pm-output-personas">For: All personas</span>
+            <span class="pm-output-modules">Modules: Document Intelligence · Experience Layer</span>
           </div>
         </div>
-        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric — the financial layer joins EBC funding to the sprint telemetry so each dollar of funding is scored against Say/Do and cycle time, and an AI-generated summary explains the drivers behind each initiative's delivery score.</div>
-      </div>
 
-      <!-- WORKFORCE MANAGEMENT -->
-      <div class="dash-frame hidden" id="panel-wfm" data-panel="wfm" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+        <div class="pm-output-card pm-output-delivery">
+          <div class="pm-output-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.5 0 4.76 1.02 6.4 2.66"/></svg>
           </div>
-          <div class="dash-chrome-title">CIO Hub — Workforce Management · Resource Utilization View</div>
-          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
-        </div>
-        <div class="pbi" id="dash-wfm">
-          <div class="pbi-header">
-            <div class="pbi-title">Workforce Management <span class="pbi-title-sep">|</span> Roster View (PI 26.1 &amp; After)</div>
-            <div class="pbi-slicers">
-              <span class="slicer">CIO Group: <b>Cyber &amp; Client Platforms</b></span>
-              <span class="slicer">Team: <b>All</b></span>
-              <span class="slicer">Domain: <b>All</b></span>
-              <span class="slicer">PI: <b>26.1 – 26.2</b></span>
-            </div>
+          <h4>Cutover &amp; Program Reports</h4>
+          <p>Cutover readiness, phase gates, RAID and deliverables in one governed view.</p>
+          <div class="pm-output-visual" aria-hidden="true">
+            <svg viewBox="0 0 220 60" width="100%" height="60" role="img">
+              <text x="0" y="10" fill="rgba(255,255,255,.7)" font-size="7" font-family="system-ui">MC1</text>
+              <text x="0" y="26" fill="rgba(255,255,255,.7)" font-size="7" font-family="system-ui">FC</text>
+              <text x="0" y="42" fill="rgba(255,255,255,.7)" font-size="7" font-family="system-ui">DR</text>
+              <text x="0" y="58" fill="rgba(255,255,255,.7)" font-size="7" font-family="system-ui">GO</text>
+              <rect x="26" y="4" width="80" height="8" rx="2" fill="#3EB2A6"/>
+              <rect x="60" y="18" width="90" height="8" rx="2" fill="#3EB2A6"/>
+              <rect x="110" y="32" width="70" height="8" rx="2" fill="#4C9BE0"/>
+              <rect x="150" y="46" width="60" height="8" rx="2" fill="rgba(255,255,255,.35)"/>
+              <line x1="140" y1="0" x2="140" y2="60" stroke="#F2B24A" stroke-width="1.2" stroke-dasharray="2 2"/>
+              <text x="142" y="8" fill="#F2B24A" font-size="6" font-weight="700" font-family="system-ui">Today</text>
+            </svg>
           </div>
-          <div class="pbi-kpis" id="wfm-kpis"></div>
-          <div class="pbi-grid pbi-grid-wfm">
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Roster Contract Types <span class="pbi-card-sub">Count of resources by contract type</span></div>
-              <div id="wfm-contracts" class="chart"></div>
-            </div>
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Onshore vs Offshore <span class="pbi-card-sub">% split across the CIO's teams</span></div>
-              <div id="wfm-onshore" class="chart"></div>
-            </div>
-            <div class="pbi-card span-12">
-              <div class="pbi-card-title">Resource View <span class="pbi-card-sub">Team · resources · onshore % · FTE / Non-FTE · locations · vendors</span></div>
-              <div id="wfm-table" class="chart pmo-table-wrap"></div>
-            </div>
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Say/Do by Sprint <span class="pbi-card-sub">Completed vs committed story points · in-sprint</span></div>
-              <div id="wfm-saydo" class="chart"></div>
-            </div>
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Cycle Time by Sprint <span class="pbi-card-sub">Average &amp; median cycle days</span></div>
-              <div id="wfm-cycle" class="chart"></div>
-            </div>
+          <div class="pm-output-meta">
+            <span class="pm-output-personas">For: PMO Lead · Program Lead</span>
+            <span class="pm-output-modules">Modules: Delivery Tracker · Cutover and Hypercare</span>
           </div>
         </div>
-        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with an HR/resource lakehouse joined to Jira sprint telemetry — one certified model spanning teams, contract types, locations, and delivery outcomes.</div>
-      </div>
 
-      <!-- ONBOARDING -->
-      <div class="dash-frame hidden" id="panel-onb" data-panel="onb" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+        <div class="pm-output-card pm-output-intel">
+          <div class="pm-output-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 0-5 5v1a4 4 0 0 0-2 3.4V13a4 4 0 0 0 2 3.5V17a5 5 0 0 0 10 0v-.5A4 4 0 0 0 19 13v-1.6A4 4 0 0 0 17 8V7a5 5 0 0 0-5-5z"/><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M9 15c1.5 1 4.5 1 6 0"/></svg>
           </div>
-          <div class="dash-chrome-title">Contractor Onboarding &amp; Licensing — Executive Command Center</div>
-          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
-        </div>
-        <div class="pbi" id="dash-onb">
-          <div class="pbi-header">
-            <div class="pbi-title">Executive Onboarding Command Center</div>
-            <div class="pbi-slicers">
-              <span class="slicer">Firm: <b>All</b></span>
-              <span class="slicer">Region: <b>All</b></span>
-              <span class="slicer">Line of Authority: <b>All</b></span>
-              <span class="slicer">Period: <b>Trailing 12 mo</b></span>
-            </div>
+          <h4>Model Evaluation</h4>
+          <p>ML model training, performance, and cross-system reconciliation checks.</p>
+          <div class="pm-output-visual" aria-hidden="true">
+            <svg viewBox="0 0 220 60" width="100%" height="60" role="img">
+              <text x="0" y="10" fill="rgba(255,255,255,.7)" font-size="6" font-family="system-ui">Actual \ Pred</text>
+              <text x="60" y="10" fill="rgba(255,255,255,.7)" font-size="6" font-family="system-ui">A</text>
+              <text x="88" y="10" fill="rgba(255,255,255,.7)" font-size="6" font-family="system-ui">B</text>
+              <text x="116" y="10" fill="rgba(255,255,255,.7)" font-size="6" font-family="system-ui">C</text>
+              <text x="0" y="30" fill="rgba(255,255,255,.85)" font-size="7" font-family="system-ui">A</text>
+              <text x="0" y="44" fill="rgba(255,255,255,.85)" font-size="7" font-family="system-ui">B</text>
+              <text x="0" y="58" fill="rgba(255,255,255,.85)" font-size="7" font-family="system-ui">C</text>
+              <rect x="56" y="16" width="20" height="14" rx="2" fill="#3EB2A6"/>
+              <rect x="84" y="16" width="20" height="14" rx="2" fill="rgba(255,255,255,.18)"/>
+              <rect x="112" y="16" width="20" height="14" rx="2" fill="rgba(255,255,255,.10)"/>
+              <rect x="56" y="32" width="20" height="14" rx="2" fill="rgba(255,255,255,.14)"/>
+              <rect x="84" y="32" width="20" height="14" rx="2" fill="#3EB2A6"/>
+              <rect x="112" y="32" width="20" height="14" rx="2" fill="rgba(255,255,255,.18)"/>
+              <rect x="56" y="48" width="20" height="10" rx="2" fill="rgba(255,255,255,.10)"/>
+              <rect x="84" y="48" width="20" height="10" rx="2" fill="rgba(255,255,255,.18)"/>
+              <rect x="112" y="48" width="20" height="10" rx="2" fill="#3EB2A6"/>
+              <rect x="146" y="16" width="72" height="42" rx="4" fill="rgba(255,255,255,.12)"/>
+              <text x="152" y="28" fill="rgba(255,255,255,.75)" font-size="6" font-family="system-ui">F1 score</text>
+              <text x="152" y="46" fill="#fff" font-size="16" font-weight="700" font-family="system-ui">0.92</text>
+            </svg>
           </div>
-          <div class="pbi-kpis" id="onb-kpis"></div>
-          <div class="pbi-grid pbi-grid-onb">
-            <div class="pbi-card span-7">
-              <div class="pbi-card-title">Onboarding Funnel <span class="pbi-card-sub">Contractor count by current stage</span></div>
-              <div id="onb-funnel" class="chart"></div>
-            </div>
-            <div class="pbi-card span-5">
-              <div class="pbi-card-title">FINRA Registration Status <span class="pbi-card-sub">All registrations, trailing 12 months</span></div>
-              <div id="onb-finra" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">License Expiration Pipeline <span class="pbi-card-sub">Active licenses by days to expiration</span></div>
-              <div id="onb-expiry" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Monthly SLA Breach Trend <span class="pbi-card-sub">% of cases breaching stage SLA</span></div>
-              <div id="onb-sla" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Active Producers by Firm <span class="pbi-card-sub">Top firms by producer count</span></div>
-              <div id="onb-firms" class="chart"></div>
-            </div>
-            <div class="pbi-card span-6 pbi-ai">
-              <div class="pbi-card-title"><span class="ai-chip">ML</span> Risk Drivers <span class="pbi-card-sub">Feature importance from open-case risk model</span></div>
-              <div id="onb-ml-drivers" class="chart"></div>
-            </div>
-            <div class="pbi-card span-6 pbi-ai">
-              <div class="pbi-card-title"><span class="ai-chip">ML</span> High-Risk Share by Firm <span class="pbi-card-sub">% of open cases flagged high-risk by the model</span></div>
-              <div id="onb-ml-firms" class="chart"></div>
-            </div>
+          <div class="pm-output-meta">
+            <span class="pm-output-personas">For: Data &amp; Analytics Lead</span>
+            <span class="pm-output-modules">Modules: Data Intelligence · Test Cockpit</span>
           </div>
         </div>
-        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with a licensing &amp; compliance lakehouse spanning FINRA registrations, carrier appointments, and state license feeds. ML risk scores and breach forecasts are produced by a Fabric notebook and joined back into the semantic model.</div>
-      </div>
 
-      <!-- AI DELIVERY INSIGHTS -->
-      <div class="dash-frame hidden" id="panel-ai" data-panel="ai" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+        <div class="pm-output-card pm-output-adoption">
+          <div class="pm-output-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           </div>
-          <div class="dash-chrome-title">AI Delivery Insights — Agents, Scoring &amp; Narrative Analytics</div>
-          <div class="dash-chrome-right">Azure OpenAI · Fabric · Power BI</div>
-        </div>
-        <div class="pbi" id="dash-ai">
-          <div class="pbi-header">
-            <div class="pbi-title">Portfolio Delivery Intelligence <span class="pbi-title-sep">|</span> AI Layer</div>
-            <div class="pbi-slicers">
-              <span class="slicer">Scope: <b>Full Portfolio</b></span>
-              <span class="slicer">Model: <b>GPT-4 · grounded</b></span>
-              <span class="slicer">Refreshed: <b>Daily 6am</b></span>
-              <a class="ai-agent-chip" href="#">💬 Ask our AI Agent</a>
-            </div>
+          <h4>Adoption Metrics</h4>
+          <p>Training completion, weekly active users, leadership viewership.</p>
+          <div class="pm-output-visual" aria-hidden="true">
+            <svg viewBox="0 0 220 60" width="100%" height="60" role="img">
+              <text x="0" y="10" fill="rgba(255,255,255,.7)" font-size="6" font-family="system-ui">Weekly active users</text>
+              <text x="0" y="58" fill="#fff" font-size="14" font-weight="700" font-family="system-ui">1,284</text>
+              <text x="46" y="58" fill="rgba(255,255,255,.9)" font-size="7" font-family="system-ui">▲ 18% wow</text>
+              <polyline points="100,42 116,38 132,34 148,32 164,26 180,22 196,16 212,10"
+                fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <polygon points="100,42 116,38 132,34 148,32 164,26 180,22 196,16 212,10 212,52 100,52"
+                fill="rgba(255,255,255,.22)"/>
+              <circle cx="212" cy="10" r="2.5" fill="#fff"/>
+              <text x="118" y="14" fill="#fff" font-size="6" font-family="system-ui">Training complete 87%</text>
+            </svg>
           </div>
-          <div class="pbi-kpis" id="ai-kpis"></div>
-          <div class="pbi-grid pbi-grid-ai">
-            <div class="pbi-card span-12 pbi-ai">
-              <div class="pbi-card-title"><span class="ai-chip">AI</span> Executive Talking Points <span class="pbi-card-sub">Auto-generated from RAID logs, sprint telemetry &amp; status docs</span></div>
-              <ul class="ai-list" id="ai-talking"></ul>
-            </div>
-            <div class="pbi-card span-7">
-              <div class="pbi-card-title"><span class="ai-chip">AI</span> Initiative Delivery Score <span class="pbi-card-sub">0–10 composite of health, financials, RAID &amp; path-to-green</span></div>
-              <div id="ai-scores" class="chart"></div>
-            </div>
-            <div class="pbi-card span-5">
-              <div class="pbi-card-title">Score Distribution <span class="pbi-card-sub">Across active initiatives</span></div>
-              <div id="ai-dist" class="chart"></div>
-            </div>
-            <div class="pbi-card span-12 pbi-ai">
-              <div class="pbi-card-title"><span class="ai-chip">AI</span> Delivery Narrative — Sample Initiative <span class="pbi-card-sub">Grounded in structured metrics + charter documents (RAG)</span></div>
-              <div class="ai-narrative" id="ai-narrative"></div>
-            </div>
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Document Intelligence Coverage <span class="pbi-card-sub">Source docs indexed for citation-backed answers</span></div>
-              <div id="ai-docs" class="chart"></div>
-            </div>
-            <div class="pbi-card span-6">
-              <div class="pbi-card-title">Agent Usage Trend <span class="pbi-card-sub">Weekly queries to the delivery agent</span></div>
-              <div id="ai-usage" class="chart"></div>
-            </div>
+          <div class="pm-output-meta">
+            <span class="pm-output-personas">For: Change Mgmt Lead</span>
+            <span class="pm-output-modules">Modules: Adoption and Executive Intelligence</span>
           </div>
         </div>
-        <div class="dash-caption">Synthetic data for demonstration. AI layer combines Fabric semantic metrics with a RAG index over SharePoint charters, status reports, and RAID logs — producing executive narratives and delivery scores that cite their sources.</div>
-      </div>
-
-      <!-- INCIDENT & DEMAND MANAGEMENT -->
-      <div class="dash-frame hidden" id="panel-inc" data-panel="inc" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
-          </div>
-          <div class="dash-chrome-title">Demand &amp; Incident Management — Portfolio Intake View</div>
-          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
         </div>
-        <div class="pbi" id="dash-inc">
-          <div class="pbi-header">
-            <div class="pbi-title">Demand Management Dashboard</div>
-            <div class="pbi-slicers">
-              <span class="slicer">Portfolio: <b>All</b></span>
-              <span class="slicer">Funding Source: <b>All</b></span>
-              <span class="slicer">Timeline: <b>FY26</b></span>
-            </div>
-          </div>
-          <div class="pbi-kpis" id="inc-kpis"></div>
-          <div class="pbi-grid pbi-grid-inc">
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Active Demands by Priority</div>
-              <div id="inc-prio" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Active Demands by State</div>
-              <div id="inc-state" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Active Demands by Portfolio</div>
-              <div id="inc-port" class="chart"></div>
-            </div>
-            <div class="pbi-card span-7">
-              <div class="pbi-card-title">Active Demands by Sponsor <span class="pbi-card-sub">Sorted by open-demand count</span></div>
-              <div id="inc-vp" class="chart"></div>
-            </div>
-            <div class="pbi-card span-5">
-              <div class="pbi-card-title">Average Open Days of Demands <span class="pbi-card-sub">Rolling weekly average</span></div>
-              <div id="inc-open" class="chart"></div>
-            </div>
-            <div class="pbi-card span-12">
-              <div class="pbi-card-title">Closed / Completed Demands YTD <span class="pbi-card-sub">By month, current fiscal year</span></div>
-              <div id="inc-closed" class="chart"></div>
-            </div>
-          </div>
-        </div>
-        <div class="dash-caption">Synthetic data for demonstration. Delivered on Microsoft Fabric with intake feeds from ServiceNow, Jira, and SharePoint demand lists — one intake pipeline for demand, incident, and project requests.</div>
-      </div>
-
-      <!-- PRICE & MATERIALS INTELLIGENCE -->
-      <div class="dash-frame hidden" id="panel-prc" data-panel="prc" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
-          </div>
-          <div class="dash-chrome-title">AI-Driven Alternative Materials &amp; Sourcing Intelligence</div>
-          <div class="dash-chrome-right">Microsoft Fabric · Power BI · ML.NET</div>
-        </div>
-        <div class="pbi" id="dash-prc">
-          <div class="pbi-header">
-            <div class="pbi-title">Price &amp; Materials Command Center <span class="pbi-title-sep">|</span> Sourcing Intelligence</div>
-            <div class="pbi-slicers">
-              <span class="slicer">Material Group: <b>All</b></span>
-              <span class="slicer">Plant: <b>All</b></span>
-              <span class="slicer">Savings Type: <b>Similar specs · different vendor</b></span>
-            </div>
-          </div>
-          <div class="pbi-kpis" id="prc-kpis"></div>
-          <div class="pbi-grid pbi-grid-prc">
-            <div class="pbi-card span-12">
-              <div class="pbi-card-title"><span class="ai-chip">AI</span> Potential Savings Across Material Groups <span class="pbi-card-sub">Bubble size = alternative materials identified</span></div>
-              <div id="prc-bubble" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Top Savings Opportunities <span class="pbi-card-sub">By material group ($)</span></div>
-              <div id="prc-top" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Unit Price Trends — Top 5 Vendors <span class="pbi-card-sub">Selected material, trailing 5 quarters</span></div>
-              <div id="prc-trend" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">PO Count vs. Invoiced Quantity <span class="pbi-card-sub">Top 3 vendors by volume</span></div>
-              <div id="prc-po" class="chart"></div>
-            </div>
-            <div class="pbi-card span-12 pbi-ai">
-              <div class="pbi-card-title"><span class="ai-chip">AI</span> Recommended Alternative Materials <span class="pbi-card-sub">Model matches specs across vendors and flags per-unit savings</span></div>
-              <div id="prc-alts" class="chart"></div>
-            </div>
-          </div>
-        </div>
-        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with a materials &amp; sourcing lakehouse — an ML model matches specifications across vendors to surface substitution opportunities and per-unit savings.</div>
-      </div>
-
-      <!-- SUPPLY CHAIN -->
-      <div class="dash-frame hidden" id="panel-sc" data-panel="sc" role="tabpanel">
-        <div class="dash-chrome">
-          <div class="dash-chrome-left">
-            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
-          </div>
-          <div class="dash-chrome-title">Supply Chain — Customer Experience Order Fulfillment &amp; Vendor Payables</div>
-          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
-        </div>
-        <div class="pbi" id="dash-sc">
-          <div class="pbi-header">
-            <div class="pbi-title">Supply Chain Command Center <span class="pbi-title-sep">|</span> Order Fulfillment &amp; AP Holds</div>
-            <div class="pbi-slicers">
-              <span class="slicer">Department: <b>All</b></span>
-              <span class="slicer">Supplier: <b>All</b></span>
-              <span class="slicer">DC: <b>All</b></span>
-              <span class="slicer">Period: <b>Trailing 12 mo</b></span>
-            </div>
-          </div>
-          <div class="pbi-kpis" id="sc-kpis"></div>
-          <div class="pbi-grid pbi-grid-sc">
-            <div class="pbi-card span-7">
-              <div class="pbi-card-title">Orders Over Time <span class="pbi-card-sub">Daily order volume · trailing 12 months</span></div>
-              <div id="sc-orders" class="chart"></div>
-            </div>
-            <div class="pbi-card span-5">
-              <div class="pbi-card-title">Order Shipment Performance <span class="pbi-card-sub">DC only · on-time vs delayed</span></div>
-              <div id="sc-ship" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Aging of Invoice Holds <span class="pbi-card-sub">By days on hold</span></div>
-              <div id="sc-aging" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Top 10 Suppliers by Hold Amount <span class="pbi-card-sub">Trailing 12 months ($K)</span></div>
-              <div id="sc-suppliers" class="chart"></div>
-            </div>
-            <div class="pbi-card span-4">
-              <div class="pbi-card-title">Hold Reasons <span class="pbi-card-sub">Share of holds · manual vs system</span></div>
-              <div id="sc-reasons" class="chart"></div>
-            </div>
-            <div class="pbi-card span-12">
-              <div class="pbi-card-title">Monthly Hold Trend <span class="pbi-card-sub">Count of holds &amp; average hold time (days)</span></div>
-              <div id="sc-trend" class="chart"></div>
-            </div>
-          </div>
-        </div>
-        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric across the supply chain lakehouse — unifying order fulfillment telemetry from the DC and dropship systems with AP invoice-hold analytics for finance and procurement.</div>
       </div>
     </div>
   </section>
+
+  <span id="capabilities" class="anchor-only" aria-hidden="true"></span>
 
   <!-- ============ PLATFORM ARCHITECTURE ============ -->
   <section class="section platform" id="platform">
     <div class="section-inner">
-      <p class="section-kicker">How it's built</p>
+      <p class="section-kicker">Our dedicated analytics platform</p>
       <h2>Six layers. One governed platform.</h2>
-      <p class="section-sub">Every Aberdeen analytics engagement lands on the same proven architecture — collaboration where teams already work, a Fabric lakehouse underneath, certified metrics on top, AI woven through, and intelligence embedded directly inside the client's own applications.</p>
+      <p class="section-sub">HorizonView's Intelligence capability runs on Aberdeen's dedicated analytics platform, a proven six-layer architecture: collaboration where teams already work, a Fabric lakehouse underneath, certified metrics on top, AI woven through, and intelligence embedded directly inside the client's own applications.</p>
 
       <div class="arch" id="arch">
         <div class="arch-stack">
@@ -1225,66 +1271,706 @@ resp = client.<span class="fn">complete</span>(prompt)</pre>
     </div>
   </section>
 
-  <!-- ============ DOMAINS ============ -->
-  <section class="section domains" id="domains">
+  <!-- ============ VIDEO SHOWCASE ============ -->
+  <section class="section video-showcase">
     <div class="section-inner">
-      <p class="section-kicker">Where we've done it</p>
-      <h2>Proven across industries and functions.</h2>
-      <p class="section-sub">The same platform pattern, tuned to the metrics that matter in each domain.</p>
-      <div class="dom-grid">
-        <div class="dom-card reveal">
-          <h3>IT Portfolio &amp; Agile Delivery</h3>
-          <p>CIO command centers tracking initiative health, say/do ratios, cycle time, and sprint churn across hundreds of teams.</p>
-          <span class="dom-metric">Say/Do · Cycle Time · RAG Health</span>
-        </div>
-        <div class="dom-card reveal">
-          <h3>Licensing &amp; Compliance</h3>
-          <p>Contractor onboarding funnels, FINRA registration tracking, license expiration pipelines, and SLA breach analytics.</p>
-          <span class="dom-metric">Activation Days · SLA Breach · Expirations</span>
-        </div>
-        <div class="dom-card reveal">
-          <h3>Workforce Management</h3>
-          <p>Capacity, utilization, and scheduling analytics that connect workforce plans to delivery outcomes.</p>
-          <span class="dom-metric">Utilization · Capacity · Attrition Risk</span>
-        </div>
-        <div class="dom-card reveal">
-          <h3>HR &amp; People Analytics</h3>
-          <p>Hiring funnels, onboarding velocity, and organizational health measures built on governed HR data.</p>
-          <span class="dom-metric">Time-to-Fill · Onboarding Velocity</span>
-        </div>
-        <div class="dom-card reveal">
-          <h3>Financials</h3>
-          <p>Budget vs. actuals, forecast accuracy, and portfolio financial rollups certified for executive reporting.</p>
-          <span class="dom-metric">Budget vs Actual · Forecast Accuracy</span>
-        </div>
-        <div class="dom-card reveal">
-          <h3>Supply Chain &amp; Material Sciences</h3>
-          <p>From supplier performance and inventory analytics to R&amp;D pricing intelligence for specialty materials.</p>
-          <span class="dom-metric">OTIF · Inventory Turns · Pricing AI</span>
-        </div>
-        <div class="dom-card reveal">
-          <h3>Customer Experience &amp; Vendor Payables</h3>
-          <p>Order fulfillment analytics from DC and dropship systems, plus AP invoice-hold intelligence — one lakehouse from the customer promise to the vendor payment.</p>
-          <span class="dom-metric">On-Time Ship % · Hold Aging · Supplier Risk</span>
-        </div>
+      <p class="section-kicker">See it in action</p>
+      <h2>The CIO Hub, live.</h2>
+      <p class="section-sub">A live view of HorizonView's Intelligence capability. Portfolio telemetry, streaming from a real program, into the executive team's daily surface.</p>
+      <div class="video-wrap reveal">
+        <video src="CIOHubBrandingFinal.mp4" controls playsinline preload="metadata"></video>
       </div>
     </div>
   </section>
 
-  <!-- ============ ENGAGE / CTA ============ -->
-  <section class="section engage" id="engage">
-    <div class="section-inner">
-      <p class="section-kicker light">How we engage</p>
-      <h2 class="light">Discover → Model → Certify → Deliver.</h2>
-      <div class="eng-steps">
-        <div class="eng-step reveal"><span>1</span><h3>Discover</h3><p>Workshops to map sources, stakeholders, and the decisions your dashboards must drive.</p></div>
-        <div class="eng-step reveal"><span>2</span><h3>Model</h3><p>Fabric lakehouse and pipelines stood up against your real systems in weeks, not quarters.</p></div>
-        <div class="eng-step reveal"><span>3</span><h3>Certify</h3><p>KPIs defined once, governed centrally, and signed off by the business.</p></div>
-        <div class="eng-step reveal"><span>4</span><h3>Deliver</h3><p>Dashboards, portals, agents, and automated reporting in the flow of work.</p></div>
+  <!-- ============ DASHBOARD SHOWCASE ============ -->
+  <section class="section showcase" id="dashboards">
+    <div class="section-inner wide">
+      <p class="section-kicker">See it, don't imagine it</p>
+      <h2>Live program telemetry, across the domains we serve.</h2>
+      <p class="section-sub">HorizonView's Intelligence surface, rebuilt here with synthetic data. Recreations of dashboards we've delivered on Microsoft Fabric. Select a domain to see the dashboards we've delivered there. Every visual is rendered live in your browser.</p>
+
+      <div class="dom-filter" id="domains" role="tablist" aria-label="Choose a domain">
+        <button type="button" class="dom-chip is-active" data-domain="it" data-dashboards="cio,pmo,ai" role="tab" aria-selected="true">IT Portfolio and Agile Delivery</button>
+        <button type="button" class="dom-chip" data-domain="license" data-dashboards="onb" role="tab" aria-selected="false">Licensing and Compliance</button>
+        <button type="button" class="dom-chip" data-domain="wfm" data-dashboards="wfm" role="tab" aria-selected="false">Workforce Management</button>
+        <button type="button" class="dom-chip" data-domain="hr" data-dashboards="wfm" role="tab" aria-selected="false">HR and People Analytics</button>
+        <button type="button" class="dom-chip" data-domain="fin" data-dashboards="cc,fin" role="tab" aria-selected="false">Financials</button>
+        <button type="button" class="dom-chip" data-domain="sc" data-dashboards="prc,sc" role="tab" aria-selected="false">Supply Chain and Material Sciences</button>
+        <button type="button" class="dom-chip" data-domain="cx" data-dashboards="sc,inc" role="tab" aria-selected="false">Customer Experience and Vendor Payables</button>
       </div>
-      <div class="eng-cta">
-        <p>Ready to see your data this way?</p>
-        <a class="btn btn-teal" href="mailto:info@aberdeenadv.com?subject=Aberdeen%20Advisors%20%E2%80%94%20Data%2C%20AI%20%26%20Analytics%20Inquiry">Start a Conversation</a>
+      <p class="dom-filter-hint" id="dom-count-hint"></p>
+
+      <div class="tabbar" role="tablist" aria-label="Dashboard demos">
+        <button class="tab active" role="tab" aria-selected="true" data-tab="cio">
+          <span class="tab-title">CIO Hub</span>
+          <span class="tab-sub">Portfolio &amp; Agile Delivery</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="pmo">
+          <span class="tab-title">PMO Stage Gates</span>
+          <span class="tab-sub">Intake to Closure Pipeline</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="cc">
+          <span class="tab-title">Cost Control</span>
+          <span class="tab-sub">Budget · Capital · Expense</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="fin">
+          <span class="tab-title">Portfolio Financials</span>
+          <span class="tab-sub">Budget vs Delivery Performance</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="wfm">
+          <span class="tab-title">Workforce Management</span>
+          <span class="tab-sub">Roster · Contracts · Utilization</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="onb">
+          <span class="tab-title">Onboarding &amp; Licensing</span>
+          <span class="tab-sub">Executive Command Center</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="ai">
+          <span class="tab-title">AI Delivery Insights</span>
+          <span class="tab-sub">Agents &amp; Narrative Analytics</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="inc">
+          <span class="tab-title">Demand &amp; Incident Mgmt</span>
+          <span class="tab-sub">Portfolio Intake &amp; Triage</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="prc">
+          <span class="tab-title">Price &amp; Materials Intel</span>
+          <span class="tab-sub">AI-Driven Sourcing Savings</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="sc">
+          <span class="tab-title">Supply Chain</span>
+          <span class="tab-sub">Customer Experience &amp; Vendor Payables</span>
+        </button>
+      </div>
+
+      <!-- CIO HUB -->
+      <div class="dash-frame" id="panel-cio" data-panel="cio" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">CIO Hub — Initiative, Team &amp; Domain View</div>
+          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
+        </div>
+        <div class="pbi" id="dash-cio">
+          <div class="pbi-header">
+            <div class="pbi-title">CIO Hub <span class="pbi-title-sep">|</span> Summary View</div>
+            <div class="pbi-slicers">
+              <span class="slicer">Portfolio: <b>All</b></span>
+              <span class="slicer">PI: <b>2026.1</b></span>
+              <span class="slicer">Sprint: <b>26.2.6 (Latest)</b></span>
+              <span class="slicer">Team: <b>Multiple selections</b></span>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="cio-kpis"></div>
+          <div class="pbi-grid pbi-grid-cio">
+            <div class="pbi-card span-7">
+              <div class="pbi-card-title">Say / Do by Sprint <span class="pbi-card-sub">Committed vs completed story points (in-sprint)</span></div>
+              <div id="cio-saydo" class="chart"></div>
+            </div>
+            <div class="pbi-card span-5">
+              <div class="pbi-card-title">Initiative Health Status <span class="pbi-card-sub">Based on most recent completed PI</span></div>
+              <div id="cio-health" class="chart"></div>
+            </div>
+            <div class="pbi-card span-5">
+              <div class="pbi-card-title">Burn Up — Story Points <span class="pbi-card-sub">Max of remaining points within sprint</span></div>
+              <div id="cio-burnup" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Avg Cycle Time by Sprint <span class="pbi-card-sub">Days, completed stories</span></div>
+              <div id="cio-cycle" class="chart"></div>
+            </div>
+            <div class="pbi-card span-3">
+              <div class="pbi-card-title">Scope Changes (Churn) <span class="pbi-card-sub">During active sprints</span></div>
+              <div id="cio-churn" class="chart"></div>
+            </div>
+            <div class="pbi-card span-12 pbi-ai">
+              <div class="pbi-card-title"><span class="ai-chip">AI</span> Executive Highlights <span class="pbi-card-sub">Generated from RAID log &amp; delivery telemetry</span></div>
+              <ul class="ai-list" id="cio-ai"></ul>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with Azure DevOps &amp; Jira pipelines, a certified Power BI semantic model, and AI-generated executive narratives.</div>
+      </div>
+
+      <!-- PMO STAGE GATES -->
+      <div class="dash-frame hidden" id="panel-pmo" data-panel="pmo" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">PMO Stage Gates — Intake to Closure Pipeline</div>
+          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
+        </div>
+        <div class="pbi" id="dash-pmo">
+          <div class="pbi-header">
+            <div class="pbi-title">Project Portfolio Dashboard <span class="pbi-title-sep">|</span> Delivery View</div>
+            <div class="pbi-slicers">
+              <span class="slicer">Region: <b>All</b></span>
+              <span class="slicer">Delivery Dept: <b>All</b></span>
+              <span class="slicer">Sponsor: <b>All</b></span>
+              <span class="slicer">Intake Stage: <b>All</b></span>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="pmo-kpis"></div>
+          <div class="pbi-grid pbi-grid-pmo">
+            <div class="pbi-card span-12">
+              <div class="pbi-card-title">Project Pipeline by Work Status <span class="pbi-card-sub">Count &amp; share of portfolio across intake stages</span></div>
+              <div id="pmo-pipeline" class="chart"></div>
+            </div>
+            <div class="pbi-card span-9">
+              <div class="pbi-card-title">Project Tracking <span class="pbi-card-sub">Timeline · Open/Active · Closed · On Hold · Intake</span></div>
+              <div id="pmo-gantt" class="chart"></div>
+            </div>
+            <div class="pbi-card span-3">
+              <div class="pbi-card-title">Delivery Region Mix <span class="pbi-card-sub">Active projects by PPM region</span></div>
+              <div id="pmo-region" class="chart"></div>
+            </div>
+            <div class="pbi-card span-12">
+              <div class="pbi-card-title">Project Details <span class="pbi-card-sub">Top active projects · department, region, budget</span></div>
+              <div id="pmo-table" class="chart pmo-table-wrap"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with a PPM lakehouse spanning intake, gate approvals, delivery status, and closure — one certified model across every stage.</div>
+      </div>
+
+      <!-- COST CONTROL -->
+      <div class="dash-frame hidden" id="panel-cc" data-panel="cc" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">Cost Control — Budget, Capital &amp; Expense Estimates</div>
+          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
+        </div>
+        <div class="pbi" id="dash-cc">
+          <div class="pbi-header">
+            <div class="pbi-title">Project Portfolio Dashboard <span class="pbi-title-sep">|</span> Cost Control View</div>
+            <div class="pbi-slicers">
+              <span class="slicer">Timeline: <b>2/1/2024 – 1/11/2028</b></span>
+              <span class="slicer">Region: <b>All</b></span>
+              <span class="slicer">Providing Org: <b>All</b></span>
+              <span class="slicer">Gatekeeper: <b>All</b></span>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="cc-kpis"></div>
+          <div class="pbi-grid pbi-grid-cc">
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Resource Cost (Capital) Estimate <span class="pbi-card-sub">By providing organization ($K)</span></div>
+              <div id="cc-org" class="chart"></div>
+            </div>
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Total Cost Estimate <span class="pbi-card-sub">By budget classification ($K)</span></div>
+              <div id="cc-class" class="chart"></div>
+            </div>
+            <div class="pbi-card span-12">
+              <div class="pbi-card-title">Project Details <span class="pbi-card-sub">Top projects · manager, department, region, budget</span></div>
+              <div id="cc-table" class="chart"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric — resource vs. non-resource, capital vs. expense, one certified financial model across the portfolio.</div>
+      </div>
+
+      <!-- PORTFOLIO FINANCIALS -->
+      <div class="dash-frame hidden" id="panel-fin" data-panel="fin" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">CIO Hub — Portfolio Financials · Budget vs. Delivery Performance</div>
+          <div class="dash-chrome-right">Microsoft Fabric · Power BI · Azure OpenAI</div>
+        </div>
+        <div class="pbi" id="dash-fin">
+          <div class="pbi-header">
+            <div class="pbi-title">Financials View <span class="pbi-title-sep">|</span> EBC Funding &amp; Delivery Score</div>
+            <div class="pbi-slicers">
+              <span class="slicer">Initiative: <b>All</b></span>
+              <span class="slicer">EBC Funding: <b>All</b></span>
+              <span class="slicer">Heuristic: <b>All</b></span>
+              <a class="ai-agent-chip" href="#">💬 Ask our AI Agent</a>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="fin-kpis"></div>
+          <div class="pbi-grid pbi-grid-fin">
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Budget by Funding Source <span class="pbi-card-sub">EBC $ share by initiative</span></div>
+              <div id="fin-donut" class="chart"></div>
+            </div>
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Budget vs Performance <span class="pbi-card-sub">EBC funding · Say/Do · Cycle time by initiative</span></div>
+              <div id="fin-table" class="chart pmo-table-wrap"></div>
+            </div>
+            <div class="pbi-card span-12 pbi-ai">
+              <div class="pbi-card-title"><span class="ai-chip">AI</span> Delivery Insights <span class="pbi-card-sub">Initiative-level executive summary from RAID, financials &amp; sprint telemetry</span></div>
+              <div id="fin-ai" class="chart pmo-table-wrap"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric — the financial layer joins EBC funding to the sprint telemetry so each dollar of funding is scored against Say/Do and cycle time, and an AI-generated summary explains the drivers behind each initiative's delivery score.</div>
+      </div>
+
+      <!-- WORKFORCE MANAGEMENT -->
+      <div class="dash-frame hidden" id="panel-wfm" data-panel="wfm" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">CIO Hub — Workforce Management · Resource Utilization View</div>
+          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
+        </div>
+        <div class="pbi" id="dash-wfm">
+          <div class="pbi-header">
+            <div class="pbi-title">Workforce Management <span class="pbi-title-sep">|</span> Roster View (PI 26.1 &amp; After)</div>
+            <div class="pbi-slicers">
+              <span class="slicer">CIO Group: <b>Cyber &amp; Client Platforms</b></span>
+              <span class="slicer">Team: <b>All</b></span>
+              <span class="slicer">Domain: <b>All</b></span>
+              <span class="slicer">PI: <b>26.1 – 26.2</b></span>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="wfm-kpis"></div>
+          <div class="pbi-grid pbi-grid-wfm">
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Roster Contract Types <span class="pbi-card-sub">Count of resources by contract type</span></div>
+              <div id="wfm-contracts" class="chart"></div>
+            </div>
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Onshore vs Offshore <span class="pbi-card-sub">% split across the CIO's teams</span></div>
+              <div id="wfm-onshore" class="chart"></div>
+            </div>
+            <div class="pbi-card span-12">
+              <div class="pbi-card-title">Resource View <span class="pbi-card-sub">Team · resources · onshore % · FTE / Non-FTE · locations · vendors</span></div>
+              <div id="wfm-table" class="chart pmo-table-wrap"></div>
+            </div>
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Say/Do by Sprint <span class="pbi-card-sub">Completed vs committed story points · in-sprint</span></div>
+              <div id="wfm-saydo" class="chart"></div>
+            </div>
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Cycle Time by Sprint <span class="pbi-card-sub">Average &amp; median cycle days</span></div>
+              <div id="wfm-cycle" class="chart"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with an HR/resource lakehouse joined to Jira sprint telemetry — one certified model spanning teams, contract types, locations, and delivery outcomes.</div>
+      </div>
+
+      <!-- ONBOARDING -->
+      <div class="dash-frame hidden" id="panel-onb" data-panel="onb" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">Contractor Onboarding &amp; Licensing — Executive Command Center</div>
+          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
+        </div>
+        <div class="pbi" id="dash-onb">
+          <div class="pbi-header">
+            <div class="pbi-title">Executive Onboarding Command Center</div>
+            <div class="pbi-slicers">
+              <span class="slicer">Firm: <b>All</b></span>
+              <span class="slicer">Region: <b>All</b></span>
+              <span class="slicer">Line of Authority: <b>All</b></span>
+              <span class="slicer">Period: <b>Trailing 12 mo</b></span>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="onb-kpis"></div>
+          <div class="pbi-grid pbi-grid-onb">
+            <div class="pbi-card span-7">
+              <div class="pbi-card-title">Onboarding Funnel <span class="pbi-card-sub">Contractor count by current stage</span></div>
+              <div id="onb-funnel" class="chart"></div>
+            </div>
+            <div class="pbi-card span-5">
+              <div class="pbi-card-title">FINRA Registration Status <span class="pbi-card-sub">All registrations, trailing 12 months</span></div>
+              <div id="onb-finra" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">License Expiration Pipeline <span class="pbi-card-sub">Active licenses by days to expiration</span></div>
+              <div id="onb-expiry" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Monthly SLA Breach Trend <span class="pbi-card-sub">% of cases breaching stage SLA</span></div>
+              <div id="onb-sla" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Active Producers by Firm <span class="pbi-card-sub">Top firms by producer count</span></div>
+              <div id="onb-firms" class="chart"></div>
+            </div>
+            <div class="pbi-card span-6 pbi-ai">
+              <div class="pbi-card-title"><span class="ai-chip">ML</span> Risk Drivers <span class="pbi-card-sub">Feature importance from open-case risk model</span></div>
+              <div id="onb-ml-drivers" class="chart"></div>
+            </div>
+            <div class="pbi-card span-6 pbi-ai">
+              <div class="pbi-card-title"><span class="ai-chip">ML</span> High-Risk Share by Firm <span class="pbi-card-sub">% of open cases flagged high-risk by the model</span></div>
+              <div id="onb-ml-firms" class="chart"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with a licensing &amp; compliance lakehouse spanning FINRA registrations, carrier appointments, and state license feeds. ML risk scores and breach forecasts are produced by a Fabric notebook and joined back into the semantic model.</div>
+      </div>
+
+      <!-- AI DELIVERY INSIGHTS -->
+      <div class="dash-frame hidden" id="panel-ai" data-panel="ai" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">AI Delivery Insights — Agents, Scoring &amp; Narrative Analytics</div>
+          <div class="dash-chrome-right">Azure OpenAI · Fabric · Power BI</div>
+        </div>
+        <div class="pbi" id="dash-ai">
+          <div class="pbi-header">
+            <div class="pbi-title">Portfolio Delivery Intelligence <span class="pbi-title-sep">|</span> AI Layer</div>
+            <div class="pbi-slicers">
+              <span class="slicer">Scope: <b>Full Portfolio</b></span>
+              <span class="slicer">Model: <b>GPT-4 · grounded</b></span>
+              <span class="slicer">Refreshed: <b>Daily 6am</b></span>
+              <a class="ai-agent-chip" href="#">💬 Ask our AI Agent</a>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="ai-kpis"></div>
+          <div class="pbi-grid pbi-grid-ai">
+            <div class="pbi-card span-12 pbi-ai">
+              <div class="pbi-card-title"><span class="ai-chip">AI</span> Executive Talking Points <span class="pbi-card-sub">Auto-generated from RAID logs, sprint telemetry &amp; status docs</span></div>
+              <ul class="ai-list" id="ai-talking"></ul>
+            </div>
+            <div class="pbi-card span-7">
+              <div class="pbi-card-title"><span class="ai-chip">AI</span> Initiative Delivery Score <span class="pbi-card-sub">0–10 composite of health, financials, RAID &amp; path-to-green</span></div>
+              <div id="ai-scores" class="chart"></div>
+            </div>
+            <div class="pbi-card span-5">
+              <div class="pbi-card-title">Score Distribution <span class="pbi-card-sub">Across active initiatives</span></div>
+              <div id="ai-dist" class="chart"></div>
+            </div>
+            <div class="pbi-card span-12 pbi-ai">
+              <div class="pbi-card-title"><span class="ai-chip">AI</span> Delivery Narrative — Sample Initiative <span class="pbi-card-sub">Grounded in structured metrics + charter documents (RAG)</span></div>
+              <div class="ai-narrative" id="ai-narrative"></div>
+            </div>
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Document Intelligence Coverage <span class="pbi-card-sub">Source docs indexed for citation-backed answers</span></div>
+              <div id="ai-docs" class="chart"></div>
+            </div>
+            <div class="pbi-card span-6">
+              <div class="pbi-card-title">Agent Usage Trend <span class="pbi-card-sub">Weekly queries to the delivery agent</span></div>
+              <div id="ai-usage" class="chart"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. AI layer combines Fabric semantic metrics with a RAG index over SharePoint charters, status reports, and RAID logs — producing executive narratives and delivery scores that cite their sources.</div>
+      </div>
+
+      <!-- INCIDENT & DEMAND MANAGEMENT -->
+      <div class="dash-frame hidden" id="panel-inc" data-panel="inc" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">Demand &amp; Incident Management — Portfolio Intake View</div>
+          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
+        </div>
+        <div class="pbi" id="dash-inc">
+          <div class="pbi-header">
+            <div class="pbi-title">Demand Management Dashboard</div>
+            <div class="pbi-slicers">
+              <span class="slicer">Portfolio: <b>All</b></span>
+              <span class="slicer">Funding Source: <b>All</b></span>
+              <span class="slicer">Timeline: <b>FY26</b></span>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="inc-kpis"></div>
+          <div class="pbi-grid pbi-grid-inc">
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Active Demands by Priority</div>
+              <div id="inc-prio" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Active Demands by State</div>
+              <div id="inc-state" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Active Demands by Portfolio</div>
+              <div id="inc-port" class="chart"></div>
+            </div>
+            <div class="pbi-card span-7">
+              <div class="pbi-card-title">Active Demands by Sponsor <span class="pbi-card-sub">Sorted by open-demand count</span></div>
+              <div id="inc-vp" class="chart"></div>
+            </div>
+            <div class="pbi-card span-5">
+              <div class="pbi-card-title">Average Open Days of Demands <span class="pbi-card-sub">Rolling weekly average</span></div>
+              <div id="inc-open" class="chart"></div>
+            </div>
+            <div class="pbi-card span-12">
+              <div class="pbi-card-title">Closed / Completed Demands YTD <span class="pbi-card-sub">By month, current fiscal year</span></div>
+              <div id="inc-closed" class="chart"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. Delivered on Microsoft Fabric with intake feeds from ServiceNow, Jira, and SharePoint demand lists — one intake pipeline for demand, incident, and project requests.</div>
+      </div>
+
+      <!-- PRICE & MATERIALS INTELLIGENCE -->
+      <div class="dash-frame hidden" id="panel-prc" data-panel="prc" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">AI-Driven Alternative Materials &amp; Sourcing Intelligence</div>
+          <div class="dash-chrome-right">Microsoft Fabric · Power BI · ML.NET</div>
+        </div>
+        <div class="pbi" id="dash-prc">
+          <div class="pbi-header">
+            <div class="pbi-title">Price &amp; Materials Command Center <span class="pbi-title-sep">|</span> Sourcing Intelligence</div>
+            <div class="pbi-slicers">
+              <span class="slicer">Material Group: <b>All</b></span>
+              <span class="slicer">Plant: <b>All</b></span>
+              <span class="slicer">Savings Type: <b>Similar specs · different vendor</b></span>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="prc-kpis"></div>
+          <div class="pbi-grid pbi-grid-prc">
+            <div class="pbi-card span-12">
+              <div class="pbi-card-title"><span class="ai-chip">AI</span> Potential Savings Across Material Groups <span class="pbi-card-sub">Bubble size = alternative materials identified</span></div>
+              <div id="prc-bubble" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Top Savings Opportunities <span class="pbi-card-sub">By material group ($)</span></div>
+              <div id="prc-top" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Unit Price Trends — Top 5 Vendors <span class="pbi-card-sub">Selected material, trailing 5 quarters</span></div>
+              <div id="prc-trend" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">PO Count vs. Invoiced Quantity <span class="pbi-card-sub">Top 3 vendors by volume</span></div>
+              <div id="prc-po" class="chart"></div>
+            </div>
+            <div class="pbi-card span-12 pbi-ai">
+              <div class="pbi-card-title"><span class="ai-chip">AI</span> Recommended Alternative Materials <span class="pbi-card-sub">Model matches specs across vendors and flags per-unit savings</span></div>
+              <div id="prc-alts" class="chart"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric with a materials &amp; sourcing lakehouse — an ML model matches specifications across vendors to surface substitution opportunities and per-unit savings.</div>
+      </div>
+
+      <!-- SUPPLY CHAIN -->
+      <div class="dash-frame hidden" id="panel-sc" data-panel="sc" role="tabpanel">
+        <div class="dash-chrome">
+          <div class="dash-chrome-left">
+            <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+          </div>
+          <div class="dash-chrome-title">Supply Chain — Customer Experience Order Fulfillment &amp; Vendor Payables</div>
+          <div class="dash-chrome-right">Microsoft Fabric · Power BI</div>
+        </div>
+        <div class="pbi" id="dash-sc">
+          <div class="pbi-header">
+            <div class="pbi-title">Supply Chain Command Center <span class="pbi-title-sep">|</span> Order Fulfillment &amp; AP Holds</div>
+            <div class="pbi-slicers">
+              <span class="slicer">Department: <b>All</b></span>
+              <span class="slicer">Supplier: <b>All</b></span>
+              <span class="slicer">DC: <b>All</b></span>
+              <span class="slicer">Period: <b>Trailing 12 mo</b></span>
+            </div>
+          </div>
+          <div class="pbi-kpis" id="sc-kpis"></div>
+          <div class="pbi-grid pbi-grid-sc">
+            <div class="pbi-card span-7">
+              <div class="pbi-card-title">Orders Over Time <span class="pbi-card-sub">Daily order volume · trailing 12 months</span></div>
+              <div id="sc-orders" class="chart"></div>
+            </div>
+            <div class="pbi-card span-5">
+              <div class="pbi-card-title">Order Shipment Performance <span class="pbi-card-sub">DC only · on-time vs delayed</span></div>
+              <div id="sc-ship" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Aging of Invoice Holds <span class="pbi-card-sub">By days on hold</span></div>
+              <div id="sc-aging" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Top 10 Suppliers by Hold Amount <span class="pbi-card-sub">Trailing 12 months ($K)</span></div>
+              <div id="sc-suppliers" class="chart"></div>
+            </div>
+            <div class="pbi-card span-4">
+              <div class="pbi-card-title">Hold Reasons <span class="pbi-card-sub">Share of holds · manual vs system</span></div>
+              <div id="sc-reasons" class="chart"></div>
+            </div>
+            <div class="pbi-card span-12">
+              <div class="pbi-card-title">Monthly Hold Trend <span class="pbi-card-sub">Count of holds &amp; average hold time (days)</span></div>
+              <div id="sc-trend" class="chart"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-caption">Synthetic data for demonstration. Original delivered on Microsoft Fabric across the supply chain lakehouse — unifying order fulfillment telemetry from the DC and dropship systems with AP invoice-hold analytics for finance and procurement.</div>
+      </div>
+
+      <!-- Cutover Status Report mock (merged into Dashboards showcase) -->
+      <h3 class="showcase-subhead">Cutover Status, one governed view.</h3>
+      <p class="showcase-sub">The transformation counterpart. Program telemetry from the Enterprise Transformation Portal, rebuilt here with synthetic data.</p>
+      <a class="cutover-mock" href="/portal/transformation" aria-label="Open the Cutover Status Report in the HorizonView Portal">
+        <div class="cm-header">
+          <span class="cm-title"><strong>Cutover</strong> <span class="cm-title-accent">Status Report</span></span>
+          <span class="cm-live-pill">Open in HorizonView Portal &nearr;</span>
+        </div>
+        <div class="cm-body">
+          <div class="cm-filters">
+            <div class="cm-filter"><label>Wave</label><div class="cm-select">All ▾</div></div>
+            <div class="cm-filter"><label>Cutover Cycle</label><div class="cm-select">All ▾</div></div>
+            <div class="cm-filter"><label>Team</label><div class="cm-select">All ▾</div></div>
+            <div class="cm-filter"><label>Status</label><div class="cm-select">All ▾</div></div>
+          </div>
+          <div class="cm-kpis">
+            <div class="cm-kpi kpi-teal"><div class="kpi-num">68%</div><div class="kpi-lbl">Completed</div></div>
+            <div class="cm-kpi kpi-navy"><div class="kpi-num">245</div><div class="kpi-lbl">Total</div></div>
+            <div class="cm-kpi kpi-teal"><div class="kpi-num">167</div><div class="kpi-lbl">Complete</div></div>
+            <div class="cm-kpi kpi-blue"><div class="kpi-num">34</div><div class="kpi-lbl">In Progress</div></div>
+            <div class="cm-kpi kpi-red"><div class="kpi-num">6</div><div class="kpi-lbl">Blocked</div></div>
+            <div class="cm-kpi kpi-grey"><div class="kpi-num">22</div><div class="kpi-lbl">Not Started</div></div>
+            <div class="cm-kpi kpi-orange"><div class="kpi-num">78</div><div class="kpi-lbl">Past Due</div></div>
+            <div class="cm-kpi kpi-amber"><div class="kpi-num">39</div><div class="kpi-lbl">Time Restri…</div></div>
+            <div class="cm-kpi kpi-danger"><div class="kpi-num">82</div><div class="kpi-lbl">Open Defects</div></div>
+          </div>
+          <div class="cm-charts">
+            <div class="cm-chart">
+              <div class="cm-chart-h">Planned % vs Completed %</div>
+              <div class="cm-chart-b">
+                <div class="bar-row"><span class="bar-lbl">Planned</span><div class="bar"><span class="bar-fill bar-navy" style="width:100%"></span></div><span class="bar-val">100%</span></div>
+                <div class="bar-row"><span class="bar-lbl">Completed</span><div class="bar"><span class="bar-fill bar-teal" style="width:68%"></span></div><span class="bar-val">68%</span></div>
+                <div class="bar-legend"><span><i class="dot dot-navy"></i>Cutover Planned %</span><span><i class="dot dot-teal"></i>Cutover Completed %</span></div>
+              </div>
+            </div>
+            <div class="cm-chart">
+              <div class="cm-chart-h">Blocked Tasks by Team</div>
+              <div class="cm-chart-b">
+                <div class="bar-row"><span class="bar-lbl">Cutover Team</span><div class="bar"><span class="bar-fill bar-blue" style="width:80%"></span></div><span class="bar-val">4</span></div>
+                <div class="bar-row"><span class="bar-lbl">Leadership</span><div class="bar"><span class="bar-fill bar-blue" style="width:40%"></span></div><span class="bar-val">2</span></div>
+                <div class="bar-row"><span class="bar-lbl">Data &amp; Int.</span><div class="bar"><span class="bar-fill bar-blue" style="width:20%"></span></div><span class="bar-val">1</span></div>
+              </div>
+            </div>
+            <div class="cm-chart">
+              <div class="cm-chart-h">Past Due by Team</div>
+              <div class="cm-chart-b">
+                <div class="bar-row"><span class="bar-lbl">Cutover Team</span><div class="bar"><span class="bar-fill bar-blue" style="width:90%"></span></div><span class="bar-val">42</span></div>
+                <div class="bar-row"><span class="bar-lbl">Finance &amp; Bill.</span><div class="bar"><span class="bar-fill bar-blue" style="width:30%"></span></div><span class="bar-val">12</span></div>
+                <div class="bar-row"><span class="bar-lbl">EWM</span><div class="bar"><span class="bar-fill bar-blue" style="width:20%"></span></div><span class="bar-val">8</span></div>
+                <div class="bar-row"><span class="bar-lbl">CVI</span><div class="bar"><span class="bar-fill bar-blue" style="width:17%"></span></div><span class="bar-val">7</span></div>
+                <div class="bar-row"><span class="bar-lbl">ETM.next</span><div class="bar"><span class="bar-fill bar-blue" style="width:13%"></span></div><span class="bar-val">5</span></div>
+                <div class="bar-row"><span class="bar-lbl">HXM</span><div class="bar"><span class="bar-fill bar-blue" style="width:10%"></span></div><span class="bar-val">4</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="cm-charts cm-charts-2">
+            <div class="cm-chart">
+              <div class="cm-chart-h">Open Defects by Severity</div>
+              <div class="cm-chart-b cm-donut-row">
+                <svg viewBox="0 0 42 42" class="cm-donut" role="img" aria-label="Open Defects by Severity donut chart">
+                  <circle cx="21" cy="21" r="15.9155" fill="#fff"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#F2B24A" stroke-width="8" stroke-dasharray="45 55" stroke-dashoffset="25"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#3EB2A6" stroke-width="8" stroke-dasharray="30 70" stroke-dashoffset="-20"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#E88A3F" stroke-width="8" stroke-dasharray="18 82" stroke-dashoffset="-50"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#D94D3B" stroke-width="8" stroke-dasharray="7 93" stroke-dashoffset="-68"></circle>
+                </svg>
+                <ul class="cm-legend">
+                  <li><i style="background:#D94D3B"></i>Critical <b>6 (7%)</b></li>
+                  <li><i style="background:#E88A3F"></i>High <b>15 (18%)</b></li>
+                  <li><i style="background:#3EB2A6"></i>Low <b>25 (30%)</b></li>
+                  <li><i style="background:#F2B24A"></i>Medium <b>36 (45%)</b></li>
+                </ul>
+              </div>
+            </div>
+            <div class="cm-chart">
+              <div class="cm-chart-h">Open Defects by Status</div>
+              <div class="cm-chart-b cm-donut-row">
+                <svg viewBox="0 0 42 42" class="cm-donut" role="img" aria-label="Open Defects by Status donut chart">
+                  <circle cx="21" cy="21" r="15.9155" fill="#fff"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#4C9BE0" stroke-width="8" stroke-dasharray="40 60" stroke-dashoffset="25"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#2E6FAE" stroke-width="8" stroke-dasharray="35 65" stroke-dashoffset="-15"></circle>
+                  <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#E88A3F" stroke-width="8" stroke-dasharray="25 75" stroke-dashoffset="-50"></circle>
+                </svg>
+                <ul class="cm-legend">
+                  <li><i style="background:#4C9BE0"></i>Closed <b>33 (40%)</b></li>
+                  <li><i style="background:#2E6FAE"></i>In Progress <b>29 (35%)</b></li>
+                  <li><i style="background:#E88A3F"></i>Open <b>20 (25%)</b></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="cm-chart cm-table-wrap" style="margin-top:12px;">
+            <div class="cm-chart-h">Cutover Tasks (by Sequence)</div>
+            <div class="cm-table-scroll">
+              <table class="cm-table">
+                <thead>
+                  <tr>
+                    <th>Task ID</th><th>WBS</th><th>Email Notification Sent</th><th>Task Name</th>
+                    <th>Status</th><th>Team</th><th>Cutover Cycle</th>
+                    <th>Start Date</th><th>End Date</th><th>System Ready</th><th>Business Ready</th><th class="num">Sequence</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>C-0101</td><td>002.001.001</td><td>Y</td><td>Extract Master Data Snapshot</td><td>Complete</td><td>Cutover Team</td><td>MC1</td><td>2026-03-18</td><td>2026-03-22</td><td>Y</td><td>Y</td><td class="num">1.00</td></tr>
+                  <tr><td>C-0102</td><td>002.001.002</td><td>Y</td><td>Freeze Legacy Transactions</td><td>Complete</td><td>Finance &amp; Billings</td><td>MC1</td><td>2026-03-22</td><td>2026-03-22</td><td>Y</td><td>Y</td><td class="num">2.00</td></tr>
+                  <tr><td>C-0103</td><td>002.001.003</td><td>Y</td><td>Validate Landing Zone</td><td>Complete</td><td>Data &amp; Int.</td><td>FC</td><td>2026-03-24</td><td>2026-03-25</td><td>Y</td><td>Y</td><td class="num">3.00</td></tr>
+                  <tr><td>C-0104</td><td>002.001.004</td><td>N</td><td>Integration Regression</td><td>Planned</td><td>Data &amp; Int.</td><td>FC</td><td>2026-04-02</td><td>2026-04-05</td><td>N</td><td>N</td><td class="num">4.00</td></tr>
+                  <tr><td>C-0105</td><td>002.001.005</td><td>Y</td><td>Replication Cutover</td><td>In Progress</td><td>Data &amp; Int.</td><td>FC</td><td>2026-04-05</td><td>2026-04-08</td><td>Y</td><td>N</td><td class="num">5.00</td></tr>
+                  <tr><td>C-0106</td><td>002.001.006</td><td>N</td><td>Payroll Archive Handoff</td><td>Time Restricted</td><td>HXM</td><td>FC</td><td>2026-04-08</td><td>2026-04-10</td><td>N</td><td>N</td><td class="num">6.00</td></tr>
+                  <tr><td>C-0107</td><td>002.001.007</td><td>Y</td><td>Role Cleanup Validation</td><td>Complete</td><td>HXM</td><td>DR</td><td>2026-04-10</td><td>2026-04-11</td><td>Y</td><td>Y</td><td class="num">7.00</td></tr>
+                  <tr><td>C-0108</td><td>002.001.008</td><td>Y</td><td>Multi-Bank Connectivity Test</td><td>Complete</td><td>Finance &amp; Billings</td><td>DR</td><td>2026-04-12</td><td>2026-04-13</td><td>Y</td><td>Y</td><td class="num">8.00</td></tr>
+                  <tr><td>C-0109</td><td>002.001.009</td><td>N</td><td>Middleware Failover Rehearsal</td><td>Blocked</td><td>Cutover Team</td><td>DR</td><td>2026-04-14</td><td>2026-04-15</td><td>N</td><td>N</td><td class="num">9.00</td></tr>
+                  <tr><td>C-0110</td><td>002.001.010</td><td>Y</td><td>EWM Warehouse Cutover</td><td>In Progress</td><td>EWM</td><td>DR</td><td>2026-04-16</td><td>2026-04-18</td><td>Y</td><td>N</td><td class="num">10.00</td></tr>
+                  <tr><td>C-0111</td><td>002.001.011</td><td>N</td><td>Hypercare Command Center Standup</td><td>Not Started</td><td>Cutover Team</td><td>GO</td><td>2026-04-28</td><td>2026-04-30</td><td>N</td><td>N</td><td class="num">11.00</td></tr>
+                  <tr><td>C-0112</td><td>002.001.012</td><td>Y</td><td>Business Sign-off: Go/No-Go</td><td>Planned</td><td>Leadership</td><td>GO</td><td>2026-05-01</td><td>2026-05-01</td><td>N</td><td>N</td><td class="num">12.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="cm-fake-note">Illustrative dashboard mock. Values shown are representative, not actual program data.</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- OCM subsection (consolidated) -->
+  <section class="section ocm-inline">
+    <div class="section-inner">
+      <p class="section-kicker">Adoption and change, built in</p>
+      <h2>A program lands only when people adopt it.</h2>
+      <p class="section-sub">Every HorizonView engagement carries an adoption story. Change impact for the processes and roles being reshaped, stakeholder posture across the org, adoption tracking that proves the platform is landing, and training records that prove the org is ready.</p>
+      <div class="ocm-grid">
+        <div class="ocm-card">
+          <div class="ocm-icon" aria-hidden="true">◈</div>
+          <h4>Change Impact</h4>
+          <p>Which processes, roles, teams, and decisions are touched by the transformation, and how deeply.</p>
+          <div class="ocm-mock">Process by role impact heatmap.</div>
+        </div>
+        <div class="ocm-card">
+          <div class="ocm-icon" aria-hidden="true">◇</div>
+          <h4>Stakeholder Analysis</h4>
+          <p>Champions, blockers, and skeptics mapped across the org, with RACI on every deliverable.</p>
+          <div class="ocm-mock">Stakeholder table, influence and stance.</div>
+        </div>
+        <div class="ocm-card">
+          <div class="ocm-icon" aria-hidden="true">◭</div>
+          <h4>Adoption Tracking</h4>
+          <p>Weekly active users, training completion, leadership viewership, and readiness by role band.</p>
+          <div class="ocm-mock">Adoption trend, training rollup.</div>
+        </div>
+      </div>
+      <p class="ocm-cta"><a href="/portal/transformation">See adoption in HorizonView &nearr;</a></p>
+    </div>
+  </section>
+
+  <!-- Final dual-CTA (one platform, two ways in) -->
+  <section class="section final-cta" id="engage">
+    <div class="section-inner">
+      <p class="section-kicker light">Ready to see it live?</p>
+      <h2 class="light">One platform. Multiple ways in.</h2>
+      <p class="final-cta-sub light">Sign in with your organization to see live figures, or start a conversation to see how HorizonView would show up on your program.</p>
+      <div class="final-cta-buttons">
+        <a class="btn btn-teal" href="/portal">Enter HorizonView Portal</a>
+        <a class="btn btn-teal btn-teal-alt" href="/portal/transformation">Enter Transformation Portal</a>
+        <a class="btn btn-teal btn-teal-outline" href="mailto:info@aberdeenadv.com?subject=HorizonView%20Inquiry">Start a Conversation</a>
       </div>
     </div>
   </section>
@@ -1298,5 +1984,120 @@ resp = client.<span class="fn">complete</span>(prompt)</pre>
 
   <script src="js/dashboards.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    // Domain filter inside the Dashboards section. Selecting a domain chip
+    // hides irrelevant dashboard tabs and auto-clicks the first visible one.
+    // The underlying tab-click behavior in js/dashboards.js stays intact.
+    (function () {
+      var chips = document.querySelectorAll('.dom-chip');
+      var tabsContainer = document.querySelector('.showcase .tabbar');
+      var hint = document.getElementById('dom-count-hint');
+      if (!chips.length || !tabsContainer) return;
+      var tabs = tabsContainer.querySelectorAll('.tab');
+      function selectFirstVisibleTab() {
+        var firstVisible = null;
+        tabs.forEach(function (t) {
+          if (t.style.display !== 'none' && !firstVisible) firstVisible = t;
+        });
+        if (firstVisible && !firstVisible.classList.contains('active')) {
+          firstVisible.click();
+        }
+      }
+      function applyDomain(chip) {
+        chips.forEach(function (c) {
+          var on = c === chip;
+          c.classList.toggle('is-active', on);
+          c.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        var allowed = (chip.dataset.dashboards || '').split(',').map(function (s) { return s.trim(); });
+        var visible = 0;
+        tabs.forEach(function (t) {
+          var show = allowed.indexOf(t.dataset.tab) !== -1;
+          t.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        if (hint) {
+          hint.textContent = visible === 1
+            ? '1 dashboard for this domain'
+            : visible + ' dashboards for this domain';
+        }
+        selectFirstVisibleTab();
+      }
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () { applyDomain(chip); });
+      });
+      var initial = document.querySelector('.dom-chip.is-active') || chips[0];
+      if (initial) applyDomain(initial);
+    })();
+
+    // Coverage tile click: activate matching dashboard tab and scroll to it
+    (function () {
+      var covTiles = document.querySelectorAll('.cov-tile[data-dashboard]');
+      var dashboardsSection = document.getElementById('dashboards');
+      if (!covTiles.length || !dashboardsSection) return;
+      var tabsContainer = document.querySelector('.showcase .tabbar');
+      var domFilter = document.querySelector('.dom-filter');
+
+      // Domain mapping: which dom-chip contains a dashboard key (for auto-selecting a
+      // parent domain when a coverage tile targets a specific dashboard).
+      var domainForDashboard = {
+        cio: 'it', pmo: 'it', ai: 'it',
+        onb: 'license',
+        wfm: 'wfm',
+        cc:  'fin', fin: 'fin',
+        prc: 'sc',  sc:  'sc',
+        inc: 'cx'
+      };
+
+      covTiles.forEach(function (tile) {
+        tile.addEventListener('click', function () {
+          var target = tile.dataset.dashboard;
+          if (!target) return;
+          // 1. Activate the parent domain in the domain filter (so the target tab is visible)
+          var domainKey = domainForDashboard[target];
+          if (domainKey && domFilter) {
+            var chip = domFilter.querySelector('.dom-chip[data-domain="' + domainKey + '"]');
+            if (chip) chip.click();
+          }
+          // 2. Activate the specific dashboard tab
+          if (tabsContainer) {
+            var tab = tabsContainer.querySelector('.tab[data-tab="' + target + '"]');
+            if (tab) tab.click();
+          }
+          // 3. Scroll the dashboards section into view
+          dashboardsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // Persona buttons: same pattern but supports either dashboard target,
+      // raw anchor jump, or a nested scroll target within dashboards.
+      var personaBtns = document.querySelectorAll('.pm-persona-btn');
+      personaBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var jump = btn.dataset.personaJump;
+          if (jump) {
+            var target = document.querySelector(jump);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+          }
+          var dash = btn.dataset.personaDashboard;
+          if (dash && tabsContainer) {
+            var domKey = btn.dataset.personaDomain || domainForDashboard[dash];
+            if (domKey && domFilter) {
+              var chip = domFilter.querySelector('.dom-chip[data-domain="' + domKey + '"]');
+              if (chip) chip.click();
+            }
+            var tab = tabsContainer.querySelector('.tab[data-tab="' + dash + '"]');
+            if (tab) tab.click();
+          }
+          // Scroll to a specific element inside dashboards (e.g., cutover-mock)
+          // otherwise fall back to the dashboards section top.
+          var scrollSel = btn.dataset.personaScroll;
+          var scrollTarget = scrollSel ? document.querySelector(scrollSel) : dashboardsSection;
+          if (scrollTarget) scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import { isDemoMode } from "@/lib/config";
 
 const links = [
   { href: "/portal", label: "Portfolio" },
+  { href: "/portal/transformation", label: "Transformation Program" },
   { href: "/portal/dashboards", label: "Dashboards" },
   { href: "/portal/reports", label: "Reports" },
   { href: "/portal/ask", label: "Ask Horizon" },
