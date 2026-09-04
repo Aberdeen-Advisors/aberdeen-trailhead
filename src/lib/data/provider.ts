@@ -1,6 +1,7 @@
 import { isDemoMode, hasPowerBi } from "@/lib/config";
 import { demoProjects, demoRaid, demoMilestones, demoPortfolioSummary } from "@/lib/data/demo-data";
 import { getLiveProjects, getLiveRaid, getLiveMilestones } from "@/lib/data/live-elevate";
+import { applyRaidOverlay } from "@/lib/data/raid-store";
 import type { Project, RaidItem, Milestone, PortfolioKpis } from "@/lib/types";
 
 // Single data access seam. Pages and API routes call these functions only.
@@ -33,9 +34,19 @@ export async function getProject(id: string): Promise<Project | undefined> {
 }
 
 export async function getRaid(projectId?: string): Promise<RaidItem[]> {
-  const items = await mergedWithDemo("RAID", getLiveRaid, demoRaid);
+  const base = await mergedWithDemo("RAID", getLiveRaid, demoRaid);
+  // Portal edits are an overlay on the demo set (see raid-store.ts). Live rows
+  // come from SharePoint/Power BI and are left untouched.
+  const items = isRaidEditable() ? await applyRaidOverlay(base) : base;
   return projectId ? items.filter((r) => r.projectId === projectId) : items;
 }
+
+/**
+ * RAID is editable in demo mode only. In live mode the semantic model and
+ * SharePoint Lists are the source of truth, so the portal stays read-only until
+ * a Graph write-back exists.
+ */
+export const isRaidEditable = (): boolean => isDemoMode();
 
 export async function getMilestones(projectId?: string): Promise<Milestone[]> {
   const items = await mergedWithDemo("Milestones", getLiveMilestones, demoMilestones);

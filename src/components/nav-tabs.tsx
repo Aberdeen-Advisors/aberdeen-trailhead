@@ -5,11 +5,10 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/portal", label: "Portfolio" },
-  { href: "/portal/transformation", label: "Transformation Program" },
-  { href: "/portal/dashboards", label: "Dashboards" },
-  { href: "/portal/reports", label: "Reports" },
+  { href: "/portal/reports", label: "Dashboards & Reports" },
   { href: "/portal/ask", label: "Ask Horizon" },
   { href: "/portal/live", label: "Solution in Action" },
+  { href: "/portal/transformation", label: "Transformation Program" },
 ];
 
 export function NavTabs() {

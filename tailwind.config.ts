@@ -27,7 +27,7 @@ const config: Config = {
           border: "#DDE7ED",  // line
           accent: "#09375F",  // navy — buttons, emphasis
           accent2: "#0E7C7D", // teal darkened for text on white (ADA)
-          text: "#231F20",    // ink
+          text: "#404040",    // Onyx — the style guide's body text
           muted: "#5B6B78",
           subtle: "#8296A6",
         },
@@ -48,11 +48,12 @@ const config: Config = {
           tint: "#E4F1F9",
           ink: "#025C8C",
         },
-        // Status — 500 = fill (site chart colors), 300/400 = text-safe on white.
-        emerald: { 50: "#E6F6F1", 300: "#00694E", 400: "#00805B", 500: "#00A676", 600: "#00805B" },
-        amber: { 50: "#FEF7DF", 300: "#7A6000", 400: "#8A6D00", 500: "#F7CE01", 600: "#B79800" },
-        red: { 50: "#FBECEB", 300: "#AE332D", 400: "#C23A34", 500: "#D85049", 600: "#B8332C" },
-        sky: { 50: "#E7F3FA", 300: "#176E9F", 400: "#1C7FB8", 500: "#0072AD" },
+        // Status — 500 is the Aberdeen Style Guide secondary palette exactly;
+        // 300/400 are darkened variants that clear 4.5:1 for text on white.
+        emerald: { 50: "#E6F6F1", 300: "#00694E", 400: "#00805B", 500: "#00A676", 600: "#00805B" }, // Jade
+        amber: { 50: "#FEF7DF", 300: "#7A6000", 400: "#8A6D00", 500: "#F7D002", 600: "#B79800" }, // Gold
+        red: { 50: "#FBECEB", 300: "#AE332D", 400: "#C23A34", 500: "#DB504A", 600: "#B8332C" }, // Jasper
+        sky: { 50: "#E7F3FA", 300: "#176E9F", 400: "#1C7FB8", 500: "#5CC8FF" }, // Deep Sky Blue
         blue: { 400: "#0B5FA0", 500: "#0C4A80", 600: "#09375F" },
       },
       borderRadius: {

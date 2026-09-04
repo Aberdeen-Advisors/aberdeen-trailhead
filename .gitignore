@@ -12,6 +12,9 @@
 .DS_Store
 *.pem
 
+# demo-mode RAID edits made in the portal (see src/lib/data/raid-store.ts)
+.raid-overrides.json
+
 # debug
 npm-debug.log*
 yarn-debug.log*

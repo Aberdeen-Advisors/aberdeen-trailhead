@@ -1,19 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProject, getRaid, getMilestones } from "@/lib/data/provider";
+import { getProject, getRaid, getMilestones, isRaidEditable } from "@/lib/data/provider";
 import { HealthBadge, KpiCard, MilestoneStatusLabel, Panel, ScoreBar, fmtMoney } from "@/components/ui";
 import { GenerateDeckButton } from "@/components/generate-deck-button";
 import { PodcastPanel } from "@/components/podcast-panel";
 import { ProjectLogo } from "@/components/project-logo";
+import { RaidEditor } from "@/components/raid-editor";
 import { tierHasPodcasts } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
-
-const severityTone: Record<string, string> = {
-  High: "text-red-300",
-  Medium: "text-amber-300",
-  Low: "text-hv-muted",
-};
 
 export default async function ProjectPage({ params }: { params: { id: string } }) {
   const [project, raid, milestones] = await Promise.all([
@@ -129,41 +124,6 @@ export default async function ProjectPage({ params }: { params: { id: string } }
               ))}
             </ul>
           </Panel>
-
-          <Panel title="RAID Log" action={<span className="hv-num text-[0.72rem] text-hv-muted">{raid.length} items</span>}>
-            <div className="hv-scroll-x">
-              <table className="w-full min-w-[640px] text-left text-sm">
-                <thead>
-                  <tr className="border-b border-hv-border text-[0.65rem] uppercase tracking-[0.1em] text-hv-subtle">
-                    <th className="pb-2.5 pr-4 font-semibold">Type</th>
-                    <th className="pb-2.5 pr-4 font-semibold">Item</th>
-                    <th className="pb-2.5 pr-4 font-semibold">Severity</th>
-                    <th className="pb-2.5 pr-4 font-semibold">Owner</th>
-                    <th className="pb-2.5 font-semibold">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-hv-border">
-                  {raid.map((r) => (
-                    <tr key={r.id} className="transition hover:bg-hv-bg">
-                      <td className="py-3 pr-4 text-xs font-semibold uppercase tracking-wider text-hv-subtle">
-                        {r.type}
-                      </td>
-                      <td className="py-3 pr-4 text-hv-text">{r.title}</td>
-                      <td className={`py-3 pr-4 text-xs font-semibold ${severityTone[r.severity] ?? "text-hv-muted"}`}>
-                        {r.severity}
-                      </td>
-                      <td className="hv-num py-3 pr-4 text-xs text-hv-muted">{r.owner}</td>
-                      <td
-                        className={`py-3 text-xs font-semibold ${r.status === "Overdue" ? "text-red-300" : "text-hv-muted"}`}
-                      >
-                        {r.status}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Panel>
         </div>
 
         <div className="space-y-6">
@@ -212,15 +172,18 @@ export default async function ProjectPage({ params }: { params: { id: string } }
           <Panel title="Executive Podcast">
             <PodcastPanel projectId={project.id} podcastUrl={project.podcastUrl} enabled={tierHasPodcasts()} />
           </Panel>
-
-          <Link
-            href="/portal"
-            className="block rounded-full border border-hv-border bg-white py-2.5 text-center text-sm font-medium text-hv-muted transition hover:border-teal hover:text-teal-ink"
-          >
-            ← Back to portfolio
-          </Link>
         </div>
       </div>
+
+      {/* Full width: the editable log needs the whole page for its columns. */}
+      <RaidEditor projectId={project.id} items={raid} editable={isRaidEditable()} />
+
+      <Link
+        href="/portal"
+        className="mx-auto block w-full max-w-xs rounded-full border border-hv-border bg-white py-2.5 text-center text-sm font-medium text-hv-muted transition hover:border-teal hover:text-teal-ink"
+      >
+        ← Back to portfolio
+      </Link>
     </div>
   );
 }

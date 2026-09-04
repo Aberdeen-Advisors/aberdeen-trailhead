@@ -1,4 +1,4 @@
-import { HealthBadge, KpiCard, PageHeader, Panel, ScoreBar, SegmentBar } from "@/components/ui";
+import { HealthBadge, KpiCard, Notice, PageHeader, Panel, ScoreBar, SegmentBar } from "@/components/ui";
 import type { HealthStatus } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -192,8 +192,15 @@ export default function EnterpriseTransformationPortal() {
 
   return (
     <div className="space-y-10">
+      <Notice>
+        <strong className="font-semibold">Example page</strong> — this control tower is configured for an{" "}
+        <strong className="font-semibold">ERP transformation program</strong>; the phase gates, workstreams,
+        cutover readiness, and adoption metrics below are illustrative of an ERP implementation. HorizonView
+        configures the same structure for any transformation type.
+      </Notice>
+
       <PageHeader
-        kicker="Transformation Program"
+        kicker="Example · ERP Transformation"
         title="Enterprise Transformation Program"
         sub="One control tower for the active program — phase gates, workstream health, cutover readiness, RAID, and adoption."
       />

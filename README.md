@@ -56,7 +56,7 @@ push-to-github.bat       — commit + push helper (Vercel deploys from this repo
 | Microsoft Entra ID login (Auth.js v5) | `src/auth.ts`, `src/middleware.ts` | 1 |
 | Portfolio home with certified KPIs | `src/app/portal/page.tsx` | 1 |
 | Project pages (health, RAID, milestones, AI insights) | `src/app/portal/projects/[id]` | 1–2 |
-| Power BI dashboard links | `src/app/portal/dashboards` | 1 |
+| Power BI dashboards + generated reports | `src/app/portal/reports` | 1 |
 | Semantic Model DAX client (executeQueries) | `src/lib/msft/powerbi.ts` | 1 |
 | Fabric notebook trigger (AI insights refresh) | `src/lib/msft/fabric.ts` | 2 |
 | One-click SteerCo PowerPoint (PptxGenJS) | `src/lib/pptx/steering-deck.ts` | 3 |

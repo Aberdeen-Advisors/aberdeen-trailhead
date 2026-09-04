@@ -2,9 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    // Bundle the branded PPTX skeleton with the deck API route on Vercel.
+    // Bundle the cover lockup with the deck API route on Vercel — public/ is not
+    // readable from a serverless function unless it is traced in explicitly.
     outputFileTracingIncludes: {
-      "/api/reports/steering-deck": ["./src/assets/steerco-skeleton.pptx"],
+      "/api/reports/steering-deck": [
+        "./public/horizonview-logo-white.png",
+        "./public/deck-cover.png",
+        "./public/assets/aberdeen-logo.png",
+      ],
     },
   },
   async rewrites() {

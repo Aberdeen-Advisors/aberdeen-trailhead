@@ -74,7 +74,7 @@ export default async function Nav() {
               <span aria-hidden="true" className="mr-1">
                 ←
               </span>
-              trAIlhead
+              Home Website
             </Link>
           </div>
         </div>
