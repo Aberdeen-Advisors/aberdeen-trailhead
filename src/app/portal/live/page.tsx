@@ -1,4 +1,4 @@
-import { Panel } from "@/components/ui";
+import { PageHeader, Panel } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -106,18 +106,14 @@ const bullets = [
 export default function LivePage() {
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Solution in Action</h1>
-        <p className="mt-1 text-sm text-hv-muted">
-          A live, production-grade collaboration hub Aberdeen delivered on Microsoft 365 for an ERP
-          upgrade program — governed permissions, templated project sites, and a phase-driven
-          Reports Library of downstream Power BI dashboards wired to the same certified data model
-          powering this portal.
-        </p>
-      </div>
+      <PageHeader
+        kicker="Solution in Action"
+        title="Solution in Action"
+        sub="A live, production-grade collaboration hub Aberdeen delivered on Microsoft 365 for an ERP upgrade program — governed permissions, templated project sites, and a phase-driven Reports Library of downstream Power BI dashboards wired to the same certified data model powering this portal."
+      />
 
       {/* Project Elevate style mock */}
-      <div className="overflow-hidden rounded-xl border border-hv-border shadow-lg">
+      <div className="overflow-hidden rounded-hv border border-hv-border shadow-hv-lg">
         {/* SharePoint chrome bar */}
         <div className="flex items-center gap-2 border-b border-neutral-200 bg-white px-3 py-1.5 text-[11px] text-neutral-500">
           <span className="h-2.5 w-2.5 rounded-full bg-red-400"></span>
@@ -276,21 +272,15 @@ export default function LivePage() {
             ))}
           </ul>
         </Panel>
-        <Panel>
-          <div className="flex h-full flex-col justify-center">
-            <p className="mb-4 text-sm text-hv-muted">
-              Tour the live SharePoint hub — Aberdeen tenant sign-in required.
-            </p>
-            <a
-              href={ELEVATE_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-hv-accent px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-hv-accent/90"
-            >
-              Open Project Elevate ↗
-            </a>
-          </div>
-        </Panel>
+        <section className="flex flex-col justify-center overflow-hidden rounded-hv bg-hv-hero p-6 shadow-hv">
+          <div className="hv-kicker-light mb-3">Live Environment</div>
+          <p className="mb-5 text-sm font-light leading-relaxed text-white/85">
+            Tour the live SharePoint hub — Aberdeen tenant sign-in required.
+          </p>
+          <a href={ELEVATE_URL} target="_blank" rel="noreferrer" className="hv-btn-primary">
+            Open Project Elevate ↗
+          </a>
+        </section>
       </div>
 
       <Panel title="Downstream Power BI Dashboards">
@@ -305,13 +295,15 @@ export default function LivePage() {
               href={r.href}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center justify-between rounded-lg border border-hv-border p-3 text-sm transition hover:border-hv-accent/50"
+              className="group flex items-center justify-between gap-3 rounded-hv border border-hv-border p-3.5 text-sm transition duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-hv"
             >
-              <span>
-                {r.name}
-                <span className="mt-0.5 block text-xs text-hv-muted">{r.sub} ↗</span>
+              <span className="min-w-0">
+                <span className="block truncate font-semibold text-navy">{r.name}</span>
+                <span className="hv-num mt-0.5 block text-[0.72rem] text-hv-muted">{r.sub}</span>
               </span>
-              <span className="text-xs text-hv-muted">📊</span>
+              <span className="shrink-0 text-[0.72rem] font-semibold text-hv-subtle transition group-hover:text-teal-ink">
+                ↗
+              </span>
             </a>
           ))}
         </div>

@@ -28,12 +28,18 @@ export function GenerateDeckButton({ projectId, label }: { projectId?: string; l
   }
 
   return (
-    <button
-      onClick={generate}
-      disabled={busy}
-      className="rounded-lg bg-hv-accent px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-500 disabled:opacity-50"
-    >
-      {busy ? "Generating…" : label ?? "Generate SteerCo Deck"}
+    <button onClick={generate} disabled={busy} className="hv-btn-primary px-4 py-2 text-[0.82rem]">
+      {busy ? (
+        <>
+          <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+          </svg>
+          Generating…
+        </>
+      ) : (
+        label ?? "Generate SteerCo Deck"
+      )}
     </button>
   );
 }

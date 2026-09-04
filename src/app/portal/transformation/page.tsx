@@ -1,4 +1,4 @@
-import { HealthBadge, KpiCard, Panel, ScoreBar } from "@/components/ui";
+import { HealthBadge, KpiCard, PageHeader, Panel, ScoreBar, SegmentBar } from "@/components/ui";
 import type { HealthStatus } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -43,16 +43,16 @@ const deliverables: Deliverable[] = [
 ];
 
 const deliverableTone: Record<Deliverable["status"], string> = {
-  Complete: "text-emerald-400",
-  "In Progress": "text-sky-400",
-  "At Risk": "text-amber-400",
-  "Not Started": "text-hv-muted",
+  Complete: "text-emerald-300",
+  "In Progress": "text-sky-300",
+  "At Risk": "text-amber-300",
+  "Not Started": "text-hv-subtle",
 };
 
 const raidBadgeTone: Record<Raid["type"], string> = {
-  Risk: "border-red-500/30 bg-red-500/10 text-red-400",
-  Issue: "border-amber-500/30 bg-amber-500/10 text-amber-400",
-  Decision: "border-sky-400/30 bg-sky-400/10 text-sky-400",
+  Risk: "border-red-500/35 bg-red-50 text-red-300",
+  Issue: "border-amber-500/50 bg-amber-50 text-amber-300",
+  Decision: "border-sky-400/35 bg-sky-50 text-sky-300",
 };
 
 // ---------- OCM ----------
@@ -82,10 +82,10 @@ const impact: number[][] = [
 ];
 const impactLabel = ["Low", "Medium", "High", "Severe"];
 const impactBg = [
-  "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-  "bg-sky-400/10 text-sky-400 border-sky-400/30",
-  "bg-amber-500/15 text-amber-400 border-amber-500/30",
-  "bg-red-500/20 text-red-400 border-red-500/30",
+  "bg-emerald-50 text-emerald-300 border-emerald-500/30",
+  "bg-sky-50 text-sky-300 border-sky-400/30",
+  "bg-amber-50 text-amber-300 border-amber-500/45",
+  "bg-red-50 text-red-300 border-red-500/35",
 ];
 
 type Stakeholder = { name: string; role: string; influence: "High" | "Medium" | "Low"; stance: "Champion" | "Supportive" | "Neutral" | "Skeptical"; raci: string };
@@ -99,15 +99,15 @@ const stakeholders: Stakeholder[] = [
 ];
 
 const stanceTone: Record<Stakeholder["stance"], string> = {
-  Champion: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-  Supportive: "bg-sky-400/15 text-sky-400 border-sky-400/30",
-  Neutral: "bg-hv-border text-hv-muted border-hv-border",
-  Skeptical: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+  Champion: "bg-emerald-50 text-emerald-300 border-emerald-500/30",
+  Supportive: "bg-sky-50 text-sky-300 border-sky-400/30",
+  Neutral: "bg-hv-bg text-hv-muted border-hv-border",
+  Skeptical: "bg-amber-50 text-amber-300 border-amber-500/45",
 };
 const influenceTone: Record<Stakeholder["influence"], string> = {
-  High: "text-red-400",
-  Medium: "text-amber-400",
-  Low: "text-hv-muted",
+  High: "text-red-300",
+  Medium: "text-amber-300",
+  Low: "text-hv-subtle",
 };
 
 type Training = { audience: string; enrolled: number; completed: number; overdue: number };
@@ -128,35 +128,50 @@ const leaders: LeaderView[] = [
   { name: "J. Mendez", role: "Controller", lastView: "6d ago", topDashboard: "Financial Readiness", viewsThisMonth: 4 },
 ];
 
+// Brand chart colors, taken from the Aberdeen secondary palette on the site.
+const SERIES = [
+  { key: "exec", label: "Executives", color: "#09375F" },
+  { key: "pm", label: "Process / PM", color: "#00A676" },
+  { key: "ic", label: "End Users", color: "#0072AD" },
+] as const;
+
 function TrendChart({ points }: { points: TrendPoint[] }) {
   const w = 640;
-  const h = 200;
-  const padX = 32;
-  const padY = 20;
+  const h = 210;
+  const padX = 34;
+  const padY = 18;
   const innerW = w - padX * 2;
-  const innerH = h - padY * 2;
+  const innerH = h - padY * 2 - 14;
   const xStep = innerW / (points.length - 1);
   const yFor = (v: number) => padY + innerH - (v / 100) * innerH;
   const pathFor = (key: "exec" | "pm" | "ic") =>
     points.map((p, i) => `${i === 0 ? "M" : "L"} ${padX + i * xStep} ${yFor(p[key])}`).join(" ");
+
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full" role="img" aria-label="Weekly active users by role band">
-      <g stroke="currentColor" className="text-hv-border" strokeWidth="1" opacity="0.4">
+      <g stroke="#DDE7ED" strokeWidth="1">
         {[0, 25, 50, 75, 100].map((v) => (
           <line key={v} x1={padX} x2={padX + innerW} y1={yFor(v)} y2={yFor(v)} />
         ))}
       </g>
-      <g className="text-hv-muted" fontSize="10" fill="currentColor">
+      <g fontSize="10" fill="#8296A6" fontFamily="Segoe UI, sans-serif">
         {[0, 25, 50, 75, 100].map((v) => (
-          <text key={v} x={padX - 6} y={yFor(v) + 3} textAnchor="end">{v}%</text>
+          <text key={v} x={padX - 8} y={yFor(v) + 3} textAnchor="end">
+            {v}%
+          </text>
         ))}
         {points.map((p, i) => (
-          <text key={p.week} x={padX + i * xStep} y={h - 4} textAnchor="middle">{p.week}</text>
+          <text key={p.week} x={padX + i * xStep} y={h - 4} textAnchor="middle">
+            {p.week}
+          </text>
         ))}
       </g>
-      <path d={pathFor("ic")} fill="none" stroke="#60a5fa" strokeWidth="2" />
-      <path d={pathFor("pm")} fill="none" stroke="#34d399" strokeWidth="2" />
-      <path d={pathFor("exec")} fill="none" stroke="#fbbf24" strokeWidth="2" />
+      {SERIES.map((s) => (
+        <g key={s.key}>
+          <path d={pathFor(s.key)} fill="none" stroke={s.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx={padX + (points.length - 1) * xStep} cy={yFor(points[points.length - 1][s.key])} r="3.5" fill={s.color} />
+        </g>
+      ))}
     </svg>
   );
 }
@@ -177,52 +192,97 @@ export default function EnterpriseTransformationPortal() {
 
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Enterprise Transformation Program</h1>
-        <p className="mt-1 text-sm text-hv-muted">
-          Phase gates, workstream health, cutover readiness, RAID, and adoption for the active program.
-        </p>
-      </div>
+      <PageHeader
+        kicker="Transformation Program"
+        title="Enterprise Transformation Program"
+        sub="One control tower for the active program — phase gates, workstream health, cutover readiness, RAID, and adoption."
+      />
 
-      {/* Program KPIs */}
+      {/* ── Phase gate band ─────────────────────────────────────────────────*/}
+      <section className="overflow-hidden rounded-hv bg-hv-hero shadow-hv">
+        <div className="p-6 lg:p-7">
+          <div className="hv-kicker-light mb-4">Phase Gates</div>
+          <div className="hv-scroll-x">
+            <ol className="flex min-w-max items-stretch gap-2">
+              {phases.map((p, i) => {
+                const active = p.state === "current";
+                const done = p.state === "done";
+                return (
+                  <li key={p.key} className="flex items-center gap-2">
+                    {i > 0 && (
+                      <span
+                        className={`block h-[2px] w-6 rounded-full ${
+                          done ? "bg-teal" : active ? "bg-gradient-to-r from-teal to-white/25" : "bg-white/20"
+                        }`}
+                      />
+                    )}
+                    <div
+                      className={`min-w-[9.5rem] rounded-xl border p-3.5 ${
+                        active
+                          ? "border-teal-bright bg-teal-bright/20"
+                          : done
+                            ? "border-white/20 bg-white/[0.07]"
+                            : "border-white/10 bg-white/[0.03]"
+                      }`}
+                    >
+                      <div className="hv-num text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-white/50">
+                        {p.window}
+                      </div>
+                      <div className="mt-1 text-sm font-bold text-white">{p.label}</div>
+                      <div className={`mt-1 text-[0.7rem] ${active ? "text-teal-tint" : "text-white/50"}`}>
+                        {done ? "✓ Complete" : active ? "● In progress" : "Upcoming"}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Program KPIs ────────────────────────────────────────────────────*/}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <KpiCard label="Workstream Health" value={`${green}G / ${amber}A / ${red}R`} sub={`${workstreams.length} active workstreams`} tone={red > 0 ? "bad" : amber > 0 ? "warn" : "good"} />
-        <KpiCard label="Program Progress" value={`${avgProgress}%`} sub="weighted across workstreams" />
-        <KpiCard label="Open High-Sev RAID" value={String(openHighRaid)} sub={`${raid.length} total open items`} tone={openHighRaid > 1 ? "warn" : "default"} />
-        <KpiCard label="Cutover Confidence" value="68%" sub="business readiness index" tone="warn" />
+        <KpiCard lane="delivery" label="Workstream Health" value={`${green}G · ${amber}A · ${red}R`}>
+          <SegmentBar green={green} amber={amber} red={red} />
+        </KpiCard>
+        <KpiCard lane="delivery" label="Program Progress" value={`${avgProgress}%`} sub="weighted across workstreams">
+          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-hv-border">
+            <div className="h-full rounded-full bg-navy" style={{ width: `${avgProgress}%` }} />
+          </div>
+        </KpiCard>
+        <KpiCard
+          lane="intel"
+          label="Open High-Sev RAID"
+          value={String(openHighRaid)}
+          sub={`${raid.length} total open items`}
+          tone={openHighRaid > 1 ? "warn" : "default"}
+        />
+        <KpiCard lane="adoption" label="Cutover Confidence" value="68%" sub="business readiness index" tone="warn" />
       </div>
 
-      {/* Phase timeline */}
-      <Panel title="Phase Gates">
-        <ol className="grid grid-cols-2 gap-3 md:grid-cols-5">
-          {phases.map((p) => {
-            const active = p.state === "current";
-            const done = p.state === "done";
-            return (
-              <li key={p.key} className={`rounded-lg border p-3 ${active ? "border-hv-accent bg-hv-accent/5" : done ? "border-hv-border bg-hv-panel" : "border-hv-border bg-hv-panel opacity-70"}`}>
-                <div className="text-[0.65rem] font-semibold uppercase tracking-wider text-hv-muted">{p.window}</div>
-                <div className="mt-1 text-sm font-semibold text-hv-text">{p.label}</div>
-                <div className="mt-1 text-xs text-hv-muted">{done ? "Complete" : active ? "In progress" : "Upcoming"}</div>
-              </li>
-            );
-          })}
-        </ol>
-      </Panel>
-
-      {/* Workstreams */}
-      <Panel title="Workstreams">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* ── Workstreams ─────────────────────────────────────────────────────*/}
+      <Panel
+        title="Workstreams"
+        action={<span className="hv-num text-[0.72rem] text-hv-muted">{workstreams.length} active</span>}
+      >
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {workstreams.map((w) => (
-            <div key={w.name} className="rounded-lg border border-hv-border p-4">
-              <div className="flex items-center justify-between gap-2">
-                <div className="text-sm font-semibold text-hv-text">{w.name}</div>
+            <div
+              key={w.name}
+              className="rounded-hv border border-hv-border p-4 transition duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-hv"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-sm font-semibold text-navy">{w.name}</div>
                 <HealthBadge status={w.health} />
               </div>
-              <div className="mt-2 text-xs text-hv-muted">Lead: {w.lead}</div>
+              <div className="hv-num mt-1.5 text-xs text-hv-muted">Lead: {w.lead}</div>
               <div className="mt-3">
                 <ScoreBar label="Progress" score={w.progressPct} />
               </div>
-              <p className="mt-3 text-xs text-hv-muted">{w.detail}</p>
+              <p className="mt-3 border-t border-hv-border pt-3 text-xs font-light leading-relaxed text-hv-muted">
+                {w.detail}
+              </p>
             </div>
           ))}
         </div>
@@ -232,30 +292,48 @@ export default function EnterpriseTransformationPortal() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel title="Cutover Readiness">
           <div className="grid grid-cols-3 gap-3">
-            <KpiCard label="Mock Cutover" value="MC3" sub="dress rehearsal next" />
-            <KpiCard label="Open Defects" value="82" sub="18 high severity" tone="warn" />
-            <KpiCard label="Ready Entities" value="9 / 14" sub="wave 1 legal entities" />
+            {[
+              { label: "Mock Cutover", value: "MC3", sub: "dress rehearsal next", tone: "text-navy" },
+              { label: "Open Defects", value: "82", sub: "18 high severity", tone: "text-amber-400" },
+              { label: "Ready Entities", value: "9 / 14", sub: "wave 1 legal entities", tone: "text-navy" },
+            ].map((s) => (
+              <div key={s.label} className="rounded-hv border border-hv-border bg-hv-bg p-3.5">
+                <div className="truncate text-[0.6rem] font-semibold uppercase tracking-[0.08em] text-hv-subtle">
+                  {s.label}
+                </div>
+                <div className={`hv-num mt-1 text-xl font-bold ${s.tone}`}>{s.value}</div>
+                <div className="hv-num mt-1 text-[0.68rem] text-hv-muted">{s.sub}</div>
+              </div>
+            ))}
           </div>
-          <div className="mt-4 space-y-3">
-            <ScoreBar label="Business Readiness" score={68} />
-            <ScoreBar label="Data Reconciliation" score={74} />
-            <ScoreBar label="Integration Regression" score={81} />
-            <ScoreBar label="Defect Burn-Down (inverted)" score={54} invert />
+          <div className="mt-5 space-y-3.5">
+            <ScoreBar label="Business readiness" score={68} />
+            <ScoreBar label="Data reconciliation" score={74} />
+            <ScoreBar label="Integration regression" score={81} />
+            <ScoreBar label="Defect burn-down (inverted)" score={54} invert />
           </div>
-          <p className="mt-4 text-xs text-hv-muted">Values illustrative. Live figures flow from the Cutover Status semantic model.</p>
+          <p className="mt-5 border-t border-hv-border pt-3 text-[0.7rem] font-light text-hv-subtle">
+            Values illustrative. Live figures flow from the Cutover Status semantic model.
+          </p>
         </Panel>
 
-        <Panel title="Top RAID Items">
+        <Panel title="Top RAID Items" action={<span className="hv-num text-[0.72rem] text-hv-muted">{raid.length} open</span>}>
           <ul className="divide-y divide-hv-border">
             {raid.map((r) => (
-              <li key={r.id} className="py-3">
+              <li key={r.id} className="py-3.5 first:pt-0 last:pb-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider ${raidBadgeTone[r.type]}`}>{r.type}</span>
-                  <span className="text-xs text-hv-muted">{r.id}</span>
-                  <span className="ml-auto text-xs text-hv-muted">{r.severity} sev, due {r.due}</span>
+                  <span
+                    className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-[0.08em] ${raidBadgeTone[r.type]}`}
+                  >
+                    {r.type}
+                  </span>
+                  <span className="hv-num text-xs font-semibold text-hv-subtle">{r.id}</span>
+                  <span className="hv-num ml-auto text-xs text-hv-muted">
+                    {r.severity} sev · due {r.due}
+                  </span>
                 </div>
-                <div className="mt-1 text-sm text-hv-text">{r.title}</div>
-                <div className="mt-0.5 text-xs text-hv-muted">Owner: {r.owner}</div>
+                <div className="mt-1.5 text-sm text-hv-text">{r.title}</div>
+                <div className="hv-num mt-0.5 text-xs text-hv-muted">Owner: {r.owner}</div>
               </li>
             ))}
           </ul>
@@ -263,28 +341,33 @@ export default function EnterpriseTransformationPortal() {
       </div>
 
       {/* ---------- OCM section ---------- */}
-      <div className="pt-4">
-        <h2 className="text-lg font-semibold tracking-tight text-hv-text">Adoption and Change</h2>
-        <p className="mt-1 text-sm text-hv-muted">
-          Change impact, stakeholder posture, adoption, training, and leadership engagement for this program.
+      <div className="border-t border-hv-border pt-8">
+        <div className="hv-kicker mb-2">Organizational Change Management</div>
+        <h2 className="text-xl font-bold tracking-tight text-navy">Adoption and Change</h2>
+        <p className="mt-2 max-w-3xl text-sm font-light leading-relaxed text-hv-muted">
+          Change impact, stakeholder posture, adoption, training, and leadership engagement for this
+          program.
         </p>
       </div>
 
       {/* OCM KPI row */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <KpiCard label="Weekly Active Users" value={`${avgWeekly}%`} sub="avg across role bands" tone={avgWeekly >= 65 ? "good" : "warn"} />
-        <KpiCard label="Training Completion" value={`${completionPct}%`} sub={`${totalCompleted} of ${totalEnrolled}`} tone={completionPct >= 70 ? "good" : "warn"} />
-        <KpiCard label="Training Overdue" value={String(totalOverdue)} sub="past due date" tone={totalOverdue > 50 ? "bad" : totalOverdue > 20 ? "warn" : "default"} />
-        <KpiCard label="Skeptical Stakeholders" value={String(stakeholders.filter((s) => s.stance === "Skeptical").length)} sub={`of ${stakeholders.length} tracked`} tone="warn" />
+        <KpiCard lane="adoption" label="Weekly Active Users" value={`${avgWeekly}%`} sub="avg across role bands" tone={avgWeekly >= 65 ? "good" : "warn"} />
+        <KpiCard lane="adoption" label="Training Completion" value={`${completionPct}%`} sub={`${totalCompleted} of ${totalEnrolled}`} tone={completionPct >= 70 ? "good" : "warn"} />
+        <KpiCard lane="adoption" label="Training Overdue" value={String(totalOverdue)} sub="past due date" tone={totalOverdue > 50 ? "bad" : totalOverdue > 20 ? "warn" : "default"} />
+        <KpiCard lane="adoption" label="Skeptical Stakeholders" value={String(stakeholders.filter((s) => s.stance === "Skeptical").length)} sub={`of ${stakeholders.length} tracked`} tone="warn" />
       </div>
 
       {/* Adoption trend */}
       <Panel title="Adoption Trend (Weekly Active Users)">
         <TrendChart points={trend} />
-        <div className="mt-3 flex flex-wrap gap-4 text-xs text-hv-muted">
-          <span className="inline-flex items-center gap-2"><span className="h-2 w-4 rounded-sm" style={{ background: "#fbbf24" }} /> Executives</span>
-          <span className="inline-flex items-center gap-2"><span className="h-2 w-4 rounded-sm" style={{ background: "#34d399" }} /> Process / PM</span>
-          <span className="inline-flex items-center gap-2"><span className="h-2 w-4 rounded-sm" style={{ background: "#60a5fa" }} /> End Users</span>
+        <div className="mt-4 flex flex-wrap gap-5 border-t border-hv-border pt-3 text-xs font-medium text-hv-muted">
+          {SERIES.map((s) => (
+            <span key={s.key} className="inline-flex items-center gap-2">
+              <span className="h-1 w-5 rounded-full" style={{ background: s.color }} />
+              {s.label}
+            </span>
+          ))}
         </div>
       </Panel>
 
@@ -293,10 +376,10 @@ export default function EnterpriseTransformationPortal() {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] text-sm">
             <thead>
-              <tr className="text-left text-xs uppercase tracking-wider text-hv-muted">
-                <th className="pb-3 font-medium">Process</th>
+              <tr className="border-b border-hv-border text-left text-[0.65rem] uppercase tracking-[0.1em] text-hv-subtle">
+                <th className="pb-2.5 font-semibold">Process</th>
                 {roles.map((r) => (
-                  <th key={r} className="pb-3 font-medium">{r}</th>
+                  <th key={r} className="pb-2.5 font-semibold">{r}</th>
                 ))}
               </tr>
             </thead>
@@ -322,12 +405,12 @@ export default function EnterpriseTransformationPortal() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs uppercase tracking-wider text-hv-muted">
-                <th className="pb-3 font-medium">Stakeholder</th>
-                <th className="pb-3 font-medium">Role</th>
-                <th className="pb-3 font-medium">Influence</th>
-                <th className="pb-3 font-medium">Stance</th>
-                <th className="pb-3 font-medium">RACI</th>
+              <tr className="border-b border-hv-border text-left text-[0.65rem] uppercase tracking-[0.1em] text-hv-subtle">
+                <th className="pb-2.5 font-semibold">Stakeholder</th>
+                <th className="pb-2.5 font-semibold">Role</th>
+                <th className="pb-2.5 font-semibold">Influence</th>
+                <th className="pb-2.5 font-semibold">Stance</th>
+                <th className="pb-2.5 font-semibold">RACI</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-hv-border">
@@ -387,11 +470,11 @@ export default function EnterpriseTransformationPortal() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs uppercase tracking-wider text-hv-muted">
-                <th className="pb-3 font-medium">Deliverable</th>
-                <th className="pb-3 font-medium">Owner</th>
-                <th className="pb-3 font-medium">Due</th>
-                <th className="pb-3 font-medium">Status</th>
+              <tr className="border-b border-hv-border text-left text-[0.65rem] uppercase tracking-[0.1em] text-hv-subtle">
+                <th className="pb-2.5 font-semibold">Deliverable</th>
+                <th className="pb-2.5 font-semibold">Owner</th>
+                <th className="pb-2.5 font-semibold">Due</th>
+                <th className="pb-2.5 font-semibold">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-hv-border">

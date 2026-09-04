@@ -7,15 +7,18 @@ import { useEffect, useState } from "react";
 // Renders a colored monogram immediately; swaps to the image only if it
 // actually loads (probed via the Image object, so no broken-image flash).
 
+// Monogram fills, drawn from the Aberdeen brand palette so a project without a
+// logo still looks like it belongs to the portfolio. (Tailwind's default color
+// scales are overridden in tailwind.config.ts — use brand names only.)
 const palette = [
-  "bg-blue-600",
+  "bg-navy",
+  "bg-teal-ink",
+  "bg-azure",
+  "bg-navy-deep",
+  "bg-teal-bright",
+  "bg-navy-mid",
+  "bg-azure-ink",
   "bg-emerald-600",
-  "bg-violet-600",
-  "bg-rose-600",
-  "bg-amber-600",
-  "bg-cyan-600",
-  "bg-indigo-600",
-  "bg-teal-600",
 ];
 
 function colorFor(name: string): string {

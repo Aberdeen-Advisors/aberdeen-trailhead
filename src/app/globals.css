@@ -4,10 +4,75 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-hv-bg text-hv-text antialiased;
+@layer base {
+  body {
+    @apply bg-hv-bg text-hv-text antialiased;
+  }
+
+  /* Headings inherit the site's navy, as they do on the marketing pages. */
+  h1,
+  h2,
+  h3 {
+    @apply text-navy;
+    line-height: 1.2;
+  }
+
+  ::selection {
+    @apply bg-teal-tint text-navy;
+  }
 }
 
-::selection {
-  @apply bg-hv-accent/40;
+@layer components {
+  /* ── Section kicker ────────────────────────────────────────────────────────
+     The site's .section-kicker: small, wide-tracked, teal, above a heading. */
+  .hv-kicker {
+    @apply text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-teal-ink;
+  }
+
+  .hv-kicker-light {
+    @apply text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-teal;
+  }
+
+  /* ── Cards ────────────────────────────────────────────────────────────────
+     Resting state is quiet; hover borrows the site's .cap-card lift. */
+  .hv-card {
+    @apply rounded-hv border border-hv-border bg-hv-panel shadow-card;
+  }
+
+  .hv-lift {
+    @apply transition duration-200 hover:-translate-y-1 hover:border-teal hover:shadow-hv;
+  }
+
+  /* ── Chips (the site's .fc-chip lane markers) ─────────────────────────────*/
+  .hv-chip {
+    @apply inline-flex items-center rounded px-1.5 py-[2px] text-[0.56rem] font-bold uppercase tracking-[0.04em] text-white;
+  }
+
+  /* ── Pill buttons (the site's .btn family) ────────────────────────────────*/
+  .hv-btn {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold transition duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .hv-btn-primary {
+    @apply hv-btn bg-teal-bright text-white shadow-[0_8px_24px_rgba(0,179,178,0.35)] hover:-translate-y-0.5 hover:bg-teal disabled:translate-y-0;
+  }
+
+  .hv-btn-navy {
+    @apply hv-btn bg-navy text-white hover:-translate-y-0.5 hover:bg-azure disabled:translate-y-0;
+  }
+
+  .hv-btn-ghost {
+    @apply hv-btn border-[1.5px] border-hv-border bg-white text-navy hover:border-teal hover:text-teal-ink;
+  }
+
+  /* Numerals: Segoe, like the site's report chrome. */
+  .hv-num {
+    @apply font-num tabular-nums;
+  }
+}
+
+/* Keep long report tables from dragging the page sideways. */
+.hv-scroll-x {
+  overflow-x: auto;
+  scrollbar-width: thin;
 }

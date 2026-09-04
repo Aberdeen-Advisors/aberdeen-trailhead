@@ -96,7 +96,7 @@ export function PodcastPanel({
         <a
           href={audioUrl}
           download={fileName}
-          className="block w-full rounded-lg border border-hv-border px-3 py-2 text-center text-sm text-hv-muted transition hover:text-hv-text"
+          className="block w-full rounded-full border border-hv-border px-3 py-2 text-center text-sm font-medium text-hv-muted transition hover:border-teal hover:text-teal-ink"
         >
           ⬇ Download MP3
         </a>
@@ -104,13 +104,13 @@ export function PodcastPanel({
       <button
         onClick={build}
         disabled={busy}
-        className="flex w-full items-center justify-center gap-2 rounded-lg border border-hv-accent/40 bg-hv-accent/5 px-3 py-2 text-sm font-medium text-hv-accent transition hover:bg-hv-accent/10 disabled:opacity-70"
+        className="flex w-full items-center justify-center gap-2 rounded-full border-[1.5px] border-teal/50 bg-teal-tint/50 px-4 py-2.5 text-sm font-semibold text-navy transition hover:border-teal hover:bg-teal-tint disabled:opacity-70"
       >
         {busy ? <Spinner /> : <span aria-hidden>🎙</span>}
         {busy ? "Rendering…" : "Build a Podcast Update"}
       </button>
       {busy && (
-        <div className="rounded-lg border border-hv-border bg-hv-bg p-3">
+        <div className="rounded-hv border border-hv-border bg-hv-bg p-3">
           <div className="flex items-center justify-between gap-2">
             <p className="text-xs text-hv-muted">{stage}</p>
             <span className="shrink-0 font-mono text-xs text-hv-muted">
@@ -119,7 +119,7 @@ export function PodcastPanel({
           </div>
           <div className="mt-2 h-1 w-full overflow-hidden rounded bg-hv-border">
             <div
-              className="h-1 rounded bg-hv-accent transition-all duration-1000"
+              className="h-1 rounded bg-teal-bright transition-all duration-1000"
               style={{ width: `${Math.min(95, Math.round((elapsed / 90) * 100))}%` }}
             />
           </div>
@@ -127,7 +127,7 @@ export function PodcastPanel({
         </div>
       )}
       {result && !busy && (
-        <div className="rounded-lg border border-hv-border bg-hv-bg p-3">
+        <div className="rounded-hv border border-hv-border bg-hv-bg p-3">
           <p className="text-xs text-hv-muted">{result.message}</p>
           {result.script && (
             <pre className="mt-2 max-h-64 overflow-y-auto whitespace-pre-wrap text-xs leading-relaxed text-hv-text">

@@ -1,74 +1,87 @@
 import Link from "next/link";
 import { getSessionUser, signOut } from "@/auth";
-import { isDemoMode } from "@/lib/config";
+import { isDemoMode, hvTier } from "@/lib/config";
+import { NavTabs } from "@/components/nav-tabs";
 
-const links = [
-  { href: "/portal", label: "Portfolio" },
-  { href: "/portal/transformation", label: "Transformation Program" },
-  { href: "/portal/dashboards", label: "Dashboards" },
-  { href: "/portal/reports", label: "Reports" },
-  { href: "/portal/ask", label: "Ask Horizon" },
-  { href: "/portal/live", label: "Solution in Action" },
-];
+function initials(name: string): string {
+  const words = name.split(/\s+/).filter(Boolean);
+  return words.slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?";
+}
 
 export default async function Nav() {
   const user = await getSessionUser();
   const demo = isDemoMode();
+  const name = user?.name ?? "Guest";
+
   return (
-    <header className="sticky top-0 z-40 border-b border-hv-border bg-hv-bg/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
-        <div className="flex items-center gap-6">
-          <Link
-            href="/"
-            className="flex items-center gap-1.5 rounded-lg border border-hv-border px-2.5 py-1.5 text-xs font-medium text-hv-muted transition hover:border-hv-accent/50 hover:bg-hv-panel hover:text-hv-text"
-          >
-            <span aria-hidden="true">←</span> trAIlhead
-          </Link>
-          <Link href="/portal" className="flex items-center gap-3">
+    <header className="sticky top-0 z-40 shadow-[0_1px_0_rgba(9,55,95,0.06)]">
+      {/* ── Brand band ───────────────────────────────────────────────────────
+          Navy, matching the marketing hero. Uses the white logo lockups. */}
+      <div className="bg-hv-hero">
+        <div className="mx-auto flex max-w-[1320px] items-center gap-5 px-6 py-3">
+          <Link href="/portal" className="flex shrink-0 items-center gap-3.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/horizonview-logo-dark.png" alt="HorizonView" className="h-8 w-auto" />
-            <span className="hidden border-l border-hv-border pl-3 text-[11px] leading-tight text-hv-muted sm:block">
-              by Aberdeen
-              <br />
-              Advisors
-            </span>
+            <img src="/aberdeen-logo-white.svg" alt="Aberdeen Advisors" className="h-6 w-auto" />
+            <span aria-hidden="true" className="block h-7 w-px bg-white/25" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/horizonview-logo-white.png" alt="HorizonView" className="h-8 w-auto" />
           </Link>
-          <nav className="hidden gap-1 md:flex">
-            {links.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="rounded-lg px-3 py-1.5 text-sm text-hv-muted transition hover:bg-hv-panel hover:text-hv-text"
-              >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-        <div className="flex items-center gap-3">
-          {demo && (
-            <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-300">
-              Demo Mode
+
+          <span className="hidden text-[0.72rem] font-light leading-tight text-white/55 lg:block">
+            Project &amp; Portfolio
+            <br />
+            Intelligence Platform
+          </span>
+
+          <div className="ml-auto flex items-center gap-2.5">
+            {demo && (
+              <span className="hidden items-center gap-1.5 rounded-full border border-teal/40 bg-teal/15 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-teal-tint sm:inline-flex">
+                <span className="h-1.5 w-1.5 rounded-full bg-teal-bright" />
+                Demo Mode
+              </span>
+            )}
+            <span className="hidden rounded-full border border-white/20 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-white/70 md:inline-flex">
+              {hvTier()} tier
             </span>
-          )}
-          <span className="text-sm text-hv-muted">{user?.name ?? "Guest"}</span>
-          {!demo && user && (
-            <form
-              action={async () => {
-                "use server";
-                await signOut({ redirectTo: "/" });
-              }}
-            >
-              <button
-                type="submit"
-                className="rounded-lg border border-hv-border px-3 py-1.5 text-sm text-hv-muted transition hover:bg-hv-panel hover:text-hv-text"
+
+            <span className="flex items-center gap-2 rounded-full bg-white/10 py-1 pl-1 pr-3.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-teal-bright text-[0.7rem] font-bold text-white">
+                {initials(name)}
+              </span>
+              <span className="whitespace-nowrap text-[0.8rem] font-medium text-white">{name}</span>
+            </span>
+
+            {!demo && user && (
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut({ redirectTo: "/" });
+                }}
               >
-                Sign out
-              </button>
-            </form>
-          )}
+                <button
+                  type="submit"
+                  className="whitespace-nowrap rounded-full border border-white/25 px-3.5 py-1.5 text-[0.78rem] font-medium text-white/80 transition hover:border-teal hover:text-white"
+                >
+                  Sign out
+                </button>
+              </form>
+            )}
+
+            <Link
+              href="/"
+              className="hidden whitespace-nowrap rounded-full border border-white/25 px-3.5 py-1.5 text-[0.78rem] font-medium text-white/80 transition hover:border-teal hover:text-white sm:inline-flex"
+            >
+              <span aria-hidden="true" className="mr-1">
+                ←
+              </span>
+              trAIlhead
+            </Link>
+          </div>
         </div>
       </div>
+
+      {/* ── Section tabs ─────────────────────────────────────────────────── */}
+      <NavTabs />
     </header>
   );
 }
