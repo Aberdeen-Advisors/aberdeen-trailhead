@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProject, getRaid, getMilestones, isRaidEditable } from "@/lib/data/provider";
-import { HealthBadge, KpiCard, MilestoneStatusLabel, Panel, ScoreBar, fmtMoney } from "@/components/ui";
+import { HealthBadge, KpiCard, Panel, ScoreBar, fmtMoney } from "@/components/ui";
 import { GenerateDeckButton } from "@/components/generate-deck-button";
 import { PodcastPanel } from "@/components/podcast-panel";
+import { MilestoneGantt } from "@/components/milestone-gantt";
 import { ProjectLogo } from "@/components/project-logo";
 import { RaidEditor } from "@/components/raid-editor";
 import { tierHasPodcasts } from "@/lib/config";
@@ -124,6 +125,22 @@ export default async function ProjectPage({ params }: { params: { id: string } }
               ))}
             </ul>
           </Panel>
+
+          <Panel
+            title="Milestone Timeline"
+            action={
+              <span className="hv-num text-[0.72rem] text-hv-muted">
+                {milestones.length} milestone{milestones.length === 1 ? "" : "s"}
+              </span>
+            }
+          >
+            <MilestoneGantt
+              milestones={milestones}
+              startDate={project.startDate}
+              endDate={project.endDate}
+              forecastEndDate={project.forecastCompletionDate}
+            />
+          </Panel>
         </div>
 
         <div className="space-y-6">
@@ -152,23 +169,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             <p className="text-sm font-light leading-relaxed text-hv-muted">{project.weeklyChangeSummary}</p>
           </Panel>
 
-          <Panel title="Milestones">
-            <ul className="space-y-3.5">
-              {milestones.map((m) => (
-                <li key={m.id} className="flex items-start justify-between gap-3 text-sm">
-                  <div className="min-w-0">
-                    <div className="text-hv-text">{m.name}</div>
-                    <div className="hv-num mt-0.5 text-xs text-hv-muted">
-                      Baseline {m.baselineDate}
-                      {m.forecastDate !== m.baselineDate && ` · Forecast ${m.forecastDate}`}
-                    </div>
-                  </div>
-                  <MilestoneStatusLabel status={m.status} />
-                </li>
-              ))}
-            </ul>
-          </Panel>
-
+          {/* Milestones live in the timeline in the main column now. */}
           <Panel title="Executive Podcast">
             <PodcastPanel projectId={project.id} podcastUrl={project.podcastUrl} enabled={tierHasPodcasts()} />
           </Panel>
