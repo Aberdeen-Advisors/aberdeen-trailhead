@@ -36,6 +36,14 @@ export interface Project {
   // Links
   sharePointUrl: string;
   powerBiReportUrl: string;
+  /** Where this project's data lives. "database" projects are created and edited in HorizonView. */
+  source?: "demo" | "semantic-model" | "database";
+  /** "Runs on" stack keys (see lib/stacks.ts). */
+  stack?: string[];
+  /** Why the health score is what it is (calculated projects only). */
+  healthReasons?: string[];
+  /** Plain-text description entered when the project was created. */
+  description?: string | null;
 }
 
 export interface RaidItem {

@@ -43,3 +43,6 @@ export const sbUpdate = async (table: string, filter: string, patch: Row): Promi
 
 export const sbDelete = (table: string, filter: string): Promise<Row[]> =>
   call<Row[]>("DELETE", `${table}?${filter}`, undefined, "return=representation");
+
+/** Call a Postgres function exposed through PostgREST (e.g. hv_create_project). */
+export const sbRpc = <T = unknown>(fn: string, args: Row): Promise<T> => call<T>("POST", `rpc/${fn}`, args);

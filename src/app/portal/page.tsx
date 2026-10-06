@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { getPortfolioKpis, getProjects, getRaid, openDecisions } from "@/lib/data/provider";
+import { getPortfolioKpis, getProjects, getRaid, openDecisions, samplesHidden } from "@/lib/data/provider";
+import { SamplesToggle } from "@/components/samples-toggle";
+import { hasSupabase } from "@/lib/supabase";
 import { PortfolioSummaryText, PortfolioSummarySkeleton } from "@/components/portfolio-summary";
 import { HealthBadge, KpiCard, Panel, PageHeader, ScoreBar, SegmentBar, fmtMoney } from "@/components/ui";
 import { ProjectLogo } from "@/components/project-logo";
 import { StackLogos } from "@/components/stack-logos";
-import { stackFor, stackDetail, type StackKey } from "@/lib/stacks";
+import { stackOf, stackDetail, type StackKey } from "@/lib/stacks";
 
 export const dynamic = "force-dynamic";
 // AI summaries can take several seconds to write on a cache miss.
@@ -13,6 +15,7 @@ export const maxDuration = 60;
 
 export default async function PortfolioHome() {
   const [kpis, projects, raid] = await Promise.all([getPortfolioKpis(), getProjects(), getRaid()]);
+  const hideSamples = samplesHidden();
   const spendPct = kpis.totalBudget > 0 ? Math.round((kpis.totalActuals / kpis.totalBudget) * 100) : 0;
 
   // Decisions Needed: one entry per project, from each project's own RAID log
@@ -200,7 +203,15 @@ export default async function PortfolioHome() {
       <div>
         <div className="mb-4 flex items-baseline justify-between gap-3">
           <h2 className="hv-kicker">Projects</h2>
-          <span className="hv-num text-[0.72rem] text-hv-muted">{projects.length} active</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <span className="hv-num text-[0.72rem] text-hv-muted">{projects.length} active</span>
+            <SamplesToggle hidden={hideSamples} />
+            {hasSupabase() && (
+              <Link href="/portal/projects/new" className="hv-btn-navy px-4 py-2 text-[0.8rem] font-semibold">
+                + New project
+              </Link>
+            )}
+          </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {projects.map((p) => (
@@ -221,7 +232,12 @@ export default async function PortfolioHome() {
                     </div>
                   </div>
                 </div>
-                <HealthBadge status={p.status} />
+                <div className="flex shrink-0 flex-col items-end gap-1.5">
+                  <HealthBadge status={p.status} />
+                  {p.source === "demo" && (
+                    <span className="rounded-full bg-hv-bg px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider text-hv-subtle">Sample</span>
+                  )}
+                </div>
               </div>
 
               <div className="mt-4 space-y-3">
@@ -230,7 +246,7 @@ export default async function PortfolioHome() {
                   <span>
                     {p.phase} · {p.percentComplete}% complete
                   </span>
-                  <span className="font-semibold text-navy">{fmtMoney(p.budget)}</span>
+                  <span className="font-semibold text-navy">{p.budget > 0 ? fmtMoney(p.budget) : "—"}</span>
                 </div>
               </div>
 
@@ -238,12 +254,12 @@ export default async function PortfolioHome() {
                 {p.weeklyChangeSummary}
               </p>
 
-              {stackFor(p.id).length > 0 && (
+              {stackOf(p).length > 0 && (
                 <div className="mt-auto pt-3">
                   <div className="border-t border-hv-border pt-3">
                     <StackLogos
-                      stack={stackFor(p.id)}
-                      details={Object.fromEntries(stackFor(p.id).map((k) => [k, stackDetail(p.id, k)])) as Partial<Record<StackKey, string>>}
+                      stack={stackOf(p)}
+                      details={Object.fromEntries(stackOf(p).map((k) => [k, stackDetail(p, k)])) as Partial<Record<StackKey, string>>}
                     />
                   </div>
                 </div>

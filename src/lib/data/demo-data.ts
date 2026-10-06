@@ -269,3 +269,58 @@ export const demoDocuments: { projectId: string; doc: string; snippet: string }[
       "Union scheduling rules vary by local agreement; 11 policy questions were raised requiring Labor Relations rulings before design can be finalized.",
   },
 ];
+
+// ── Executive Dashboard (client PowerPoint template) — sample detail ─────────
+// Workstream-level detail the client's Executive Dashboard template needs.
+// Demo data for Project Phoenix; a live project would supply the same shape
+// from its own plan.
+export interface DemoDashboardDetail {
+  lastMonthPct: number;
+  summaryHeadline: string;
+  detailHeadline: string;
+  detailSub: string;
+  next: string;
+  priorities: { title: string; text: string }[];
+  next60: string;
+  workstreams: {
+    name: string;
+    short?: string;
+    label: [string, string];
+    pct: number;
+    lastMonth: number;
+    status: "Completed" | "Active" | "Deferred" | "At Risk";
+    nextGate?: string;
+    due?: string; // YYYY-MM-DD
+  }[];
+}
+
+export const demoDashboardDetail: Record<string, DemoDashboardDetail> = {
+  phoenix: {
+    lastMonthPct: 74,
+    summaryHeadline: "Phoenix is 78% complete; Dallas circuits put the exit at risk",
+    detailHeadline: "Phoenix is 78% complete; the Dallas carrier now drives the critical path",
+    detailSub: "Network, waves 6–8 and contract exit remain open; decommissioning follows the datacenter exit.",
+    next: "Bring Dallas circuits live, re-sequence waves 6–8 to non-Dallas sites and rehearse the database cutover.",
+    priorities: [
+      { title: "Escalate the Dallas carrier", text: "Trigger the contractual penalty and escalate to the carrier's executive sponsor; circuits have slipped twice." },
+      { title: "Run the alternate carrier in parallel", text: "Approve the +$140K alternate quote as a parallel path while the carrier decision is pending." },
+      { title: "Re-sequence app waves 6–8", text: "Move the remaining app migrations to non-Dallas sites to protect the datacenter exit date." },
+    ],
+    next60: "Exit the datacenter, finish waves 6–8 and the database cutover, then close vendor contracts and begin decommissioning.",
+    workstreams: [
+      { name: "Network & Circuits", short: "Network", label: ["Network &", "Circuits"], pct: 65, lastMonth: 62, status: "At Risk", nextGate: "Dallas circuits live; failover test", due: "2026-10-14" },
+      { name: "Datacenter Exit", short: "Datacenter", label: ["Datacenter", "Exit"], pct: 70, lastMonth: 61, status: "Active", nextGate: "Cage clear-out and power-down plan", due: "2026-10-22" },
+      { name: "Compute & Storage", short: "Compute", label: ["Compute &", "Storage"], pct: 90, lastMonth: 84, status: "Active", nextGate: "Final storage replication cutover", due: "2026-10-16" },
+      { name: "App Waves 1–5", short: "Waves 1–5", label: ["App Waves", "1–5"], pct: 100, lastMonth: 100, status: "Completed" },
+      { name: "App Waves 6–8", short: "Waves 6–8", label: ["App Waves", "6–8"], pct: 50, lastMonth: 46, status: "At Risk", nextGate: "Re-sequence waves to non-Dallas sites", due: "2026-10-09" },
+      { name: "Database Migration", short: "Database", label: ["Database", "Migration"], pct: 85, lastMonth: 78, status: "Active", nextGate: "Oracle cluster cutover rehearsal", due: "2026-10-20" },
+      { name: "Backup & DR", short: "Backup & DR", label: ["Backup &", "DR"], pct: 100, lastMonth: 100, status: "Completed" },
+      { name: "Security & Firewall", short: "Security", label: ["Security &", "Firewall"], pct: 100, lastMonth: 100, status: "Completed" },
+      { name: "Monitoring & Tooling", short: "Monitoring", label: ["Monitoring", "& Tooling"], pct: 100, lastMonth: 100, status: "Completed" },
+      { name: "Identity & Access", short: "Identity", label: ["Identity &", "Access"], pct: 100, lastMonth: 100, status: "Completed" },
+      { name: "Service Desk & Runbooks", short: "Service Desk", label: ["Service Desk", "Runbooks"], pct: 90, lastMonth: 85, status: "Active", nextGate: "Hypercare runbooks signed off", due: "2026-10-21" },
+      { name: "Vendor & Contract Exit", short: "Vendor Exit", label: ["Vendor &", "Contracts"], pct: 60, lastMonth: 52, status: "Active", nextGate: "Carrier penalty claim; colo exit notice", due: "2026-10-31" },
+      { name: "Decommission & Disposal", short: "Decom", label: ["Decom &", "Disposal"], pct: 0, lastMonth: 0, status: "Deferred" },
+    ],
+  },
+};

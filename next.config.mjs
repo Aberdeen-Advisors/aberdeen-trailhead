@@ -10,6 +10,9 @@ const nextConfig = {
         "./public/deck-cover.png",
         "./public/assets/aberdeen-logo.png",
       ],
+      // The client's Executive Dashboard template, filled by this route.
+      "/api/reports/executive-dashboard": ["./src/assets/templates/executive-dashboard.pptx"],
+      "/api/reports/guest-deck": ["./src/assets/templates/executive-dashboard.pptx"],
     },
   },
   async rewrites() {

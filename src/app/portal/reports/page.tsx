@@ -4,6 +4,8 @@ import { Notice, PageHeader, Panel } from "@/components/ui";
 import { GenerateDeckButton } from "@/components/generate-deck-button";
 import { PodcastPanel } from "@/components/podcast-panel";
 import { ProjectLogo } from "@/components/project-logo";
+import { projectDashboard, hasClientTemplate } from "@/lib/stacks";
+import { styleFor } from "@/components/showcase-dashboards";
 
 export const dynamic = "force-dynamic";
 
@@ -75,13 +77,15 @@ export default async function ReportsPage() {
       <PageHeader
         kicker="Dashboards & Reports"
         title="Dashboards & Reports"
-        sub="Interactive Power BI dashboards for exploring the portfolio, and one-click executive reports generated from the same certified data."
+        sub="Interactive dashboards for exploring the portfolio and each project, and one-click executive reports generated from the same data."
       />
 
       {!live && (
         <Notice>
-          Demo mode — the dashboard links below open the live Power BI reports on the Project Elevate
-          workspace. Set the <code className="font-semibold">POWERBI_*</code> variables and{" "}
+          Demo mode — the portfolio dashboards open the live Power BI reports on the Project Elevate
+          workspace. Project dashboards open where each project lives: Power BI for Elevate, the live HTML
+          dashboard for projects kept in HorizonView, and a built-in HorizonView dashboard (each in a different
+          style) for the sample projects. Set the <code className="font-semibold">POWERBI_*</code> variables and{" "}
           <code className="font-semibold">POWERBI_REPORT_LINKS</code> to surface different workspace reports
           per environment.
         </Notice>
@@ -121,26 +125,31 @@ export default async function ReportsPage() {
         action={<span className="hv-num text-[0.72rem] text-hv-muted">{projects.length} projects</span>}
       >
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {projects.map((p) => (
+          {projects.map((p) => {
+            const dash = projectDashboard(p);
+            const sub = dash.kind === "internal" ? `${dash.label} · ${styleFor(p.id).name} style` : dash.label;
+            const badge = { powerbi: ["Power BI", "bg-[#F2C811]/20 text-[#7A5F00]"], html: ["HTML", "bg-teal-tint text-teal-ink"], internal: ["HorizonView", "bg-navy/10 text-navy"] }[dash.kind];
+            return (
             <a
               key={p.id}
-              href={p.powerBiReportUrl}
-              target="_blank"
-              rel="noreferrer"
+              href={dash.href}
+              {...(dash.kind === "internal" ? {} : { target: "_blank", rel: "noreferrer" })}
               className="group flex items-center gap-3 rounded-hv border border-hv-border p-3.5 transition duration-200 hover:-translate-y-0.5 hover:border-teal hover:shadow-hv"
             >
               <ProjectLogo projectId={p.id} name={p.name} size={34} />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-semibold text-navy">{p.name}</span>
-                <span className="hv-num mt-0.5 block text-[0.72rem] text-hv-muted">
-                  {p.code} · Power BI report
+                <span className="hv-num mt-0.5 block truncate text-[0.72rem] text-hv-muted">
+                  {p.code} · {sub}
                 </span>
               </span>
+              <span className={`shrink-0 rounded-full px-2 py-0.5 text-[0.62rem] font-semibold ${badge[1]}`}>{badge[0]}</span>
               <span className="shrink-0 text-[0.72rem] font-semibold text-hv-subtle transition group-hover:text-teal-ink">
-                ↗
+                {dash.kind === "internal" ? "→" : "↗"}
               </span>
             </a>
-          ))}
+            );
+          })}
         </div>
       </Panel>
 
@@ -157,10 +166,20 @@ export default async function ReportsPage() {
           action={<span className="hv-chip bg-navy">PPTX</span>}
         >
           <p className="mb-5 text-sm font-light leading-relaxed text-hv-muted">
-            Portfolio health KPIs, AI executive summary, one slide per project (summary, risks,
-            recommended actions, milestones, decisions), and a consolidated decisions table.
+            <span className="font-semibold text-navy">Built to your company template.</span> Sums up the whole
+            portfolio: health KPIs and an AI executive summary, one slide per project (summary, risks,
+            recommended actions, milestones, decisions), and a consolidated decisions table. We customize the
+            deck to your own PowerPoint template, so it arrives in your brand, layout and fonts, ready to present.
           </p>
-          <GenerateDeckButton label="Generate Portfolio Deck" />
+          <div className="flex flex-wrap items-center gap-3">
+            <GenerateDeckButton label="Generate Portfolio Deck" />
+            <GenerateDeckButton endpoint="/api/reports/guest-deck" label="Guest Demo Deck" variant="secondary" />
+          </div>
+          <p className="mt-3 text-[0.72rem] font-light leading-relaxed text-hv-subtle">
+            Guest Demo Deck: the same portfolio built into a guest client&apos;s template (PKFOD executive
+            dashboard), showing how any template can be filled. Cover, portfolio summary, then one dashboard
+            slide per project, filled from live data.
+          </p>
         </Panel>
 
         <Panel title="Portfolio Podcast Briefing" action={<span className="hv-chip bg-teal-bright">MP3</span>}>
@@ -180,27 +199,104 @@ export default async function ReportsPage() {
           {projects.map((p) => (
             <div
               key={p.id}
-              className="flex items-center justify-between gap-3 rounded-hv border border-hv-border p-3.5 transition hover:border-teal"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-hv border border-hv-border p-3.5 transition hover:border-teal"
             >
-              <div className="min-w-0">
+              <div className="min-w-[9rem] flex-1">
                 <div className="truncate text-sm font-semibold text-navy">{p.name}</div>
                 <div className="hv-num mt-0.5 text-[0.72rem] text-hv-muted">{p.code}</div>
               </div>
-              <GenerateDeckButton projectId={p.id} label="Generate" />
+              {/* Same buttons, same output as the project page. */}
+              <div className="flex shrink-0 flex-wrap justify-end gap-2">
+                <GenerateDeckButton projectId={p.id} label="SteerCo Deck" />
+                {hasClientTemplate(p) && (
+                  <GenerateDeckButton
+                    projectId={p.id}
+                    endpoint="/api/reports/executive-dashboard"
+                    label="Client template"
+                    variant="secondary"
+                  />
+                )}
+              </div>
             </div>
           ))}
         </div>
       </Panel>
 
-      <Panel title="Scheduled Reports">
-        <p className="text-sm font-light leading-relaxed text-hv-muted">
-          A Vercel Cron job hits{" "}
-          <code className="rounded bg-navy-tint px-1.5 py-0.5 font-num text-xs font-semibold text-navy">
-            /api/cron/weekly-insights
-          </code>{" "}
-          every Monday at 12:00 UTC. In live mode it triggers the Fabric AI insights notebook so
-          fresh executive summaries, risk scores, and forecasts are ready before the week starts.
-          Extend it to email decks via Microsoft Graph sendMail.
+      <Panel
+        title="Scheduled Reports & Agentic Automation"
+        action={<span className="hv-chip bg-navy">Scoped at implementation</span>}
+      >
+        <p className="max-w-4xl text-sm font-light leading-relaxed text-hv-muted">
+          Reports shouldn&apos;t wait for someone to click a button. HorizonView&apos;s data, decks and briefings can run
+          on autopilot: delivered on a schedule, triggered the moment something changes, and chased until it&apos;s
+          done. Aberdeen scopes the automations with you during your HorizonView implementation, then builds them on
+          the platform that fits your stack.
+        </p>
+
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
+          {[
+            { name: "Power Automate", logo: "power-automate", text: "For Microsoft 365 shops: Outlook, Teams and SharePoint flows with your existing security and approvals." },
+            { name: "n8n", logo: "n8n", text: "Open, self-hostable workflows that connect HorizonView to almost any system, from Jira to Slack to ServiceNow." },
+            { name: "CrewAI agents", logo: "crewai", text: "Teams of AI agents that read the portfolio, reason about it, draft the follow-up and hand it to a human to approve." },
+          ].map((t) => (
+            <div key={t.name} className="rounded-hv border border-hv-border bg-hv-bg p-4">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-hv-border bg-white">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`/automation-logos/${t.logo}.svg`} alt="" aria-hidden="true" className="h-5 w-5" />
+                </span>
+                <span className="text-sm font-semibold text-navy">{t.name}</span>
+              </div>
+              <p className="mt-2 text-[0.78rem] font-light leading-relaxed text-hv-muted">{t.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 grid gap-4 lg:grid-cols-3">
+          {[
+            {
+              scope: "Transformation program",
+              items: [
+                "Monday 7am: the portfolio SteerCo deck and podcast land in every executive's inbox, built from Friday's data",
+                "Benefits and cost tracking rolls up from every workstream into one monthly board pack, no spreadsheets",
+                "An agent drafts the program status narrative; the PMO lead edits and approves it in Teams",
+              ],
+            },
+            {
+              scope: "Portfolio",
+              items: [
+                "A project turns Red: the sponsor gets a Teams alert with the reason and the recommended action",
+                "Decisions past their due date escalate automatically, first to the owner, then to the sponsor",
+                "Weekly digest of what changed across all projects: new risks, slipped milestones, closed items",
+              ],
+            },
+            {
+              scope: "Single project",
+              items: [
+                "Overdue task reminders to each owner, with a one-click link to update status",
+                "Thursday nudge to the PM when this week's status hasn't been entered yet",
+                "Milestone 5 days out and not on track: the agent drafts a recovery note and books the review",
+              ],
+            },
+          ].map((g) => (
+            <div key={g.scope} className="rounded-hv border border-hv-border p-4">
+              <div className="hv-kicker mb-3">{g.scope}</div>
+              <ul className="space-y-2.5">
+                {g.items.map((i) => (
+                  <li key={i} className="flex gap-2.5 text-[0.8rem] leading-relaxed text-hv-text">
+                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-full bg-teal" />
+                    {i}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-5 border-t border-hv-border pt-4 text-[0.75rem] font-light leading-relaxed text-hv-subtle">
+          Every automation reads the same project data you see here, whatever system each project runs on, and anything
+          that goes to a person can be set to require human approval first. Already running: a weekly scheduled job
+          (Mondays, 12:00 UTC) that refreshes AI insights for projects on Microsoft Fabric.
         </p>
       </Panel>
     </div>

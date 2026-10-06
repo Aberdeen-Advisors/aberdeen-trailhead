@@ -28,7 +28,7 @@ function colorFor(name: string): string {
 }
 
 function initials(name: string): string {
-  const words = name.replace(/^Project\s+/i, "").split(/\s+/).filter(Boolean);
+  const words = name.replace(/^Project\s+/i, "").split(/[^A-Za-z0-9]+/).filter(Boolean);
   return words.slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?";
 }
 

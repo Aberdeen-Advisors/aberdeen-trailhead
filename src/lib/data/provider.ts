@@ -4,9 +4,21 @@ import { getLiveProjects, getLiveRaid, getLiveMilestones, ELEVATE_PROJECT_ID } f
 import { applyRaidOverlay } from "@/lib/data/raid-store";
 import { getModelLastRefresh, type ModelRefresh } from "@/lib/msft/powerbi";
 import { hasSupabase, sbSelect } from "@/lib/supabase";
-import { supabaseProjectIds } from "@/lib/stacks";
+import { fixedStackFor } from "@/lib/stacks";
+import { dbProjects, dbProjectIds, isDbProject } from "@/lib/registry";
 import type { RaidType } from "@/lib/types";
-import { statusFromScore } from "@/lib/health";
+import { statusFromScore, calcHealth, calcPercentComplete } from "@/lib/health";
+import { cookies } from "next/headers";
+
+// "Hide sample projects" (a per-browser preference, set from Portfolio Home).
+export const SAMPLES_COOKIE = "hv_hide_samples";
+export function samplesHidden(): boolean {
+  try {
+    return cookies().get(SAMPLES_COOKIE)?.value === "1";
+  } catch {
+    return false; // outside a request (e.g. scheduled jobs)
+  }
+}
 
 import type { Project, RaidItem, Milestone, PortfolioKpis } from "@/lib/types";
 
@@ -22,7 +34,7 @@ const sbStatus = (s: string): RaidItem["status"] =>
   s === "Closed" || s === "Overdue" || s === "In Progress" ? s : "Open";
 
 async function fromSupabase<T>(label: string, base: T[], load: (ids: string[]) => Promise<T[]>, projectOf: (x: T) => string): Promise<T[]> {
-  const ids = supabaseProjectIds();
+  const ids = await dbProjectIds();
   if (!hasSupabase() || !ids.length) return base;
   try {
     const rows = await load(ids);
@@ -57,68 +69,122 @@ const loadSbMilestones = async (ids: string[]): Promise<Milestone[]> =>
     status: m.status,
   }));
 
-// Project record (status, health, % complete, dates, budget and actuals) for
-// Supabase projects. Merged over the sample record so the AI narrative fields
-// remain; every number the KPIs, SteerCo deck and podcast use comes from the database.
+// Projects kept in the HorizonView database: everything on the card, the KPIs,
+// the SteerCo deck and the podcast is read from the database, and % complete
+// and health are calculated from the project's own plan, milestones, RAID log
+// and weekly status, so nobody types a roll-up number. Alpha also exists as a
+// built-in sample; its sample narrative is kept until the AI rewrites it.
 const lastNum = (xs: (number | null)[]) => { for (let i = xs.length - 1; i >= 0; i--) if (xs[i] != null) return xs[i] as number; return 0; };
 const toNum = (v: unknown) => (v == null || v === "" ? null : Number(v));
-const sbHealth = (s: string): Project["status"] => (s === "Green" || s === "Red" ? s : "Amber");
+const todayIso = () => new Date().toISOString().slice(0, 10);
+const markOverdue = (r: RaidItem, today: string): RaidItem =>
+  r.status === "Open" && r.dueDate && r.dueDate < today ? { ...r, status: "Overdue" } : r;
+const mapSbRaid = (r: SbRow): RaidItem => ({
+  id: r.ref ?? r.id,
+  projectId: r.project_id,
+  type: sbRaidType(r.raid_type),
+  title: r.title,
+  severity: sbSeverity(r.priority),
+  owner: r.owner ?? "",
+  dueDate: r.due_date ?? "",
+  status: sbStatus(r.status),
+});
 
-async function overlaySbProjects(base: Project[]): Promise<Project[]> {
-  const ids = supabaseProjectIds();
-  if (!hasSupabase() || !ids.length) return base;
+async function withDbProjects(base: Project[]): Promise<Project[]> {
+  const rows = await dbProjects();
+  if (!rows.length) return base;
+  const ids = rows.map((r) => String(r.id));
   try {
-    const [rows, fin, ms, su, dec] = await Promise.all([
-      sbSelect("projects", `id=in.(${ids.map(encodeURIComponent).join(",")})`),
+    const [fin, ms, su, raidRows, acts] = await Promise.all([
       sbSelect("financials", `${inList(ids)}&order=month.asc`),
       sbSelect("milestones", `${inList(ids)}&order=forecast_date.asc.nullslast`),
-      sbSelect("status_updates", `${inList(ids)}&workstream_id=is.null&order=week_of.desc,updated_at.desc`),
-      sbSelect("raid_items", `${inList(ids)}&raid_type=eq.Decision&status=neq.Closed&order=due_date.asc.nullslast`),
+      sbSelect("status_updates", `${inList(ids)}&order=week_of.desc,updated_at.desc`),
+      sbSelect("raid_items", `${inList(ids)}&order=due_date.asc.nullslast`),
+      sbSelect("activities", `${inList(ids)}&select=project_id,status,start_date,target_date,pct_complete,update_type`),
     ]);
-    const byId = new Map(rows.map((r: SbRow) => [r.id as string, r]));
-    const out = base.map((p): Project => {
-      const r = byId.get(p.id);
-      if (!r) return p;
+    const today = todayIso();
+    const built = rows.map((r: SbRow): Project => {
+      const id = String(r.id);
+      const p = base.find((b) => b.id === id);
       // Financials are cumulative by month per workstream: take each workstream's latest value.
-      const f = fin.filter((x: SbRow) => x.project_id === p.id);
+      const f = fin.filter((x: SbRow) => x.project_id === id);
       const sumLatest = (key: string) => {
         const by = new Map<string, (number | null)[]>();
         for (const x of f) { const k = String(x.workstream_id); if (!by.has(k)) by.set(k, []); by.get(k)!.push(toNum(x[key])); }
-        let s = 0; by.forEach((v) => (s += lastNum(v))); return s * 1000;
+        let total = 0; by.forEach((v) => (total += lastNum(v))); return total * 1000;
       };
-      const pms = ms.filter((m: SbRow) => m.project_id === p.id);
-      const goLive: SbRow | undefined = pms.find((m: SbRow) => /go[- ]?live/i.test(m.name)) ?? pms[pms.length - 1];
-      const latest: SbRow | undefined = su.find((s: SbRow) => s.project_id === p.id);
-      // Decision Needed = the project's most urgent open decision in its RAID log.
-      const decs = dec.filter((d: SbRow) => d.project_id === p.id)
-        .sort((a: SbRow, b: SbRow) => decisionRank(sbStatus(a.status)) - decisionRank(sbStatus(b.status)));
-      const topDec: SbRow | undefined = decs[0];
+      const pms = ms.filter((m: SbRow) => m.project_id === id);
+      const lastMs = [...pms].filter((m) => m.forecast_date).sort((a, b) => String(a.forecast_date).localeCompare(String(b.forecast_date))).pop();
+      const goLive: SbRow | undefined = pms.find((m: SbRow) => /go[- ]?live/i.test(m.name)) ?? lastMs;
+      const pSu = su.filter((x: SbRow) => x.project_id === id);
+      const latestProject: SbRow | undefined = pSu.find((x: SbRow) => !x.workstream_id);
+      const lastStatusAt = pSu.reduce<string | null>((acc, x) => {
+        const t = String(x.updated_at ?? x.created_at ?? "");
+        return !acc || t > acc ? t : acc;
+      }, null);
+      const pRaid = raidRows.filter((x: SbRow) => x.project_id === id).map(mapSbRaid).map((x) => markOverdue(x, today));
+      const decs = pRaid.filter((d) => d.type === "Decision" && d.status !== "Closed")
+        .sort((a, b) => decisionRank(a.status) - decisionRank(b.status) || (a.dueDate || "9999").localeCompare(b.dueDate || "9999"));
+      const topDec = decs[0];
+      const pActs = acts.filter((a: SbRow) => a.project_id === id);
+
+      const health = calcHealth({
+        today,
+        startDate: r.start_date,
+        tasks: pActs as any,
+        milestones: pms as any,
+        raid: pRaid,
+        latestStatus: latestProject?.external_status ?? latestProject?.internal_status ?? null,
+        lastStatusAt,
+      });
+      const pct = calcPercentComplete(pActs as any) ?? (r.percent_complete ?? 0);
+      const budget = Number(r.budget) || 0;
+      const actuals = f.length ? sumLatest("actual_k") : 0;
+      const fac = f.length ? sumLatest("forecast_k") : budget;
+      const endDate = r.end_date ?? p?.endDate ?? "";
+      const forecastFinish = goLive?.forecast_date ?? endDate;
+      const slipDays = forecastFinish && endDate ? Math.round((Date.parse(forecastFinish) - Date.parse(endDate)) / 86_400_000) : 0;
+
       return {
-        ...p,
-        name: r.name ?? p.name,
-        code: r.code ?? p.code,
-        portfolio: r.portfolio ?? p.portfolio,
-        phase: r.phase ?? p.phase,
-        status: sbHealth(r.status),
-        sponsor: r.sponsor ?? p.sponsor,
-        projectManager: r.project_manager ?? p.projectManager,
-        startDate: r.start_date ?? p.startDate,
-        endDate: r.end_date ?? p.endDate,
-        healthScore: r.health_score ?? p.healthScore,
-        percentComplete: r.percent_complete ?? p.percentComplete,
-        budget: Number(r.budget) || p.budget,
-        actualsToDate: f.length ? sumLatest("actual_k") : p.actualsToDate,
-        forecastAtCompletion: f.length ? sumLatest("forecast_k") : p.forecastAtCompletion,
-        forecastCompletionDate: goLive?.forecast_date ?? p.forecastCompletionDate,
+        id,
+        name: r.name ?? p?.name ?? id,
+        code: r.code ?? p?.code ?? "",
+        portfolio: r.portfolio ?? p?.portfolio ?? "Unassigned",
+        sponsor: r.sponsor ?? p?.sponsor ?? "—",
+        projectManager: r.project_manager ?? p?.projectManager ?? "—",
+        phase: r.phase ?? p?.phase ?? "Initiation",
+        status: statusFromScore(health.score),
+        percentComplete: pct,
+        startDate: r.start_date ?? p?.startDate ?? "",
+        endDate,
+        healthScore: health.score,
+        scheduleRiskScore: Math.max(0, Math.min(100, 100 - health.score + (slipDays > 0 ? 15 : 0))),
+        budgetRiskScore: budget > 0 ? Math.max(0, Math.min(100, Math.round(20 + ((fac - budget) / budget) * 400))) : 0,
+        forecastCompletionDate: forecastFinish,
+        executiveSummary:
+          p?.executiveSummary ??
+          `${r.name} is ${pct}% complete with a health score of ${health.score}/100, running ${r.start_date} to ${endDate}. ${health.reasons.join("; ")}.`,
+        riskNarrative: p?.riskNarrative ?? "",
+        recommendedActions: p?.recommendedActions ?? [],
+        weeklyChangeSummary: latestProject?.external_summary
+          ? `Week of ${latestProject.week_of}: ${latestProject.external_summary}`
+          : p?.weeklyChangeSummary ?? "No weekly status entered yet.",
         decisionNeeded: topDec
-          ? [topDec.title, topDec.owner && `Owner ${topDec.owner}`, topDec.due_date && `due ${topDec.due_date}`].filter(Boolean).join(" · ")
+          ? [topDec.title, topDec.owner && `Owner ${topDec.owner}`, topDec.dueDate && `due ${topDec.dueDate}`].filter(Boolean).join(" · ")
           : null,
-        weeklyChangeSummary: latest?.external_summary
-          ? `Week of ${latest.week_of}: ${latest.external_summary}`
-          : p.weeklyChangeSummary,
+        podcastUrl: p?.podcastUrl ?? null,
+        budget,
+        actualsToDate: actuals,
+        forecastAtCompletion: fac,
+        sharePointUrl: "",
+        powerBiReportUrl: "",
+        source: "database",
+        stack: Array.isArray(r.stack) ? r.stack : ["supabase", "htmldash", "entra"],
+        healthReasons: health.reasons,
+        description: r.description ?? null,
       };
     });
-    return out;
+    return [...base.filter((b) => !ids.includes(b.id)), ...built];
   } catch (e) {
     console.error("[provider] Supabase project read failed; using sample data.", e);
     return base;
@@ -129,7 +195,7 @@ export interface LastChange { at: string; by: string; table: string }
 
 /** Most recent edit to a Supabase project's tables, from the change history. */
 export async function getLastChange(projectId: string): Promise<LastChange | null> {
-  if (!hasSupabase() || !supabaseProjectIds().includes(projectId)) return null;
+  if (!(await isDbProject(projectId))) return null;
   try {
     const [r] = await sbSelect("change_log", `project_id=eq.${encodeURIComponent(projectId)}&order=changed_at.desc&limit=1`);
     return r ? { at: String(r.changed_at), by: String(r.changed_by ?? ""), table: String(r.table_name) } : null;
@@ -164,10 +230,30 @@ async function mergedWithDemo<T>(label: string, fetchLive: () => Promise<T[]>, d
   }
 }
 
+const sourceRank = { "semantic-model": 0, database: 1, demo: 2 } as const;
+
 export async function getProjects(): Promise<Project[]> {
-  const projects = await overlaySbProjects(await mergedWithDemo("Projects", getLiveProjects, demoProjects));
+  const live = useLiveData();
+  const merged = (await mergedWithDemo("Projects", getLiveProjects, demoProjects)).map((p): Project => ({
+    ...p,
+    source: live && p.id === ELEVATE_PROJECT_ID ? "semantic-model" : "demo",
+    stack: fixedStackFor(p.id),
+  }));
+  let projects = await withDbProjects(merged);
+  if (samplesHidden()) projects = projects.filter((p) => p.source !== "demo");
+  // Live first (semantic model, then HorizonView database), samples last.
   // Status always follows the health score (see lib/health.ts), whatever the source.
-  return projects.map((p) => ({ ...p, status: statusFromScore(p.healthScore) }));
+  return projects
+    .map((p, i) => ({ p: { ...p, status: statusFromScore(p.healthScore) }, i }))
+    .sort((a, b) => sourceRank[a.p.source ?? "demo"] - sourceRank[b.p.source ?? "demo"] || a.i - b.i)
+    .map((x) => x.p);
+}
+
+/** Sample projects that are hidden from this browser (empty unless the viewer chose to hide them). */
+async function hiddenSampleIds(): Promise<string[]> {
+  if (!samplesHidden()) return [];
+  const db = await dbProjectIds();
+  return demoProjects.map((p) => p.id).filter((id) => !db.includes(id));
 }
 
 export async function getProject(id: string): Promise<Project | undefined> {
@@ -190,8 +276,10 @@ export async function getRaid(projectId?: string): Promise<RaidItem[]> {
   }
   items = await fromSupabase("RAID", items, loadSbRaid, (r) => r.projectId);
   // One rule for every source: an open item whose due date has passed is Overdue.
-  const today = new Date().toISOString().slice(0, 10);
-  items = items.map((r) => (r.status === "Open" && r.dueDate && r.dueDate < today ? { ...r, status: "Overdue" as const } : r));
+  const today = todayIso();
+  items = items.map((r) => markOverdue(r, today));
+  const hidden = await hiddenSampleIds();
+  if (hidden.length) items = items.filter((r) => !hidden.includes(r.projectId));
   return projectId ? items.filter((r) => r.projectId === projectId) : items;
 }
 
@@ -204,7 +292,9 @@ export const isRaidEditable = (): boolean => isDemoMode();
 
 export async function getMilestones(projectId?: string): Promise<Milestone[]> {
   const base = await mergedWithDemo("Milestones", getLiveMilestones, demoMilestones);
-  const items = await fromSupabase("milestones", base, loadSbMilestones, (m) => m.projectId);
+  let items = await fromSupabase("milestones", base, loadSbMilestones, (m) => m.projectId);
+  const hidden = await hiddenSampleIds();
+  if (hidden.length) items = items.filter((m) => !hidden.includes(m.projectId));
   return projectId ? items.filter((m) => m.projectId === projectId) : items;
 }
 
@@ -225,12 +315,12 @@ export function openDecisions(raid: RaidItem[]): RaidItem[] {
 
 // Which projects on the portfolio are real data, for the end of the summary.
 function liveNote(projects: Project[]): string {
-  const sb = hasSupabase() ? projects.filter((p) => supabaseProjectIds().includes(p.id)) : [];
-  const live = projects.filter((p) => p.id === ELEVATE_PROJECT_ID).length + sb.length;
-  const rest = projects.length - live;
-  const alpha = sb.map((p) => p.name).join(" and ");
+  const sb = projects.filter((p) => p.source === "database");
+  const rest = projects.filter((p) => p.source === "demo").length;
+  const names = sb.map((p) => p.name);
+  const list = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : names[0];
   return (
-    (alpha ? `${alpha} is live from its HorizonView project database. ` : "") +
+    (list ? `${list} ${names.length > 1 ? "are" : "is"} live from the HorizonView project database. ` : "") +
     (rest > 0 ? `The other ${rest} project${rest === 1 ? " is" : "s are"} demo data for illustration.` : "")
   ).trim();
 }

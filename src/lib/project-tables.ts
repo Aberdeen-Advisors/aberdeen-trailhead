@@ -119,7 +119,7 @@ export const PROJECT_TABLES: TableDef[] = [
   {
     key: "workstreams",
     label: "Workstreams",
-    description: "The workstream list every other table picks from, with progress and health that feed the dashboard.",
+    description: "The workstream list every other table picks from. Progress, plan and health per workstream are calculated from the tasks and milestones in each one.",
     order: "sort_order.asc,name.asc",
     searchKeys: ["name", "code", "lead"],
     defaults: { name: "New workstream", sort_order: 99 },
@@ -127,9 +127,6 @@ export const PROJECT_TABLES: TableDef[] = [
       { key: "code", label: "Code", type: "text", width: 0.8 },
       { key: "name", label: "Workstream", type: "text", width: 1.8, required: true },
       { key: "lead", label: "Lead", type: "text", width: 1.3 },
-      { key: "pct_complete", label: "% complete", type: "int", width: 0.9 },
-      { key: "pct_planned", label: "% planned", type: "int", width: 0.9 },
-      { key: "health_score", label: "Health (0-100)", type: "int", width: 1 },
       { key: "sort_order", label: "Order", type: "int", width: 0.7 },
     ],
   },

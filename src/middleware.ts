@@ -11,6 +11,7 @@ export const config = {
     "/api/podcast/:path*",
     "/api/data/:path*",
     "/api/dashboards/:path*",
+    "/api/projects/:path*",
     "/print/:path*",
   ],
 };

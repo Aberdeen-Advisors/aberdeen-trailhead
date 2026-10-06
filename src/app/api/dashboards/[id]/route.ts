@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/auth";
 import { hasSupabase, sbSelect } from "@/lib/supabase";
-import { supabaseProjectIds } from "@/lib/stacks";
-import { statusFromScore } from "@/lib/health";
+import { isDbProject } from "@/lib/registry";
+import { calcHealth, calcPercentComplete } from "@/lib/health";
+import { getProject, getRaid } from "@/lib/data/provider";
 
 export const dynamic = "force-dynamic";
 
@@ -21,10 +22,15 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (!hasSupabase()) return NextResponse.json({ error: "Supabase not configured" }, { status: 503 });
   const id = params.id;
-  if (!supabaseProjectIds().includes(id)) return NextResponse.json({ error: "Unknown project" }, { status: 404 });
+  if (!(await isDbProject(id))) return NextResponse.json({ error: "Unknown project" }, { status: 404 });
 
   try {
     const f = `project_id=eq.${encodeURIComponent(id)}`;
+    const [proj, pRaid, acts] = await Promise.all([
+      getProject(id),
+      getRaid(id),
+      sbSelect("activities", `${f}&select=workstream_id,status,start_date,target_date,pct_complete,update_type`),
+    ]);
     const [projects, ws, fin, defects, ms, raid] = (await Promise.all([
       sbSelect("projects", `id=eq.${encodeURIComponent(id)}`),
       sbSelect("workstreams", `${f}&order=sort_order.asc,name.asc`),
@@ -70,23 +76,50 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     const openDefects = names.reduce((s, n) => s + (defectsBy[n][weeks.length - 1] ?? 0), 0);
     const goLive = ms.find((m: Row) => /go[- ]?live/i.test(m.name)) ?? ms[ms.length - 1];
 
+    // Workstream progress, plan and health come from each workstream's own tasks
+    // and milestones (stored values are used only when a workstream has no plan yet).
+    const today = new Date().toISOString().slice(0, 10);
+    const planned = (tasks: Row[]): number | null => {
+      let total = 0, due = 0;
+      for (const t of tasks) {
+        if (!t.start_date || !t.target_date) continue;
+        const s0 = Date.parse(String(t.start_date)), e0 = Date.parse(String(t.target_date)) + 86_400_000;
+        const d = Math.max(1, (e0 - s0) / 86_400_000);
+        total += d;
+        due += d * Math.max(0, Math.min(1, (Date.parse(today) - s0) / (e0 - s0)));
+      }
+      return total ? Math.round((due / total) * 100) : null;
+    };
+    const wsStats = ws.map((w: Row) => {
+      const t = (acts as Row[]).filter((a) => a.workstream_id === w.id);
+      const wm = ms.filter((m: Row) => m.workstream_id === w.id);
+      const wr = pRaid.filter((r) => raid.find((x: Row) => (x.ref ?? x.id) === r.id)?.workstream_id === w.id);
+      const pct = calcPercentComplete(t as any);
+      return {
+        name: w.name,
+        actual: pct ?? w.pct_complete ?? 0,
+        plan: planned(t) ?? w.pct_planned ?? 0,
+        health: t.length || wm.length ? calcHealth({ today, startDate: null, tasks: t as any, milestones: wm as any, raid: wr, lastStatusAt: today }).score : w.health_score ?? 0,
+      };
+    });
+
     const body = {
-      project: { id, name: p.name, code: p.code, portfolio: p.portfolio, phase: p.phase, status: statusFromScore(Number(p.health_score) || 0), pm: p.project_manager, sponsor: p.sponsor },
+      project: { id, name: p.name, code: p.code, portfolio: p.portfolio, phase: p.phase, status: proj?.status ?? "Amber", pm: p.project_manager, sponsor: p.sponsor },
       source: { system: "Supabase", database: "HorizonView", schema: "public", mode: "live" },
       refreshedAt: new Date().toISOString(),
       kpis: {
-        healthScore: p.health_score ?? 0,
-        percentComplete: p.percent_complete ?? 0,
+        healthScore: proj?.healthScore ?? p.health_score ?? 0,
+        percentComplete: proj?.percentComplete ?? p.percent_complete ?? 0,
         budget: Number(p.budget) || 0,
         actualsToDate,
-        forecastAtCompletion,
+        forecastAtCompletion: fin.length ? forecastAtCompletion : Number(p.budget) || 0,
         openSev2Defects: openDefects,
         goLiveBaseline: goLive?.baseline_date ?? p.end_date,
         goLiveForecast: goLive?.forecast_date ?? p.end_date,
       },
       budgetBurn: { months: months.map(monthLabel), byWorkstream, budgetByWorkstream },
       defects: { weeks: weeks.map(weekLabel), byWorkstream: defectsBy },
-      workstreams: ws.map((w: Row) => ({ name: w.name, actual: w.pct_complete ?? 0, plan: w.pct_planned ?? 0, health: w.health_score ?? 0 })),
+      workstreams: wsStats,
       milestones: ms.map((m: Row) => ({
         name: m.name, baseline: m.baseline_date, forecast: m.forecast_date, status: m.status,
         workstreams: m.workstream_id ? [wsName.get(m.workstream_id)].filter(Boolean) : names,

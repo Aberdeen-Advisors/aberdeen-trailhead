@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Dashboard · HorizonView</title>
+<link rel="icon" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #09375F; --navy-deep: #003862; --teal: #44B0B1; --teal-ink: #0E7C7D;
+    --blue: #0072AD; --plan: #8FA3B3;
+    --good: #00A676; --warn: #E0B400; --bad: #D85049;
+    --ink: #1B2A38; --muted: #5E7180; --line: #DDE7ED; --mist: #F4F8FA; --paper: #FFFFFF;
+    --font: "Poppins", "Segoe UI", -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--mist); color: var(--ink); font-family: var(--font); font-size: 14px; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 24px 16px 48px; }
+
+  /* Header */
+  .head { background: linear-gradient(120deg, var(--navy-deep), var(--navy) 55%, #0b5a86); color: #fff; border-radius: 14px; padding: 22px 24px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+  .head h1 { margin: 0; font-size: 1.45rem; font-weight: 700; letter-spacing: -.01em; }
+  .head .sub { margin-top: 4px; font-size: .8rem; font-weight: 300; color: rgba(255,255,255,.72); }
+  .status { display: inline-flex; align-items: center; gap: 6px; margin-left: 10px; vertical-align: middle; padding: 2px 10px; border-radius: 999px; font-size: .72rem; font-weight: 600; background: #FFF6D6; color: #7A5A00; }
+  .status::before { content: "▲"; font-size: .6rem; }
+  .status:empty { display: none; }
+  .status.green { background: #E6F6F1; color: #00694E; }
+  .status.green::before { content: "●"; }
+  .status.red { background: #FBECEB; color: #AE332D; }
+  .status.red::before { content: "▼"; }
+  .src { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .src-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); font-size: .78rem; }
+  .src-badge img { height: 18px; width: auto; }
+  .src-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 3px rgba(68,176,177,.3); }
+  .src-badge.sample .dot { background: #F7CE01; box-shadow: 0 0 0 3px rgba(247,206,1,.25); }
+  .refresh { font-size: .72rem; color: rgba(255,255,255,.7); }
+  .refresh button { margin-left: 8px; font: inherit; color: #fff; background: none; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; padding: 2px 10px; cursor: pointer; }
+  .refresh button:hover { border-color: var(--teal); }
+
+  /* KPI tiles */
+  .kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-top: 16px; }
+  .kpi { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .kpi .label { font-size: .66rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .kpi .value { margin-top: 6px; font-size: 1.55rem; font-weight: 700; color: var(--navy); line-height: 1.1; }
+  .kpi .note { margin-top: 4px; font-size: .72rem; color: var(--muted); }
+  .kpi .note.bad { color: #B23A33; } .kpi .note.good { color: #007A57; }
+
+  /* Panels */
+  .grid { display: grid; grid-template-columns: 3fr 2fr; gap: 12px; margin-top: 12px; }
+  .grid.even { grid-template-columns: 1fr 1fr; }
+  .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; min-width: 0; }
+  .panel h2 { margin: 0; font-size: .95rem; font-weight: 600; color: var(--navy); }
+  .panel .desc { margin: 2px 0 10px; font-size: .74rem; color: var(--muted); }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .72rem; color: var(--muted); margin-bottom: 4px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .tip { position: absolute; pointer-events: none; background: var(--navy); color: #fff; font-size: .72rem; padding: 6px 9px; border-radius: 6px; white-space: nowrap; box-shadow: 0 6px 18px rgba(9,55,95,.25); opacity: 0; transition: opacity .08s; z-index: 2; }
+  .tip b { font-weight: 600; }
+  details { margin-top: 8px; font-size: .74rem; color: var(--muted); }
+  details summary { cursor: pointer; }
+  details table { margin-top: 6px; }
+
+  /* Workstream bars */
+  .ws { display: grid; gap: 12px; margin-top: 6px; }
+  .ws-row { display: grid; grid-template-columns: 118px 1fr 74px; align-items: center; gap: 10px; font-size: .78rem; }
+  .ws-name { color: var(--ink); }
+  .ws-track { position: relative; height: 10px; background: #E8EFF3; border-radius: 999px; }
+  .ws-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: var(--teal); }
+  .ws-plan { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--navy); border-radius: 1px; }
+  .ws-val { text-align: right; white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .ws-val.behind { color: #B23A33; font-weight: 600; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+  th { text-align: left; font-size: .64rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  td { padding: 9px 8px; border-bottom: 1px solid #EEF3F6; vertical-align: top; }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pill { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: .68rem; font-weight: 600; white-space: nowrap; }
+  .pill.good { background: #DDF5EC; color: #007A57; } .pill.warn { background: #FFF6D6; color: #7A5A00; } .pill.bad { background: #FBE3E1; color: #B23A33; } .pill.neutral { background: #EAF0F4; color: var(--navy); }
+  .pill.good::before { content: "✓ "; } .pill.warn::before { content: "▲ "; } .pill.bad::before { content: "● "; }
+
+
+  /* Filters (Power BI-style slicers + cross-filter) */
+  .filters { position: sticky; top: 0; z-index: 5; margin-top: 12px; background: rgba(244,248,250,.94); backdrop-filter: blur(6px); padding: 10px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .filters .flabel { font-size: .66rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+  .chip { font: inherit; font-size: .76rem; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); color: var(--navy); cursor: pointer; transition: background .12s, border-color .12s; }
+  .chip:hover { border-color: var(--teal); }
+  .chip[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .chip .n { opacity: .65; margin-left: 4px; font-variant-numeric: tabular-nums; }
+  .chip:focus-visible, .sel:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .clear { font: inherit; font-size: .74rem; color: var(--teal-ink); background: none; border: 0; cursor: pointer; padding: 4px 6px; margin-left: auto; }
+  .clear[hidden] { display: none; }
+  .sel { cursor: pointer; border-radius: 6px; transition: opacity .15s; }
+  .sel:hover .ws-name, .sel:hover .sp-name { color: var(--teal-ink); }
+  .dim { opacity: .32; }
+  .hint { font-size: .68rem; color: var(--muted); font-weight: 400; margin-left: 6px; }
+  .kpi .scope { font-size: .6rem; font-weight: 600; color: var(--teal-ink); letter-spacing: .04em; text-transform: none; margin-left: 4px; }
+  .raid-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+  td .wslink { font: inherit; color: var(--teal-ink); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline dotted; }
+  .empty { padding: 14px 8px; color: var(--muted); font-size: .78rem; }
+  /* Spend by workstream */
+  .sp { display: grid; gap: 12px; margin-top: 6px; }
+  .sp-row { display: grid; grid-template-columns: 118px 1fr 92px; align-items: center; gap: 10px; font-size: .78rem; }
+  .sp-track { position: relative; height: 10px; background: #E8EFF3; border-radius: 999px; }
+  .sp-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: var(--blue); }
+  .sp-fac { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--bad); border-radius: 1px; }
+  .sp-val { text-align: right; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .scroll { overflow-x: auto; }
+  .scroll table { min-width: 520px; }
+  .foot { margin-top: 16px; font-size: .7rem; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+  .error { margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: #FBE3E1; color: #8A2A24; font-size: .8rem; display: none; }
+
+  @media (max-width: 1080px) { .kpis { grid-template-columns: repeat(3, 1fr); } .grid, .grid.even { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .kpis { grid-template-columns: repeat(2, 1fr); } .src { align-items: flex-start; } .sp-row { grid-template-columns: 96px 1fr 84px; font-size: .72rem; } .ws-row { grid-template-columns: 96px 1fr 76px; font-size: .72rem; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="head">
+    <div>
+      <h1><span id="p-name">Loading…</span><span class="status" id="p-status"></span></h1>
+      <div class="sub" id="p-sub"></div>
+    </div>
+    <div class="src">
+      <span class="src-badge" id="src-badge"><span class="dot"></span><img id="src-logo" alt="" hidden><span id="src-text">Supabase</span></span>
+      <span class="refresh"><span id="refreshed">Loading…</span><button type="button" id="refresh-btn">Refresh</button></span>
+    </div>
+  </header>
+
+  <div class="error" id="error" role="alert"></div>
+
+  <nav class="filters" aria-label="Filters">
+    <span class="flabel">Workstream</span>
+    <span id="ws-chips" style="display:contents"></span>
+    <button type="button" class="clear" id="clear-btn" hidden>Clear filter ✕</button>
+  </nav>
+
+  <section class="kpis" id="kpis" aria-label="Key figures"></section>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Budget burn</h2>
+      <p class="desc">Cumulative spend vs plan, with forecast to completion</p>
+      <div class="legend">
+        <span><i style="border-color:var(--blue)"></i>Actual</span>
+        <span><i style="border-color:var(--blue);border-top-style:dashed"></i>Forecast</span>
+        <span><i style="border-color:var(--plan);border-top-style:dashed"></i>Plan</span>
+      </div>
+      <div class="chart" id="burn-chart"></div>
+      <details><summary>View as table</summary><table id="burn-table"></table></details>
+    </section>
+    <section class="panel">
+      <h2>Open defects</h2>
+      <p class="desc">Weekly count of open defects</p>
+      <div class="chart" id="defect-chart"></div>
+      <details><summary>View as table</summary><table id="defect-table"></table></details>
+    </section>
+  </div>
+
+  <div class="grid even">
+    <section class="panel">
+      <h2>Workstream progress<span class="hint">click to filter</span></h2>
+      <p class="desc">% complete — bar is actual, tick is plan</p>
+      <div class="ws" id="ws"></div>
+    </section>
+    <section class="panel">
+      <h2>Spend by workstream<span class="hint">click to filter</span></h2>
+      <p class="desc">Spent to date — red tick is forecast at completion, track is budget</p>
+      <div class="sp" id="sp"></div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:12px">
+    <h2>Milestones</h2>
+    <p class="desc" id="ms-desc">Baseline vs current forecast</p>
+    <div class="scroll"><table id="ms-table"></table></div>
+  </section>
+
+  <section class="panel" style="margin-top:12px">
+    <h2>Risks, issues &amp; decisions</h2>
+    <p class="desc" id="raid-desc">RAID items for this project</p>
+    <div class="raid-chips" id="raid-chips"></div>
+    <div class="scroll"><table id="raid-table"></table></div>
+  </section>
+
+  <div class="foot">
+    <span id="foot-src">HorizonView by Aberdeen Advisors</span>
+    <span>Refreshes automatically every 60 seconds</span>
+  </div>
+</div>
+
+<script>
+(() => {
+  // Data sources, tried in order. The first is the live Supabase-backed API;
+  // the second is the bundled sample so the dashboard always renders.
+  // One page serves every project kept in HorizonView: /dashboards/project.html?id=<project>
+  const PID = new URLSearchParams(location.search).get("id") || "alpha";
+  const SOURCES = [`/api/dashboards/${encodeURIComponent(PID)}`].concat(PID === "alpha" ? ["/dashboards/alpha-data.json"] : []);
+  const REFRESH_MS = 60_000;
+
+  const $ = (id) => document.getElementById(id);
+  const fmtK = (k) => (k >= 1000 ? `$${(k / 1000).toFixed(2)}M` : `$${k}K`);
+  const fmtM = (v) => (Math.abs(v) >= 1e6 ? `$${(v / 1e6).toFixed(2)}M` : `$${Math.round(v / 1000)}K`);
+  const fmtDate = (s) => new Date(s + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const statusPill = (s) => {
+    const cls = { Complete: "good", Completed: "good", "On Track": "good", Closed: "good", "At Risk": "warn", "In Progress": "warn", Open: "neutral", "Not Started": "neutral", Late: "bad", Overdue: "bad", Blocked: "bad", "Off Track": "bad", Critical: "bad", High: "bad", Medium: "warn", Low: "neutral" }[s] || "neutral";
+    return `<span class="pill ${cls}">${esc(s)}</span>`;
+  };
+
+  let data = null, loadedFrom = null, loadedAt = null;
+
+  // ── Filter state (Power BI-style cross-filter) ─────────────────────────────
+  // ws = selected workstream (null = all); raidType = RAID type slicer.
+  const state = { ws: null, raidType: null };
+  try { const h = new URLSearchParams(location.hash.slice(1)); state.ws = h.get("ws"); state.raidType = h.get("type"); } catch (e) {}
+  function setFilter(patch) {
+    Object.assign(state, patch);
+    const h = new URLSearchParams();
+    if (state.ws) h.set("ws", state.ws);
+    if (state.raidType) h.set("type", state.raidType);
+    history.replaceState(null, "", h.toString() ? "#" + h : location.pathname + location.search);
+    render();
+  }
+  const toggleWs = (name) => setFilter({ ws: state.ws === name ? null : name });
+
+  const wsNames = () => data.workstreams.map((w) => w.name);
+  const inScope = (name) => !state.ws || state.ws === name;
+  // Sum a by-workstream series over the workstreams currently in scope.
+  function sumSeries(byWs, key) {
+    const names = wsNames().filter(inScope);
+    const len = (key ? byWs[names[0]][key] : byWs[names[0]]).length;
+    return Array.from({ length: len }, (_, i) => {
+      let tot = 0, any = false;
+      for (const n of names) { const v = key ? byWs[n][key][i] : byWs[n][i]; if (v != null) { tot += v; any = true; } }
+      return any ? tot : null;
+    });
+  }
+  const lastVal = (arr) => { for (let i = arr.length - 1; i >= 0; i--) if (arr[i] != null) return arr[i]; return null; };
+
+  async function load() {
+    for (const url of SOURCES) {
+      try {
+        const res = await fetch(url, { cache: "no-store", headers: { Accept: "application/json" } });
+        if (!res.ok || !(res.headers.get("content-type") || "").includes("json")) continue;
+        data = await res.json(); loadedFrom = url; loadedAt = new Date();
+        if (state.ws && !wsNames().includes(state.ws)) state.ws = null;
+        $("error").style.display = "none";
+        render();
+        return;
+      } catch (e) { /* try next source */ }
+    }
+    $("error").textContent = "Could not load dashboard data. Retrying automatically.";
+    $("error").style.display = "block";
+  }
+
+  function renderHeader() {
+    const p = data.project, s = data.source;
+    $("p-name").textContent = p.name;
+    document.title = `${p.name} · Live Dashboard`;
+    $("p-status").textContent = p.status;
+    $("p-status").className = `status ${String(p.status).toLowerCase()}`;
+    $("p-sub").textContent = `${p.code} · ${p.portfolio} · ${p.phase} phase · PM ${p.pm} · Sponsor ${p.sponsor}`;
+    const sample = s.mode !== "live";
+    $("src-badge").classList.toggle("sample", sample);
+    $("src-text").textContent = sample ? `${s.system} · sample data` : `Live from ${s.system}`;
+    const logo = $("src-logo"), probe = new Image();
+    probe.onload = () => { logo.src = probe.src; logo.alt = s.system; logo.hidden = false; };
+    probe.src = `/stack-logos/${s.system.toLowerCase()}.png`;
+    $("foot-src").textContent = `HorizonView by Aberdeen Advisors · Source: ${s.system}${s.database ? " (" + s.database + ")" : ""}` + (sample ? " · sample data until connected" : "");
+    updateRefreshed();
+  }
+
+  function updateRefreshed() {
+    if (!loadedAt) return;
+    const when = data.refreshedAt ? new Date(data.refreshedAt) : loadedAt;
+    const mins = Math.round((Date.now() - when) / 60000);
+    $("refreshed").textContent = mins < 1 ? "Updated just now" : `Updated ${mins} min ago`;
+  }
+
+  function renderFilters() {
+    $("ws-chips").innerHTML = [`<button type="button" class="chip" data-ws="" aria-pressed="${!state.ws}">All</button>`]
+      .concat(wsNames().map((n) => `<button type="button" class="chip" data-ws="${esc(n)}" aria-pressed="${state.ws === n}">${esc(n)}</button>`)).join("");
+    $("ws-chips").querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => setFilter({ ws: c.dataset.ws || null })));
+    $("clear-btn").hidden = !state.ws && !state.raidType;
+  }
+
+  function renderKpis() {
+    const k = data.kpis, bb = data.budgetBurn;
+    const w = state.ws ? data.workstreams.find((x) => x.name === state.ws) : null;
+    const budget = state.ws ? bb.budgetByWorkstream[state.ws] : k.budget;
+    // With no monthly financials recorded yet, fall back to the project totals.
+    const hasFin = bb.months.length > 0;
+    const spent = hasFin ? lastVal(sumSeries(bb.byWorkstream, "actual")) * 1000 : (state.ws ? 0 : k.actualsToDate || 0);
+    const fac = hasFin ? lastVal(sumSeries(bb.byWorkstream, "forecast")) * 1000 : (state.ws ? 0 : k.forecastAtCompletion || 0);
+    const defects = lastVal(sumSeries(data.defects.byWorkstream));
+    const health = w ? w.health : k.healthScore;
+    const pct = w ? w.actual : k.percentComplete;
+    const spentPct = budget ? Math.round((spent / budget) * 100) : 0;
+    const variance = fac - budget;
+    const slip = daysBetween(k.goLiveBaseline, k.goLiveForecast);
+    const scope = state.ws ? `<span class="scope">· ${esc(state.ws)}</span>` : "";
+    const band = health >= 75 ? "Green" : health >= 50 ? "Amber" : "Red";
+    const tiles = [
+      [`Health score${scope}`, health, band, band === "Red" ? "bad" : ""],
+      [`Complete${scope}`, `${pct}%`, w ? `Plan ${w.plan}% · ${w.plan - pct > 0 ? `${w.plan - pct} pts behind` : "on plan"}` : `${data.project.phase} phase`, w && w.plan - pct >= 10 ? "bad" : ""],
+      [`Spent to date${scope}`, fmtM(spent), budget ? `${spentPct}% of ${fmtM(budget)} budget` : "No budget set", ""],
+      [`Forecast at completion${scope}`, fmtM(fac), variance === 0 ? "On budget" : `${variance > 0 ? "+" : "−"}${fmtK(Math.round(Math.abs(variance) / 1000))} vs budget`, variance > 0 ? "bad" : "good"],
+      [`Open defects${scope}`, defects ?? 0, state.ws ? "In this workstream" : "All workstreams", defects > 5 ? "bad" : defects > 0 ? "" : "good"],
+      ["Go-live forecast", fmtDate(k.goLiveForecast).replace(/, \d{4}$/, ""), slip > 0 ? `${slip} days late vs baseline` : "On baseline", slip > 0 ? "bad" : "good"],
+    ];
+    $("kpis").innerHTML = tiles.map(([l, v, n, c]) =>
+      `<div class="kpi"><div class="label">${l}</div><div class="value">${v}</div><div class="note ${c}">${n}</div></div>`).join("");
+  }
+
+  function lineChart(el, { labels, series, yFmt, yMax, ticks = 4 }) {
+    if (!labels.length) { el.innerHTML = `<div class="empty">Nothing recorded yet.</div>`; return; }
+    const W = Math.max(el.clientWidth, 280), H = Math.round(Math.min(300, Math.max(200, W * 0.42)));
+    const m = { t: 12, r: 16, b: 26, l: 46 };
+    const iw = W - m.l - m.r, ih = H - m.t - m.b;
+    const all = series.flatMap((s) => s.values.filter((v) => v != null));
+    const top = yMax ?? niceMax(Math.max(...all));
+    const x = (i) => m.l + (labels.length === 1 ? iw / 2 : (i * iw) / (labels.length - 1));
+    const y = (v) => m.t + ih - (v / top) * ih;
+    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(series.map((s) => s.name).join(", "))}">`;
+    for (let i = 0; i <= ticks; i++) {
+      const v = (top / ticks) * i, yy = y(v);
+      svg += `<line x1="${m.l}" x2="${W - m.r}" y1="${yy}" y2="${yy}" stroke="#EEF3F6"/>`;
+      svg += `<text x="${m.l - 8}" y="${yy + 4}" text-anchor="end" font-size="10" fill="#5E7180">${yFmt(v)}</text>`;
+    }
+    const step = Math.ceil(labels.length / Math.max(2, Math.floor(iw / 64)));
+    labels.forEach((lb, i) => { if (i % step === 0 || i === labels.length - 1) svg += `<text x="${x(i)}" y="${H - 6}" text-anchor="middle" font-size="10" fill="#5E7180">${esc(lb)}</text>`; });
+    series.forEach((s) => {
+      let d = "", pen = false;
+      s.values.forEach((v, i) => { if (v == null) { pen = false; return; } d += `${pen ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; pen = true; });
+      svg += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"${s.dash ? ' stroke-dasharray="5 4"' : ""}/>`;
+      if (s.label) { // direct label at last point
+        let li = s.values.length - 1; while (li >= 0 && s.values[li] == null) li--;
+        if (li >= 0) svg += `<circle cx="${x(li)}" cy="${y(s.values[li])}" r="4" fill="${s.color}" stroke="#fff" stroke-width="2"/>`;
+      }
+    });
+    svg += `<line id="xh" x1="0" x2="0" y1="${m.t}" y2="${m.t + ih}" stroke="#9FB2C0" stroke-width="1" opacity="0"/>`;
+    series.forEach((s, si) => { svg += `<circle class="hp" data-s="${si}" r="4.5" fill="${s.color}" stroke="#fff" stroke-width="2" opacity="0"/>`; });
+    svg += `<rect x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent"/></svg>`;
+    el.innerHTML = svg + `<div class="tip"></div>`;
+
+    const svgEl = el.querySelector("svg"), tip = el.querySelector(".tip"), xh = svgEl.querySelector("#xh"), dots = svgEl.querySelectorAll(".hp");
+    const hide = () => { tip.style.opacity = 0; xh.setAttribute("opacity", 0); dots.forEach((d) => d.setAttribute("opacity", 0)); };
+    svgEl.addEventListener("mouseleave", hide);
+    svgEl.addEventListener("mousemove", (ev) => {
+      const r = svgEl.getBoundingClientRect(), px = ((ev.clientX - r.left) / r.width) * W;
+      const i = Math.max(0, Math.min(labels.length - 1, Math.round(((px - m.l) / iw) * (labels.length - 1))));
+      const rows = series.map((s, si) => ({ s, si, v: s.values[i] })).filter((o) => o.v != null);
+      if (!rows.length) return hide();
+      xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.setAttribute("opacity", 1);
+      dots.forEach((d) => d.setAttribute("opacity", 0));
+      rows.forEach((o) => { const d = dots[o.si]; d.setAttribute("cx", x(i)); d.setAttribute("cy", y(o.v)); d.setAttribute("opacity", 1); });
+      tip.innerHTML = `<b>${esc(labels[i])}</b><br>` + rows.map((o) => `${esc(o.s.name)}: ${yFmt(o.v, true)}`).join("<br>");
+      const left = (x(i) / W) * r.width, tw = tip.offsetWidth;
+      tip.style.left = `${Math.min(Math.max(left + 12, 0), r.width - tw)}px`;
+      tip.style.top = `${(m.t / H) * r.height}px`;
+      tip.style.opacity = 1;
+    });
+  }
+  // Round the axis top so each of `ticks` steps is 1, 2, 2.5 or 5 × 10^n.
+  function niceMax(v, ticks = 4) {
+    if (!(v > 0)) v = 1;
+    const raw = v / ticks, p = Math.pow(10, Math.floor(Math.log10(raw)));
+    const step = [1, 2, 2.5, 5, 10].map((m) => m * p).find((s) => s >= raw);
+    return step * ticks;
+  }
+
+  function table(el, head, rows) {
+    el.innerHTML = `<thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>` +
+      rows.map((r) => `<tr>${r.map((c) => `<td class="num">${c ?? "—"}</td>`).join("")}</tr>`).join("") + "</tbody>";
+  }
+
+  function renderCharts() {
+    const bb = data.budgetBurn, months = bb.months;
+    const plan = sumSeries(bb.byWorkstream, "plan"), actual = sumSeries(bb.byWorkstream, "actual"), forecast = sumSeries(bb.byWorkstream, "forecast");
+    const top = Math.max(...[...plan, ...forecast].filter((v) => v != null));
+    // Pick 4 or 5 axis steps, whichever wastes less space.
+    const ticks = niceMax(top, 5) < niceMax(top, 4) ? 5 : 4;
+    const yMax = niceMax(top, ticks);
+    lineChart($("burn-chart"), {
+      labels: months, yMax, ticks,
+      yFmt: (v, tip) => (tip ? fmtK(v) : v >= 1000 ? `$${(v / 1000).toFixed(v % 1000 ? 1 : 0)}M` : v ? `$${Math.round(v)}K` : "0"),
+      series: [
+        { name: "Plan", values: plan, color: "#8FA3B3", dash: true },
+        { name: "Forecast", values: forecast, color: "#0072AD", dash: true, label: true },
+        { name: "Actual", values: actual, color: "#0072AD", label: true },
+      ],
+    });
+    table($("burn-table"), ["Month", "Plan", "Actual", "Forecast"], months.map((mo, i) => [mo, plan[i] != null ? fmtK(plan[i]) : null, actual[i] != null ? fmtK(actual[i]) : null, forecast[i] != null ? fmtK(forecast[i]) : null]));
+
+    const d = data.defects, open = sumSeries(d.byWorkstream);
+    const dTop = open.length ? Math.max(...open) : 0;
+    lineChart($("defect-chart"), {
+      labels: d.weeks, yMax: dTop <= 8 ? 10 : dTop <= 20 ? 20 : 40, ticks: dTop <= 8 ? 5 : 4,
+      yFmt: (v) => `${Math.round(v)}`,
+      series: [{ name: "Open defects", values: open, color: "#09375F", label: true }],
+    });
+    table($("defect-table"), ["Week of", "Open"], d.weeks.map((w, i) => [w, open[i]]));
+  }
+
+  function bindSelectable(container) {
+    container.querySelectorAll(".sel").forEach((row) => {
+      row.addEventListener("click", () => toggleWs(row.dataset.ws));
+      row.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleWs(row.dataset.ws); } });
+    });
+  }
+
+  function renderWorkstreams() {
+    $("ws").innerHTML = data.workstreams.map((w) => {
+      const behind = w.plan - w.actual;
+      return `<div class="ws-row sel${inScope(w.name) ? "" : " dim"}" data-ws="${esc(w.name)}" role="button" tabindex="0" aria-pressed="${state.ws === w.name}" title="${esc(w.name)}: ${w.actual}% actual vs ${w.plan}% plan — click to filter">
+        <span class="ws-name">${esc(w.name)}</span>
+        <span class="ws-track"><span class="ws-fill" style="width:${w.actual}%"></span><span class="ws-plan" style="left:calc(${w.plan}% - 1px)"></span></span>
+        <span class="ws-val${behind >= 10 ? " behind" : ""}">${w.actual}% / ${w.plan}%</span></div>`;
+    }).join("");
+    bindSelectable($("ws"));
+
+    const bb = data.budgetBurn;
+    const rows = wsNames().map((n) => ({ n, budget: bb.budgetByWorkstream[n], spent: lastVal(bb.byWorkstream[n].actual) * 1000, fac: lastVal(bb.byWorkstream[n].forecast) * 1000 }));
+    const scale = Math.max(1, ...rows.map((r) => Math.max(r.budget || 0, r.fac || 0)));
+    $("sp").innerHTML = rows.map((r) => {
+      const over = r.fac - r.budget;
+      return `<div class="sp-row sel${inScope(r.n) ? "" : " dim"}" data-ws="${esc(r.n)}" role="button" tabindex="0" aria-pressed="${state.ws === r.n}" title="${esc(r.n)}: spent ${fmtM(r.spent)} of ${fmtM(r.budget)} budget; forecast ${fmtM(r.fac)} — click to filter">
+        <span class="sp-name">${esc(r.n)}</span>
+        <span class="sp-track" style="width:${(r.budget / scale) * 100}%"><span class="sp-fill" style="width:${(r.spent / r.budget) * 100}%"></span>${over > 0 ? `<span class="sp-fac" style="left:calc(${(r.fac / r.budget) * 100}% - 1px)"></span>` : ""}</span>
+        <span class="sp-val${over > 0 ? " behind" : ""}">${fmtM(r.spent)}${over > 0 ? ` <span style="color:#B23A33">+${fmtK(Math.round(over / 1000))}</span>` : ""}</span></div>`;
+    }).join("");
+    bindSelectable($("sp"));
+  }
+
+  function renderTables() {
+    const ms = data.milestones.filter((m) => !state.ws || (m.workstreams || []).includes(state.ws));
+    $("ms-desc").textContent = state.ws ? `Baseline vs current forecast · milestones involving ${state.ws}` : "Baseline vs current forecast";
+    $("ms-table").innerHTML = `<thead><tr><th>Milestone</th><th>Baseline</th><th>Forecast</th><th>Variance</th><th>Status</th></tr></thead><tbody>` +
+      (ms.length ? ms.map((m) => {
+        const v = daysBetween(m.baseline, m.forecast);
+        return `<tr><td>${esc(m.name)}</td><td class="num">${fmtDate(m.baseline)}</td><td class="num">${fmtDate(m.forecast)}</td><td class="num">${v > 0 ? `+${v}d` : "—"}</td><td>${statusPill(m.status)}</td></tr>`;
+      }).join("") : `<tr><td colspan="5" class="empty">No milestones for this workstream.</td></tr>`) + "</tbody>";
+
+    const inWs = data.raid.filter((r) => inScope(r.workstream));
+    const order = ["Risk", "Issue", "Action", "Decision", "Assumption", "Dependency"];
+    const types = order.filter((t) => data.raid.some((r) => r.type === t));
+    $("raid-chips").innerHTML = [`<button type="button" class="chip" data-t="" aria-pressed="${!state.raidType}">All<span class="n">${inWs.length}</span></button>`]
+      .concat(types.map((t) => `<button type="button" class="chip" data-t="${t}" aria-pressed="${state.raidType === t}">${t}<span class="n">${inWs.filter((r) => r.type === t).length}</span></button>`)).join("");
+    $("raid-chips").querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => setFilter({ raidType: c.dataset.t || null })));
+    const rows = inWs.filter((r) => !state.raidType || r.type === state.raidType);
+    $("raid-desc").textContent = `RAID items${state.ws ? ` · ${state.ws}` : ""}${state.raidType ? ` · ${state.raidType}` : ""}`;
+    $("raid-table").innerHTML = `<thead><tr><th>Type</th><th>Item</th><th>Workstream</th><th>Severity</th><th>Owner</th><th>Status</th></tr></thead><tbody>` +
+      (rows.length ? rows.map((r) => `<tr><td>${esc(r.type)}</td><td>${esc(r.title)}</td><td><button type="button" class="wslink" data-ws="${esc(r.workstream)}">${esc(r.workstream)}</button></td><td>${statusPill(r.severity)}</td><td>${esc(r.owner)}</td><td>${statusPill(r.status)}</td></tr>`).join("")
+        : `<tr><td colspan="6" class="empty">No matching items.</td></tr>`) + "</tbody>";
+    $("raid-table").querySelectorAll(".wslink").forEach((bt) => bt.addEventListener("click", () => toggleWs(bt.dataset.ws)));
+  }
+
+  function render() { renderHeader(); renderFilters(); renderKpis(); renderCharts(); renderWorkstreams(); renderTables(); }
+
+  $("clear-btn").addEventListener("click", () => setFilter({ ws: null, raidType: null }));
+  window.addEventListener("hashchange", () => {
+    const h = new URLSearchParams(location.hash.slice(1));
+    state.ws = h.get("ws"); state.raidType = h.get("type");
+    if (data) render();
+  });
+  $("refresh-btn").addEventListener("click", load);
+  let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => data && renderCharts(), 150); });
+  setInterval(load, REFRESH_MS);
+  setInterval(updateRefreshed, 30_000);
+  load();
+})();
+</script>
+</body>
+</html>

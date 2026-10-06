@@ -3,8 +3,6 @@ import { chatCompletion } from "@/lib/ai/openai";
 import { hasAi } from "@/lib/config";
 import { getMilestones, getPortfolioKpis, getProjects, getRaid, openDecisions } from "@/lib/data/provider";
 import { hasSupabase, sbInsert, sbSelect } from "@/lib/supabase";
-import { supabaseProjectIds } from "@/lib/stacks";
-import { ELEVATE_PROJECT_ID } from "@/lib/data/live-elevate";
 import type { Milestone, Project, RaidItem } from "@/lib/types";
 
 // The portfolio "Executive Summary — This Week", written by AI from the live
@@ -96,7 +94,7 @@ export async function getPortfolioSummary(pre: { projects?: Project[]; raid?: Ra
   const now = new Date().toISOString();
   const today = now.slice(0, 10);
   const live = projects
-    .filter((p) => p.id === ELEVATE_PROJECT_ID || (hasSupabase() && supabaseProjectIds().includes(p.id)))
+    .filter((p) => p.source === "semantic-model" || p.source === "database")
     .map((p) => p.name);
   if (!hasAi()) return rulesSummary(kpis, now, projects.length, live);
 

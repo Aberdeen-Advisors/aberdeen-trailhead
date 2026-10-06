@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { getProject } from "@/lib/data/provider";
 import { sbSelect, hasSupabase } from "@/lib/supabase";
-import { supabaseProjectIds } from "@/lib/stacks";
-import { GanttChart, GanttLegend, type PlanMilestone, type PlanTask, type PlanWorkstream } from "@/components/gantt-chart";
+import { isDbProject } from "@/lib/registry";
+import { GanttChart, GanttLegend, ganttDomain, paginateGantt, type PlanMilestone, type PlanTask, type PlanWorkstream } from "@/components/gantt-chart";
 import { PrintButton } from "@/components/print-button";
 
 // Printable project plan: the full Gantt (every task and milestone) plus a
@@ -19,7 +19,7 @@ const fmt = (d?: string | null) => {
 };
 
 export default async function PrintPlanPage({ params }: { params: { id: string } }) {
-  if (!supabaseProjectIds().includes(params.id) || !hasSupabase()) notFound();
+  if (!hasSupabase() || !(await isDbProject(params.id))) notFound();
   const q = `project_id=eq.${encodeURIComponent(params.id)}`;
   const [project, acts, ms, ws] = await Promise.all([
     getProject(params.id),
@@ -53,6 +53,7 @@ export default async function PrintPlanPage({ params }: { params: { id: string }
   });
 
   const today = new Date().toISOString().slice(0, 10);
+  const domain = ganttDomain(tasks, milestones);
   const th = "border-b-2 border-navy px-2 py-1.5 text-left text-[0.62rem] font-semibold uppercase tracking-wider text-navy";
   const td = "border-b border-hv-border px-2 py-1.5 align-top";
 
@@ -80,9 +81,13 @@ export default async function PrintPlanPage({ params }: { params: { id: string }
         <PrintButton />
       </header>
 
-      <section className="plan-gantt mb-3">
-        <GanttChart tasks={tasks} milestones={milestones} workstreams={workstreams} today={today} labelChars={40} />
-      </section>
+      {/* The chart is split into page-sized pieces that share one time axis,
+          so the browser never pushes a too-tall chart onto the next page. */}
+      {paginateGantt(tasks, milestones, workstreams).map((pg, i) => (
+        <section key={i} className={`plan-gantt mb-3 ${i > 0 ? "break-before-page" : ""}`}>
+          <GanttChart tasks={pg.tasks} milestones={pg.milestones} workstreams={workstreams} today={today} labelChars={40} domain={domain} />
+        </section>
+      ))}
       <div className="mb-8"><GanttLegend /></div>
 
       <section className="break-before-page">

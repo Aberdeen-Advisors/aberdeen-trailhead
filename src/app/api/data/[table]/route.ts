@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getSessionUser } from "@/auth";
 import { hasSupabase, sbDelete, sbInsert, sbSelect, sbUpdate } from "@/lib/supabase";
 import { tableDef, type TableDef } from "@/lib/project-tables";
-import { supabaseProjectIds } from "@/lib/stacks";
+import { isDbProject } from "@/lib/registry";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +23,7 @@ async function guard(table: string, project: string | null) {
   if (!hasSupabase()) return { error: bad("Supabase is not configured for this instance.", 503) };
   const def = tableDef(table);
   if (!def) return { error: bad("Unknown table", 404) };
-  if (!project || !supabaseProjectIds().includes(project)) return { error: bad("Unknown project", 404) };
+  if (!project || !(await isDbProject(project))) return { error: bad("Unknown project", 404) };
   return { user, def, project };
 }
 

@@ -43,10 +43,12 @@ type Row =
   | { kind: "milestone"; item: PlanMilestone; d: number };
 
 export function GanttChart({
-  tasks, milestones, workstreams, showTasks = true, showMilestones = true, today, labelChars = 34,
+  tasks, milestones, workstreams, showTasks = true, showMilestones = true, today, labelChars = 34, domain,
 }: {
   tasks: PlanTask[]; milestones: PlanMilestone[]; workstreams: PlanWorkstream[];
   showTasks?: boolean; showMilestones?: boolean; today?: string; labelChars?: number;
+  /** Fixed time range (YYYY-MM-DD), so charts split across printed pages share one axis. */
+  domain?: [string, string];
 }) {
   // Scheduled items only; a task with one date is drawn as a short bar on that date.
   const sTasks = showTasks
@@ -77,7 +79,7 @@ export function GanttChart({
   }
 
   // Time domain, padded to whole months.
-  const all = [...sTasks.flatMap((x) => [x.s, x.f]), ...sMs.map((x) => x.d)];
+  const all = [...sTasks.flatMap((x) => [x.s, x.f]), ...sMs.map((x) => x.d), ...(domain ? domain.map(t) : [])];
   const lo = new Date(Math.min(...all)), hi = new Date(Math.max(...all));
   const t0 = Date.UTC(lo.getUTCFullYear(), lo.getUTCMonth(), 1);
   const t1 = Date.UTC(hi.getUTCFullYear(), hi.getUTCMonth() + 1, 1);
@@ -182,4 +184,55 @@ export function GanttLegend() {
       <span className="text-hv-subtle">Solid part of a bar = % done</span>
     </div>
   );
+}
+
+/** Time range covering every scheduled task and milestone (YYYY-MM-DD). */
+export function ganttDomain(tasks: PlanTask[], milestones: PlanMilestone[]): [string, string] | undefined {
+  const ds = [
+    ...tasks.flatMap((x) => [x.start_date, x.target_date]),
+    ...milestones.map((m) => m.forecast_date),
+  ].filter((d): d is string => !!d).sort();
+  return ds.length ? [ds[0], ds[ds.length - 1]] : undefined;
+}
+
+/**
+ * Splits the plan into page-sized pieces for printing. A chart is a single
+ * picture, so the browser cannot break it across pages; long plans are drawn
+ * as several charts instead, in the same order as the on-screen Gantt.
+ * Budgets are in chart units (the chart is 1100 units wide).
+ */
+export function paginateGantt(
+  tasks: PlanTask[], milestones: PlanMilestone[], workstreams: PlanWorkstream[],
+  firstBudget = 560, budget = 700,
+): { tasks: PlanTask[]; milestones: PlanMilestone[] }[] {
+  const ROW = 26, GROUP = 24, CHROME = 50; // axis + padding per chart
+  const sT = tasks.filter((x) => x.start_date || x.target_date);
+  const sM = milestones.filter((m) => m.forecast_date);
+  const key = (d?: string | null) => (d ? t(d) : 0);
+  const groups: (string | null)[] = [...workstreams.map((w) => w.id), null];
+  const pages: { tasks: PlanTask[]; milestones: PlanMilestone[] }[] = [];
+  let cur = { tasks: [] as PlanTask[], milestones: [] as PlanMilestone[] };
+  let used = CHROME, cap = firstBudget, curGroup: string | null | undefined = undefined;
+  const flush = () => {
+    if (cur.tasks.length || cur.milestones.length) pages.push(cur);
+    cur = { tasks: [], milestones: [] }; used = CHROME; cap = budget; curGroup = undefined;
+  };
+  for (const g of groups) {
+    const items = [
+      ...sT.filter((x) => (x.workstream_id ?? null) === g).map((x) => ({ k: Math.min(key(x.start_date || x.target_date), key(x.target_date || x.start_date)), task: x })),
+      ...sM.filter((m) => (m.workstream_id ?? null) === g).map((m) => ({ k: key(m.forecast_date), ms: m })),
+    ].sort((a, b) => a.k - b.k);
+    if (!items.length) continue;
+    // Keep a group header with at least its first two rows.
+    if (used + GROUP + ROW * Math.min(2, items.length) > cap) flush();
+    for (const it of items) {
+      const need = ROW + (curGroup === g ? 0 : GROUP);
+      if (used + need > cap) flush();
+      if (curGroup !== g) { used += GROUP; curGroup = g; }
+      used += ROW;
+      if ("task" in it && it.task) cur.tasks.push(it.task); else if ("ms" in it && it.ms) cur.milestones.push(it.ms);
+    }
+  }
+  flush();
+  return pages;
 }

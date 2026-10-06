@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import { chatCompletion } from "@/lib/ai/openai";
 import { hasAi } from "@/lib/config";
+import { calcPercentComplete } from "@/lib/health";
 import { hasSupabase, sbInsert, sbSelect } from "@/lib/supabase";
-import { supabaseProjectIds } from "@/lib/stacks";
 import { ELEVATE_PROJECT_ID } from "@/lib/data/live-elevate";
 import type { Milestone, Project, RaidItem } from "@/lib/types";
 
@@ -31,8 +31,8 @@ const money = (v: number) => (v >= 1e6 ? `$${(v / 1e6).toFixed(2)}M` : `$${Math.
 const sevRank = { High: 0, Medium: 1, Low: 2 } as const;
 const stRank: Record<string, number> = { Overdue: 0, "In Progress": 1, Open: 2, Closed: 3 };
 
-export const isLiveProject = (id: string): boolean =>
-  id === ELEVATE_PROJECT_ID || (hasSupabase() && supabaseProjectIds().includes(id));
+/** Projects on live data: the semantic model (Elevate) or the HorizonView database. */
+export const isLiveProject = (p: Pick<Project, "source">): boolean => p.source === "semantic-model" || p.source === "database";
 
 /** Extra facts kept only in the HorizonView database (weekly status, plan). */
 async function supabaseFacts(projectId: string, today: string): Promise<string[]> {
@@ -53,8 +53,8 @@ async function supabaseFacts(projectId: string, today: string): Promise<string[]
     }
   }
   for (const w of ws) {
-    if (w.pct_complete != null && w.pct_planned != null)
-      out.push(`  ${w.name}: ${w.pct_complete}% complete vs ${w.pct_planned}% planned${w.health_score != null ? `, health ${w.health_score}` : ""}`);
+    const pct = calcPercentComplete(acts.filter((a) => a.workstream_id === w.id) as any);
+    if (pct != null) out.push(`  ${w.name}: ${pct}% complete`);
   }
   const open = acts.filter((a) => a.status !== "Closed");
   const late = open.filter((a) => a.target_date && String(a.target_date) < today);
@@ -89,6 +89,8 @@ async function factSheet(p: Project, raid: RaidItem[], milestones: Milestone[], 
     `TODAY: ${day(today)}`,
     `PROJECT: ${p.name} (${p.code}, ${p.portfolio}) | ${p.status} | health ${p.healthScore}/100 | phase ${p.phase}, ${p.percentComplete}% complete`,
     `SPONSOR: ${p.sponsor} | PM: ${p.projectManager}`,
+    ...(p.healthReasons?.length ? [`HEALTH SCORE DRIVERS: ${p.healthReasons.join("; ")}`] : []),
+    ...(p.description ? [`DESCRIPTION: ${p.description}`] : []),
     `FINISH: baseline ${day(p.endDate)}, forecast ${day(p.forecastCompletionDate)}${p.forecastCompletionDate > p.endDate ? " (behind baseline)" : ""}${p.forecastCompletionDate && p.forecastCompletionDate < today && p.percentComplete < 100 ? " (date already passed with work remaining)" : ""}`,
     p.budget > 0
       ? `BUDGET: ${money(p.budget)}; spent ${money(p.actualsToDate)}; forecast at completion ${money(p.forecastAtCompletion)} (${p.forecastAtCompletion >= p.budget ? "+" : "-"}${money(Math.abs(p.forecastAtCompletion - p.budget))} vs budget)`
@@ -104,7 +106,7 @@ async function factSheet(p: Project, raid: RaidItem[], milestones: Milestone[], 
     // Workstream roll-up from the semantic model (built from the Fabric notebook output).
     lines.push(`WORKSTREAM ROLL-UP: ${p.executiveSummary}`, `KEY DEPENDENCIES: ${p.riskNarrative}`);
     if (p.recommendedActions.length) lines.push(`WORKSTREAM PATHS TO GREEN: ${p.recommendedActions.slice(0, 12).join(" | ")}`);
-  } else if (hasSupabase() && supabaseProjectIds().includes(p.id)) {
+  } else if (p.source === "database" && hasSupabase()) {
     lines.push(...(await supabaseFacts(p.id, today)));
   }
   return lines.join("\n");
@@ -149,7 +151,7 @@ export async function getProjectNarrative(
   milestones: Milestone[],
   opts: { fresh?: boolean } = {},
 ): Promise<Narrative | null> {
-  if (!isLiveProject(p.id) || !hasAi()) return null;
+  if (!isLiveProject(p) || !hasAi()) return null;
   const today = new Date().toISOString().slice(0, 10);
   let facts: string;
   try {
@@ -231,7 +233,7 @@ export async function withLiveNarratives(
 ): Promise<Project[]> {
   return Promise.all(
     projects.map(async (p) => {
-      if (!ids.includes(p.id) || !isLiveProject(p.id)) return p;
+      if (!ids.includes(p.id) || !isLiveProject(p)) return p;
       const n = await getProjectNarrative(p, raid, milestones, opts);
       return {
         ...p,

@@ -3,8 +3,7 @@ import { searchDocuments } from "@/lib/ai/documents";
 import { getProjects, getRaid, getMilestones, getPortfolioKpis, openDecisions } from "@/lib/data/provider";
 import { getProjectNarrative, isLiveProject } from "@/lib/ai/project-narrative";
 import { hasSupabase, sbSelect } from "@/lib/supabase";
-import { supabaseProjectIds, stackFor } from "@/lib/stacks";
-import { ELEVATE_PROJECT_ID } from "@/lib/data/live-elevate";
+import { stackOf } from "@/lib/stacks";
 import { fmtMoney } from "@/lib/format";
 import type { AgentAnswer, Citation, Milestone, PortfolioKpis, Project, RaidItem } from "@/lib/types";
 
@@ -24,13 +23,13 @@ type Ctx = { projects: Project[]; raid: RaidItem[]; milestones: Milestone[]; kpi
 
 const today = () => new Date().toISOString().slice(0, 10);
 
-function sourceOf(id: string): string {
-  if (id === ELEVATE_PROJECT_ID) return "Power BI semantic model (from the Elevate SharePoint Lists)";
-  if (hasSupabase() && supabaseProjectIds().includes(id)) return "HorizonView project database";
+function sourceOf(p: Project): string {
+  if (p.source === "semantic-model") return "Power BI semantic model (from the client's SharePoint Lists)";
+  if (p.source === "database") return "HorizonView project database";
   return "demo sample data";
 }
-const sourceLabel = (id: string) =>
-  id === ELEVATE_PROJECT_ID ? "Power BI semantic model" : hasSupabase() && supabaseProjectIds().includes(id) ? "HorizonView database" : "Demo data";
+const sourceLabel = (p: Project) =>
+  p.source === "semantic-model" ? "Power BI semantic model" : p.source === "database" ? "HorizonView database" : "Demo data";
 
 function resolveProject(ctx: Ctx, ref: unknown): Project | undefined {
   const s = String(ref ?? "").trim().toLowerCase();
@@ -147,14 +146,14 @@ async function runTool(name: ToolName, args: Record<string, any>, ctx: Ctx, cite
             const d = decs.find((x) => x.projectId === p.id);
             return d ? `${d.title} (${d.status}, due ${d.dueDate || "n/a"}, owner ${d.owner && d.owner !== "—" ? d.owner : "unassigned"})` : undefined;
           })(),
-          thisWeek: p.weeklyChangeSummary, dataSource: sourceOf(p.id),
+          thisWeek: p.weeklyChangeSummary, dataSource: sourceOf(p),
         })),
       };
     }
     case "get_project": {
       if (!proj) return { error: "project is required" };
-      cite({ source: sourceLabel(proj.id), detail: `${proj.name} status and narrative` });
-      const n = isLiveProject(proj.id) ? await getProjectNarrative(proj, ctx.raid, ctx.milestones) : null;
+      cite({ source: sourceLabel(proj), detail: `${proj.name} status and narrative` });
+      const n = isLiveProject(proj) ? await getProjectNarrative(proj, ctx.raid, ctx.milestones) : null;
       const decs = openDecisions(ctx.raid).filter((d) => d.projectId === proj.id);
       return {
         name: proj.name, code: proj.code, portfolio: proj.portfolio, sponsor: proj.sponsor, projectManager: proj.projectManager,
@@ -166,8 +165,8 @@ async function runTool(name: ToolName, args: Record<string, any>, ctx: Ctx, cite
         riskNarrative: n?.riskNarrative || proj.riskNarrative,
         recommendedActions: (n?.recommendedActions ?? proj.recommendedActions).slice(0, 6),
         openDecisions: decs.slice(0, 6).map((d) => ({ title: d.title, owner: d.owner, due: d.dueDate, status: d.status })),
-        runsOn: stackFor(proj.id), dataSource: sourceOf(proj.id),
-        hasPlanInHorizonView: hasSupabase() && supabaseProjectIds().includes(proj.id),
+        runsOn: stackOf(proj), dataSource: sourceOf(proj),
+        hasPlanInHorizonView: proj.source === "database",
       };
     }
     case "list_raid": {
@@ -181,7 +180,7 @@ async function runTool(name: ToolName, args: Record<string, any>, ctx: Ctx, cite
       const total = items.length;
       items = dedupe(items).sort((a, b) => sevRank[a.severity] - sevRank[b.severity] || (stRank[a.status] ?? 9) - (stRank[b.status] ?? 9) || (a.dueDate || "9999").localeCompare(b.dueDate || "9999"));
       const limit = Math.min(Number(args.limit) || 25, 60);
-      cite({ source: proj ? sourceLabel(proj.id) : "Portfolio", detail: `${proj ? proj.name + " " : ""}RAID log${args.type ? ` (${args.type})` : ""}` });
+      cite({ source: proj ? sourceLabel(proj) : "Portfolio", detail: `${proj ? proj.name + " " : ""}RAID log${args.type ? ` (${args.type})` : ""}` });
       return {
         matching: total, distinct: items.length, showing: Math.min(limit, items.length),
         items: items.slice(0, limit).map((r) => ({
@@ -199,7 +198,7 @@ async function runTool(name: ToolName, args: Record<string, any>, ctx: Ctx, cite
       if (args.to) ms = ms.filter((m) => m.forecastDate <= String(args.to));
       ms = [...ms].sort((a, b) => a.forecastDate.localeCompare(b.forecastDate));
       const limit = Math.min(Number(args.limit) || 30, 80);
-      cite({ source: proj ? sourceLabel(proj.id) : "Portfolio", detail: `${proj ? proj.name + " " : ""}milestones` });
+      cite({ source: proj ? sourceLabel(proj) : "Portfolio", detail: `${proj ? proj.name + " " : ""}milestones` });
       return {
         matching: ms.length, showing: Math.min(limit, ms.length),
         milestones: ms.slice(0, limit).map((m) => ({
@@ -213,8 +212,8 @@ async function runTool(name: ToolName, args: Record<string, any>, ctx: Ctx, cite
     case "get_weekly_status":
     case "get_financials": {
       if (!proj) return { error: "project is required" };
-      if (!(hasSupabase() && supabaseProjectIds().includes(proj.id))) {
-        return { error: `${proj.name} does not keep this in HorizonView (its data source is ${sourceOf(proj.id)}). Use get_project, list_raid or list_milestones instead.` };
+      if (!(hasSupabase() && proj.source === "database")) {
+        return { error: `${proj.name} does not keep this in HorizonView (its data source is ${sourceOf(proj)}). Use get_project, list_raid or list_milestones instead.` };
       }
       const q = `project_id=eq.${encodeURIComponent(proj.id)}`;
       const ws = await sbSelect("workstreams", `${q}&order=sort_order.asc`);
@@ -307,8 +306,12 @@ async function complete(messages: Msg[]): Promise<{ content: string | null; tool
 function systemPrompt(ctx: Ctx): string {
   return [
     "You are Ask Horizon, the AI analyst inside HorizonView, Aberdeen Advisors' project and portfolio platform. You are talking with executives and PMO leads about their portfolio.",
-    `Today is ${today()}. The portfolio has ${ctx.projects.length} projects: ${ctx.projects.map((p) => `${p.name} (${p.status})`).join(", ")}.`,
-    "Data sources: Project Elevate is live from the client's Power BI semantic model (fed by SharePoint Lists); projects kept in the HorizonView project database (e.g. Project Alpha) are live and edited in HorizonView; the other projects are demo sample data. Mention that a project is demo data only if the user asks where data comes from.",
+    `Today is ${today()}. The portfolio has ${ctx.projects.length} projects: ${ctx.projects.map((p) => `${p.name} (${p.status}, ${p.portfolio})`).join(", ")}.`,
+    `Data sources: ${[
+      ctx.projects.filter((p) => p.source === "semantic-model").map((p) => p.name).join(", ") && `${ctx.projects.filter((p) => p.source === "semantic-model").map((p) => p.name).join(", ")} live from the client's Power BI semantic model (fed by SharePoint Lists)`,
+      ctx.projects.filter((p) => p.source === "database").map((p) => p.name).join(", ") && `${ctx.projects.filter((p) => p.source === "database").map((p) => p.name).join(", ")} live in the HorizonView project database, edited in HorizonView`,
+      ctx.projects.some((p) => p.source === "demo") && "the rest are demo sample data",
+    ].filter(Boolean).join("; ")}. Mention that a project is demo data only if the user asks where data comes from.`,
     "Always use the tools to look up facts before answering. Never guess or invent numbers, names, owners or dates. If the tools do not have the answer, say so plainly and suggest where it might live.",
     "Use earlier turns of the conversation for context (e.g. 'it', 'that project', 'what about Compass?').",
     "Style: direct and executive-ready. Lead with the answer in one or two sentences, then supporting detail. Use short bullet lists ('- ') for several items and **bold** for key figures sparingly. Keep most answers under 180 words unless the user asks for more. Write dates like 'Jul 10'.",

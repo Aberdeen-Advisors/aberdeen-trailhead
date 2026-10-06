@@ -2,15 +2,23 @@
 
 import { useState } from "react";
 
-export function GenerateDeckButton({ projectId, label }: { projectId?: string; label?: string }) {
+export function GenerateDeckButton({
+  projectId,
+  label,
+  endpoint = "/api/reports/steering-deck",
+  variant = "primary",
+}: {
+  projectId?: string;
+  label?: string;
+  endpoint?: string;
+  variant?: "primary" | "outline" | "secondary";
+}) {
   const [busy, setBusy] = useState(false);
 
   async function generate() {
     setBusy(true);
     try {
-      const url = projectId
-        ? `/api/reports/steering-deck?projectId=${encodeURIComponent(projectId)}`
-        : "/api/reports/steering-deck";
+      const url = projectId ? `${endpoint}?projectId=${encodeURIComponent(projectId)}` : endpoint;
       const res = await fetch(url);
       if (!res.ok) throw new Error(await res.text());
       const blob = await res.blob();
@@ -28,7 +36,17 @@ export function GenerateDeckButton({ projectId, label }: { projectId?: string; l
   }
 
   return (
-    <button onClick={generate} disabled={busy} className="hv-btn-primary px-4 py-2 text-[0.82rem]">
+    <button
+      onClick={generate}
+      disabled={busy}
+      className={
+        variant === "outline"
+          ? "hv-btn whitespace-nowrap border-[1.5px] border-teal bg-teal/20 px-4 py-2 text-[0.82rem] font-semibold text-white transition hover:bg-teal/40"
+          : variant === "secondary"
+            ? "hv-btn whitespace-nowrap border-[1.5px] border-navy px-4 py-2 text-[0.82rem] font-semibold text-navy transition hover:border-teal hover:text-teal-ink"
+            : "hv-btn-primary px-4 py-2 text-[0.82rem]"
+      }
+    >
       {busy ? (
         <>
           <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden>

@@ -12,7 +12,8 @@ import { AutoRefresh } from "@/components/auto-refresh";
 import { ProjectLogo } from "@/components/project-logo";
 import { RaidEditor } from "@/components/raid-editor";
 import { tierHasPodcasts } from "@/lib/config";
-import { dashboardFor, usesMicrosoftStack, stackFor, usesSupabase } from "@/lib/stacks";
+import { dashboardFor, usesMicrosoftStack, stackOf, isDatabaseProject, hasClientTemplate, projectDashboard } from "@/lib/stacks";
+import { ProjectSettings } from "@/components/project-settings";
 import { ProjectDataWorkspace } from "@/components/project-data-workspace";
 import { hasSupabase } from "@/lib/supabase";
 import { ProjectPlan } from "@/components/project-plan";
@@ -44,14 +45,15 @@ export default async function ProjectPage({ params }: { params: { id: string } }
           .filter(Boolean)
           .join(" · ")
       : null);
-  const dashboardUrl = dashboardFor(project.id);
-  const showMicrosoftLinks = usesMicrosoftStack(project.id);
+  const dashboardUrl = dashboardFor(project);
+  const dash = projectDashboard(project);
+  const showMicrosoftLinks = usesMicrosoftStack(project);
   // Projects fed by SharePoint Lists are read-only here: edits happen in SharePoint.
-  const fromSharePointLists = stackFor(project.id).includes("lists");
+  const fromSharePointLists = stackOf(project).includes("lists");
   const siteUrl = project.sharePointUrl || "https://aberdeenadv.sharepoint.com/sites/elevate";
   const freshness = fromSharePointLists ? await getDataFreshness() : null;
-  // Supabase projects keep their plan in HorizonView: show the full Gantt instead of the milestone timeline.
-  const ownPlan = usesSupabase(project.id) && hasSupabase();
+  // Projects kept in HorizonView show their full plan (Gantt) instead of the milestone timeline.
+  const ownPlan = isDatabaseProject(project) && hasSupabase();
   const lastChange = ownPlan ? await getLastChange(project.id) : null;
 
   return (
@@ -65,6 +67,11 @@ export default async function ProjectPage({ params }: { params: { id: string } }
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-[1.6rem] font-bold tracking-tight text-white">{project.name}</h1>
                 <HealthBadge status={project.status} />
+                {project.source === "demo" && (
+                  <span className="rounded-full border border-white/30 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-white/70">
+                    Sample data
+                  </span>
+                )}
               </div>
               <p className="hv-num mt-1.5 text-[0.8rem] font-light text-white/65">
                 {[
@@ -80,6 +87,31 @@ export default async function ProjectPage({ params }: { params: { id: string } }
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <GenerateDeckButton projectId={project.id} />
+            {hasClientTemplate(project) && (
+              <GenerateDeckButton
+                projectId={project.id}
+                endpoint="/api/reports/executive-dashboard"
+                label="Executive Dashboard (client template)"
+                variant="outline"
+              />
+            )}
+            {ownPlan && (
+              <ProjectSettings
+                project={{
+                  id: project.id,
+                  name: project.name,
+                  code: project.code,
+                  portfolio: project.portfolio,
+                  phase: project.phase,
+                  sponsor: project.sponsor,
+                  projectManager: project.projectManager,
+                  startDate: project.startDate,
+                  endDate: project.endDate,
+                  budget: project.budget,
+                  description: project.description ?? "",
+                }}
+              />
+            )}
             {dashboardUrl && (
               <a
                 href={dashboardUrl}
@@ -90,6 +122,14 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                 Live dashboard ↗
               </a>
             )}
+            {dash.kind === "internal" && (
+              <Link
+                href={dash.href}
+                className="hv-btn whitespace-nowrap border-[1.5px] border-teal bg-teal/20 px-4 py-2 text-[0.82rem] font-semibold text-white transition hover:bg-teal/40"
+              >
+                Dashboard →
+              </Link>
+            )}
             {showMicrosoftLinks && (<>
             <a
               href={project.sharePointUrl}
@@ -99,7 +139,8 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             >
               SharePoint ↗
             </a>
-            <a
+            {dash.kind === "powerbi" && (
+              <a
               href={project.powerBiReportUrl}
               target="_blank"
               rel="noreferrer"
@@ -107,6 +148,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             >
               Power BI ↗
             </a>
+            )}
             </>)}
           </div>
         </div>
@@ -176,8 +218,18 @@ export default async function ProjectPage({ params }: { params: { id: string } }
           <Panel
             title="Milestone Timeline"
             action={
-              <span className="hv-num text-[0.72rem] text-hv-muted">
-                {milestones.length} milestone{milestones.length === 1 ? "" : "s"}
+              <span className="flex items-center gap-3">
+                <span className="hv-num text-[0.72rem] text-hv-muted">
+                  {milestones.length} milestone{milestones.length === 1 ? "" : "s"}
+                </span>
+                <a
+                  href={`/print/projects/${encodeURIComponent(project.id)}/milestones`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hv-btn whitespace-nowrap border-[1.5px] border-hv-border px-3 py-1 text-[0.72rem] font-semibold text-navy transition hover:border-teal hover:text-teal-ink"
+                >
+                  Print / Save as PDF
+                </a>
               </span>
             }
           >
@@ -200,12 +252,25 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             </div>
             <p className="mt-4 border-t border-hv-border pt-3 text-[0.7rem] font-light text-hv-subtle">
               {ownPlan
-                ? "Health score comes from your project database."
+                ? "Health and % complete are calculated from this project's plan, milestones, RAID log and weekly status."
                 : fromSharePointLists
                   ? "Health score is the average of your workstream statuses in the semantic model (Green 85, Amber 65, Red 40); schedule risk is 100 minus health."
                   : "Scored nightly in Microsoft Fabric."}{" "}
               Risk scales are inverted — lower is better.
             </p>
+            {ownPlan && project.healthReasons && project.healthReasons.length > 0 && (
+              <div className="mt-3 rounded-lg bg-hv-bg p-3">
+                <div className="text-[0.65rem] font-semibold uppercase tracking-wider text-hv-subtle">Why {project.healthScore}</div>
+                <ul className="mt-1.5 space-y-1 text-[0.72rem] text-hv-muted">
+                  {project.healthReasons.map((r) => (
+                    <li key={r} className="flex gap-1.5">
+                      <span className="text-teal-ink">·</span>
+                      {r}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </Panel>
 
           {decisionNeeded && (
