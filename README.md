@@ -165,3 +165,11 @@ Plain HTML/CSS/JS — no framework, no build step, no chart libraries. All dashb
 - **Teams/Email delivery:** extend the cron route with Graph `sendMail` / Teams webhooks.
 - **Report Builder replacement:** add more deck types alongside `buildSteeringDeck` (QBR, budget review) — same pattern.
 - **Project logo upload:** logos currently ship as files in `public/project-logos/`; a portal upload UI backed by SharePoint is a natural next step.
+
+## Recent updates (Oct 2026)
+
+- Projects can run fully inside HorizonView (Supabase database) or on the client's Microsoft 365 stack (SharePoint Lists, Fabric, Power BI).
+- Built-in project plan: editable tables, Gantt timeline of tasks and milestones, print / save as PDF.
+- AI-written portfolio and project summaries from live data; Ask Horizon is a conversational agent with sources.
+- SteerCo decks and podcasts are built from the latest data at the moment you click.
+- One health rule everywhere: 75+ Green, 50-74 Amber, below 50 Red.
