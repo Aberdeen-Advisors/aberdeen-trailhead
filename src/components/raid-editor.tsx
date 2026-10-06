@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { RaidItem, RaidType } from "@/lib/types";
 
@@ -29,15 +29,28 @@ const statusTone: Record<RaidItem["status"], string> = {
 const cell =
   "w-full rounded border border-transparent bg-transparent px-1.5 py-1 outline-none transition hover:border-hv-border hover:bg-hv-bg focus:border-teal focus:bg-white";
 
+// Long logs stay readable: open items first, worst first, capped until expanded.
+const CAP = 10;
+const statusRank: Record<RaidItem["status"], number> = { Overdue: 0, Open: 1, "In Progress": 1, Closed: 2 };
+const severityRank: Record<RaidItem["severity"], number> = { High: 0, Medium: 1, Low: 2 };
+
 export function RaidEditor({
   projectId,
   items: initial,
   editable,
+  sourceLabel,
+  sourceUrl,
 }: {
   projectId: string;
   items: RaidItem[];
   editable: boolean;
+  /** Where the log really lives, e.g. "RAID Log" SharePoint list. Shown when read-only. */
+  sourceLabel?: string;
+  sourceUrl?: string;
 }) {
+  const [typeFilter, setTypeFilter] = useState<RaidType | "All">("All");
+  const [openOnly, setOpenOnly] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const router = useRouter();
   const [items, setItems] = useState(initial);
   const [busy, setBusy] = useState(false);
@@ -102,6 +115,8 @@ export function RaidEditor({
     }
     const { item } = (await res.json()) as { item: RaidItem };
     setItems((rows) => [...rows, item]);
+    setTypeFilter("All");
+    setExpanded(true);
     router.refresh();
   }
 
@@ -112,6 +127,25 @@ export function RaidEditor({
   }
 
   const overdue = items.filter((r) => r.status === "Overdue").length;
+  const presentTypes = useMemo(() => TYPES.filter((t) => items.some((r) => r.type === t)), [items]);
+  const visible = useMemo(
+    () =>
+      items
+        .filter((r) => !openOnly || r.status !== "Closed")
+        .filter((r) => typeFilter === "All" || r.type === typeFilter)
+        .sort(
+          (a, b) =>
+            (statusRank[a.status] ?? 1) - (statusRank[b.status] ?? 1) ||
+            (severityRank[a.severity] ?? 1) - (severityRank[b.severity] ?? 1) ||
+            (a.dueDate || "").localeCompare(b.dueDate || "")
+        ),
+    [items, openOnly, typeFilter]
+  );
+  const shown = expanded ? visible : visible.slice(0, CAP);
+  const chip = (on: boolean) =>
+    `rounded-full px-3 py-1 text-[0.72rem] font-medium transition ${
+      on ? "bg-navy text-white" : "border border-hv-border text-navy hover:border-teal"
+    }`;
 
   return (
     <section className="hv-card p-6">
@@ -122,6 +156,16 @@ export function RaidEditor({
             {items.length} item{items.length === 1 ? "" : "s"}
             {overdue > 0 && <span className="ml-1.5 font-semibold text-red-300">· {overdue} overdue</span>}
           </span>
+          {!editable && sourceUrl && (
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-hv-border px-3 py-1.5 text-[0.72rem] font-semibold text-navy transition hover:border-teal hover:text-teal-ink"
+            >
+              Edit in SharePoint ↗
+            </a>
+          )}
           {editable && (
             <button
               type="button"
@@ -139,7 +183,25 @@ export function RaidEditor({
         <p className="mb-3 rounded border border-red-500/35 bg-red-50 px-3 py-2 text-xs text-red-300">{error}</p>
       )}
 
-      <div className="hv-scroll-x">
+      <div className="mb-4 flex flex-wrap items-center gap-1.5">
+        <button type="button" className={chip(typeFilter === "All")} aria-pressed={typeFilter === "All"} onClick={() => { setTypeFilter("All"); setExpanded(false); }}>
+          All types
+        </button>
+        {presentTypes.map((t) => (
+          <button key={t} type="button" className={chip(typeFilter === t)} aria-pressed={typeFilter === t} onClick={() => { setTypeFilter(t); setExpanded(false); }}>
+            {t}
+            <span className="hv-num ml-1 opacity-60">
+              {items.filter((r) => r.type === t && (!openOnly || r.status !== "Closed")).length}
+            </span>
+          </button>
+        ))}
+        <label className="ml-auto inline-flex cursor-pointer items-center gap-2 text-[0.72rem] text-hv-muted">
+          <input type="checkbox" checked={openOnly} onChange={(e) => { setOpenOnly(e.target.checked); setExpanded(false); }} className="accent-teal" />
+          Open items only
+        </label>
+      </div>
+
+      <div className={`hv-scroll-x ${expanded ? "max-h-[560px] overflow-y-auto" : ""}`}>
         <table className="w-full min-w-[880px] table-fixed text-left text-sm">
           {/* Item takes the bulk of the width; the rest are sized to content. */}
           <colgroup>
@@ -163,14 +225,16 @@ export function RaidEditor({
             </tr>
           </thead>
           <tbody className="divide-y divide-hv-border">
-            {items.length === 0 && (
+            {visible.length === 0 && (
               <tr>
                 <td colSpan={editable ? 7 : 6} className="py-6 text-center text-xs text-hv-subtle">
-                  No RAID items yet.{editable && " Use “Add item” to create the first one."}
+                  {items.length === 0
+                    ? <>No RAID items yet.{editable && " Use “Add item” to create the first one."}</>
+                    : "No items match these filters."}
                 </td>
               </tr>
             )}
-            {items.map((r) => (
+            {shown.map((r) => (
               <tr key={r.id} className="group align-middle transition hover:bg-hv-bg/60">
                 <td className="py-1.5 pr-3">
                   {editable ? (
@@ -292,8 +356,24 @@ export function RaidEditor({
         </table>
       </div>
 
+      {(visible.length > CAP) && (
+        <button
+          type="button"
+          onClick={() => setExpanded((e) => !e)}
+          className="mt-3 w-full rounded-full border border-hv-border py-2 text-[0.75rem] font-medium text-hv-muted transition hover:border-teal hover:text-teal-ink"
+        >
+          {expanded ? "Show fewer" : `Show all ${visible.length}`}
+        </button>
+      )}
+
       <p className="mt-4 border-t border-hv-border pt-3 text-[0.7rem] font-light text-hv-subtle">
-        {editable ? (
+        {!editable && sourceLabel ? (
+          <>
+            Read-only. This log comes from your <span className="font-medium text-hv-muted">{sourceLabel}</span>{" "}
+            SharePoint list through your Power BI semantic model. Edit items in SharePoint and they appear here after the
+            next hourly refresh.
+          </>
+        ) : editable ? (
           <>
             Click any cell to edit; changes save automatically and flow through to portfolio decisions and
             generated SteerCo decks.

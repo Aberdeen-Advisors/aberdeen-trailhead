@@ -50,6 +50,8 @@ const RAID_PER_PAGE = 11;
 // client's status report uses. Above them, each gets its own paginated slides.
 const COMBINED_MS_MAX = 7;
 const COMBINED_RAID_MAX = 7;
+// A SteerCo deck shows the items that need attention, not the whole register.
+const MAX_RAID_PAGES = 2;
 
 export interface DeckInput {
   projects: Project[];
@@ -61,6 +63,9 @@ export interface DeckInput {
   logo?: string; // white HorizonView lockup, for the navy cover
   cover?: string; // Aberdeen "Title_Dark" chevron cover art
   mark?: string; // Aberdeen wordmark, for the content-slide footer
+  /** Portfolio summary paragraph (AI-written when available). Defaults to kpis.portfolioSummary. */
+  summary?: string;
+  summaryByAi?: boolean;
 }
 
 const sevRank = { High: 0, Medium: 1, Low: 2 } as const;
@@ -71,6 +76,7 @@ type Page = { render: (slide: PptxGenJS.Slide, page: number, of: number) => void
 
 export function buildDeck(input: DeckInput): Promise<Buffer> {
   const { projects, raid, milestones, kpis, singleProjectId, logo, cover, mark } = input;
+  const summaryText = input.summary || kpis.portfolioSummary;
   const single = singleProjectId ? projects.find((p) => p.id === singleProjectId) : undefined;
   const scope = single ? [single] : projects;
   const asOf = new Date().toISOString().slice(0, 10);
@@ -130,7 +136,7 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
             ["Health score", `${single.healthScore} / 100`],
             ["Project manager", single.projectManager],
             ["Baseline finish", single.endDate],
-            ["AI forecast finish", single.forecastCompletionDate],
+            ["Forecast finish", single.forecastCompletionDate],
           ]
         : [
             ["Portfolio", projects[0]?.portfolio ?? "Aberdeen Advisors"],
@@ -177,7 +183,7 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
 
       // Aberdeen wordmark bottom-left, matching the master's footer band.
       s.addText(
-        `${stamp}  ·  Certified KPIs from the Power BI Semantic Model  ·  AI insights generated in Microsoft Fabric`,
+        `${stamp}  ·  Built from live project data in HorizonView`,
         {
           x: M, y: 6.9, w: CW, h: 0.26, fontFace: F.body, fontSize: 9.3,
           color: "FFFFFF", transparency: 45, isTextBox: true, margin: 0,
@@ -195,7 +201,7 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
     pages.push({
       render: (s, page, of) => {
         slideHeader(s, "Portfolio Health", stamp);
-        let y = sectionLabel(s, "Certified portfolio metrics", M, BODY_Y, CW);
+        let y = sectionLabel(s, "Portfolio metrics", M, BODY_Y, CW);
         kpiStrip(
           s,
           [
@@ -203,9 +209,9 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
               color: kpis.executiveHealthScore >= 75 ? C.jade : kpis.executiveHealthScore >= 55 ? C.goldInk : C.jasperInk },
             { label: "Active projects", value: String(kpis.totalProjects), sub: `${kpis.green}G · ${kpis.amber}A · ${kpis.red}R` },
             { label: "Total budget", value: fmtMoney(kpis.totalBudget), sub: `${fmtMoney(kpis.totalActuals)} actuals` },
-            { label: "Budget variance", value: `${kpis.budgetVariancePct >= 0 ? "+" : ""}${kpis.budgetVariancePct.toFixed(1)}%`, sub: "forecast at completion",
+            { label: "Budget variance", value: `${kpis.budgetVariancePct >= 0 ? "+" : ""}${kpis.budgetVariancePct.toFixed(1)}%`, sub: "forecast vs budget",
               color: kpis.budgetVariancePct > 5 ? C.jasperInk : kpis.budgetVariancePct > 0 ? C.goldInk : C.jade },
-            { label: "Milestones", value: `${kpis.milestoneCompletionPct.toFixed(0)}%`, sub: "baseline complete" },
+            { label: "Milestones", value: `${kpis.milestoneCompletionPct.toFixed(0)}%`, sub: "of milestones complete" },
             { label: "Open decisions", value: String(kpis.openDecisions), sub: `${kpis.openRaidCount} open RAID` },
           ],
           M,
@@ -217,20 +223,20 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
 
         // The RAG split lives in the "Active projects" tile and again as a status
         // dot per row in the roll-up, so no separate bar is needed here.
-        y = sectionLabel(s, "AI executive summary — this week", M, y, CW);
-        // Capped at three lines so the roll-up below always clears the footer.
-        y += prose(s, kpis.portfolioSummary, M, y, CW, T.prose, 0.78) + 0.16;
+        y = sectionLabel(s, input.summaryByAi ? "AI executive summary — this week" : "Executive summary — this week", M, y, CW);
+        // Capped so the roll-up below always clears the footer.
+        y += prose(s, summaryText, M, y, CW, T.prose, 1.05) + 0.16;
 
         if (rollUpInline) {
           y = sectionLabel(s, "Project roll-up", M, y, CW);
           const h = rollUpTable(s, projects, y);
           s.addText(
-            "Variance and forecast finish are ML-derived in Microsoft Fabric; red indicates a forecast beyond the approved baseline.",
+            "Red indicates a forecast finish beyond the approved baseline, or a cost forecast above budget.",
             { x: M, y: y + h + 0.1, w: CW, h: 0.22, fontFace: F.body, fontSize: T.foot, color: C.subtle, isTextBox: true, margin: 0 }
           );
         } else {
           s.addText(
-            "Generated in Microsoft Fabric Notebooks · grounded in the HorizonView Intelligence Layer",
+            input.summaryByAi ? "Summary written by AI from live data across every project." : "Summary built from live data across every project.",
             { x: M, y, w: CW, h: 0.22, fontFace: F.body, fontSize: T.foot, color: C.subtle, isTextBox: true, margin: 0 }
           );
         }
@@ -245,7 +251,7 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
           slideHeader(s, "Project Roll-Up", stamp);
           const h = rollUpTable(s, projects, BODY_Y);
           s.addText(
-            "Variance and forecast finish are ML-derived in Microsoft Fabric; red indicates a forecast beyond the approved baseline.",
+            "Red indicates a forecast finish beyond the approved baseline, or a cost forecast above budget.",
             { x: M, y: BODY_Y + h + 0.15, w: CW, h: 0.22, fontFace: F.body, fontSize: T.foot, color: C.subtle, isTextBox: true, margin: 0 }
           );
           footer(s, "Portfolio Steering Committee Update", page, of, mark);
@@ -256,10 +262,38 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
 
   // ── Per-project pages ─────────────────────────────────────────────────────
   for (const p of scope) {
-    const pRaid = raid
+    // Open RAID, one row per distinct item (logs often repeat a title), most
+    // severe and overdue first, capped so the deck stays a SteerCo deck.
+    const raidAll = raid
       .filter((r) => r.projectId === p.id && r.status !== "Closed")
-      .sort((a, b) => sevRank[a.severity] - sevRank[b.severity] || statusRank[a.status] - statusRank[b.status]);
-    const pMs = milestones.filter((m) => m.projectId === p.id);
+      .sort((a, b) => sevRank[a.severity] - sevRank[b.severity] || statusRank[a.status] - statusRank[b.status] || (a.dueDate || "9999").localeCompare(b.dueDate || "9999"));
+    const seenRaid = new Set<string>();
+    const raidUnique = raidAll.filter((r) => {
+      const k = `${r.type}|${r.title.trim().toLowerCase()}`;
+      if (seenRaid.has(k)) return false;
+      seenRaid.add(k);
+      return true;
+    });
+    const pRaid = raidUnique.slice(0, RAID_PER_PAGE * MAX_RAID_PAGES);
+    const raidNote =
+      raidAll.length > pRaid.length
+        ? `Showing ${pRaid.length} of ${raidAll.length} open items: repeats combined, highest severity and overdue first.`
+        : "";
+
+    // Milestones: late and at-risk first, then the next ones due; completed last.
+    const msAll = milestones.filter((m) => m.projectId === p.id);
+    const msRank = (m: Milestone) =>
+      m.status === "Late" ? 0 : m.status === "At Risk" ? 1 : m.status === "Complete" ? 3 : 2;
+    const pMs =
+      msAll.length > MILESTONES_PER_PAGE
+        ? [...msAll]
+            .sort((a, b) => msRank(a) - msRank(b) || (msRank(a) === 3 ? b.forecastDate.localeCompare(a.forecastDate) : a.forecastDate.localeCompare(b.forecastDate)))
+            .slice(0, MILESTONES_PER_PAGE)
+        : msAll;
+    const msNote =
+      msAll.length > pMs.length
+        ? `Showing ${pMs.length} of ${msAll.length} milestones: late and at risk first, then the next due. ${msAll.filter((m) => m.status === "Complete").length} are complete.`
+        : "Slip is forecast minus baseline, in days.";
     const footLeft = `HorizonView · ${p.name} · ${p.code}`;
 
     // Executive status one-pager
@@ -291,6 +325,7 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
         // Metric strip
         const variance = p.forecastAtCompletion - p.budget;
         const slip = daysBetween(p.endDate, p.forecastCompletionDate);
+        const passed = p.forecastCompletionDate && p.forecastCompletionDate < asOf && p.percentComplete < 100;
         kpiStrip(
           s,
           [
@@ -303,9 +338,9 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
               color: variance > 0 ? C.jasperInk : C.jade },
             { label: "Schedule risk", value: String(p.scheduleRiskScore), sub: "lower is better",
               color: p.scheduleRiskScore >= 70 ? C.jasperInk : p.scheduleRiskScore >= 40 ? C.goldInk : C.jade },
-            { label: "AI forecast finish", value: p.forecastCompletionDate,
-              sub: slip > 0 ? `${slip} days past baseline` : "on or ahead of baseline",
-              color: slip > 0 ? C.jasperInk : C.jade },
+            { label: "Forecast finish", value: p.forecastCompletionDate || "—",
+              sub: passed ? `date passed · ${p.percentComplete}% complete` : slip > 0 ? `${slip} days past baseline` : "on or ahead of baseline",
+              color: passed || slip > 0 ? C.jasperInk : C.jade },
           ],
           M,
           y,
@@ -391,7 +426,7 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
               stamp
             );
             const h = msTable(s, chunk, BODY_Y);
-            s.addText("Slip is forecast minus baseline in days; forecasts are ML-derived nightly in Microsoft Fabric.", {
+            s.addText(msNote, {
               x: M, y: BODY_Y + h + 0.15, w: CW, h: 0.22, fontFace: F.body, fontSize: T.foot,
               color: C.subtle, isTextBox: true, margin: 0,
             });
@@ -406,7 +441,11 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
           render: (s, page, of) => {
             slideHeader(s, `${p.name} — RAID Log${raidPages.length > 1 ? ` (${ci + 1}/${raidPages.length})` : ""}`, stamp);
             const h = raidTable(s, chunk, BODY_Y);
-            const y = BODY_Y + h + 0.25;
+            let y = BODY_Y + h + 0.25;
+            if (ci === raidPages.length - 1 && raidNote) {
+              s.addText(raidNote, { x: M, y: BODY_Y + h + 0.1, w: CW, h: 0.22, fontFace: F.body, fontSize: T.foot, color: C.subtle, isTextBox: true, margin: 0 });
+              y += 0.2;
+            }
             if (ci === raidPages.length - 1 && y < 6.2) {
               const yy = sectionLabel(s, "Risk narrative", M, y, CW);
               prose(s, p.riskNarrative, M, yy, CW, T.prose, FOOT_Y - 0.22 - yy);
@@ -420,9 +459,16 @@ export function buildDeck(input: DeckInput): Promise<Buffer> {
 
   // ── Decisions required (portfolio deck) ───────────────────────────────────
   if (!single) {
+    const seenDec = new Set<string>();
     const decisions = raid
       .filter((r) => r.type === "Decision" && r.status !== "Closed")
-      .sort((a, b) => statusRank[a.status] - statusRank[b.status] || a.dueDate.localeCompare(b.dueDate));
+      .sort((a, b) => statusRank[a.status] - statusRank[b.status] || a.dueDate.localeCompare(b.dueDate))
+      .filter((r) => {
+        const k = `${r.projectId}|${r.title.trim().toLowerCase()}`;
+        if (seenDec.has(k)) return false;
+        seenDec.add(k);
+        return true;
+      });
     if (decisions.length) {
       paginate(decisions, RAID_PER_PAGE).forEach((chunk, ci, all) => {
         pages.push({

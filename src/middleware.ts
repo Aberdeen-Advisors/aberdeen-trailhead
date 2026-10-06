@@ -9,5 +9,8 @@ export const config = {
     "/api/ask/:path*",
     "/api/reports/:path*",
     "/api/podcast/:path*",
+    "/api/data/:path*",
+    "/api/dashboards/:path*",
+    "/print/:path*",
   ],
 };

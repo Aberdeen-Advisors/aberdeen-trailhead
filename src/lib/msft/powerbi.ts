@@ -50,3 +50,24 @@ export async function executeDax<T>(dax: string): Promise<T[]> {
 export async function queryIntelligenceLayer<T>(table: string): Promise<T[]> {
   return executeDax<T>(`EVALUATE '${table}'`);
 }
+
+export interface ModelRefresh {
+  status: string; // "Completed" | "Failed" | "Unknown" (in progress) | ...
+  endTime: string | null; // ISO, null while a refresh is still running
+}
+
+/** Most recent refresh of the semantic model, from the Power BI refresh history. */
+export async function getModelLastRefresh(): Promise<ModelRefresh | null> {
+  const ws = process.env.POWERBI_WORKSPACE_ID;
+  const ds = process.env.POWERBI_DATASET_ID;
+  if (!ws || !ds) return null;
+  const token = await pbiToken();
+  const res = await fetch(
+    `https://api.powerbi.com/v1.0/myorg/groups/${ws}/datasets/${ds}/refreshes?$top=1`,
+    { headers: { Authorization: `Bearer ${token}` }, cache: "no-store" }
+  );
+  if (!res.ok) throw new Error(`refresh history failed: ${res.status} ${await res.text()}`);
+  const json = (await res.json()) as { value?: { status?: string; endTime?: string }[] };
+  const last = json.value?.[0];
+  return last ? { status: last.status ?? "Unknown", endTime: last.endTime ?? null } : null;
+}

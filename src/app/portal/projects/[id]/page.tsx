@@ -1,15 +1,27 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { ProjectNarrativePanels, ProjectNarrativeSkeleton } from "@/components/project-narrative-panels";
 import { notFound } from "next/navigation";
-import { getProject, getRaid, getMilestones, isRaidEditable } from "@/lib/data/provider";
+import { getProject, getRaid, getMilestones, isRaidEditable, getDataFreshness, getLastChange, openDecisions } from "@/lib/data/provider";
 import { HealthBadge, KpiCard, Panel, ScoreBar, fmtMoney } from "@/components/ui";
 import { GenerateDeckButton } from "@/components/generate-deck-button";
 import { PodcastPanel } from "@/components/podcast-panel";
-import { MilestoneGantt } from "@/components/milestone-gantt";
+import { MilestoneTimeline } from "@/components/milestone-timeline";
+import { SharePointLineage } from "@/components/sharepoint-lineage";
+import { AutoRefresh } from "@/components/auto-refresh";
 import { ProjectLogo } from "@/components/project-logo";
 import { RaidEditor } from "@/components/raid-editor";
 import { tierHasPodcasts } from "@/lib/config";
+import { dashboardFor, usesMicrosoftStack, stackFor, usesSupabase } from "@/lib/stacks";
+import { ProjectDataWorkspace } from "@/components/project-data-workspace";
+import { hasSupabase } from "@/lib/supabase";
+import { ProjectPlan } from "@/components/project-plan";
+import { SupabaseLineage } from "@/components/supabase-lineage";
+import { LiveSync } from "@/components/live-sync";
 
 export const dynamic = "force-dynamic";
+// AI summaries can take several seconds to write on a cache miss.
+export const maxDuration = 60;
 
 export default async function ProjectPage({ params }: { params: { id: string } }) {
   const [project, raid, milestones] = await Promise.all([
@@ -20,6 +32,27 @@ export default async function ProjectPage({ params }: { params: { id: string } }
   if (!project) notFound();
 
   const variance = project.forecastAtCompletion - project.budget;
+  const today = new Date().toISOString().slice(0, 10);
+  // A finish date in the past with work still open is flagged, not shown as on track.
+  const finishPassed = !!project.forecastCompletionDate && project.forecastCompletionDate < today && project.percentComplete < 100;
+  // Decision Needed: the project's own, or its most urgent open decision in the RAID log.
+  const topDecision = openDecisions(raid)[0];
+  const decisionNeeded =
+    project.decisionNeeded ??
+    (topDecision
+      ? [topDecision.title, topDecision.owner && topDecision.owner !== "—" && `Owner ${topDecision.owner}`, topDecision.dueDate && `due ${topDecision.dueDate}`, topDecision.status === "Overdue" && "overdue"]
+          .filter(Boolean)
+          .join(" · ")
+      : null);
+  const dashboardUrl = dashboardFor(project.id);
+  const showMicrosoftLinks = usesMicrosoftStack(project.id);
+  // Projects fed by SharePoint Lists are read-only here: edits happen in SharePoint.
+  const fromSharePointLists = stackFor(project.id).includes("lists");
+  const siteUrl = project.sharePointUrl || "https://aberdeenadv.sharepoint.com/sites/elevate";
+  const freshness = fromSharePointLists ? await getDataFreshness() : null;
+  // Supabase projects keep their plan in HorizonView: show the full Gantt instead of the milestone timeline.
+  const ownPlan = usesSupabase(project.id) && hasSupabase();
+  const lastChange = ownPlan ? await getLastChange(project.id) : null;
 
   return (
     <div className="space-y-8">
@@ -34,13 +67,30 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                 <HealthBadge status={project.status} />
               </div>
               <p className="hv-num mt-1.5 text-[0.8rem] font-light text-white/65">
-                {project.code} · {project.portfolio} · PM {project.projectManager} · Sponsor{" "}
-                {project.sponsor}
+                {[
+                  project.code,
+                  project.portfolio,
+                  project.projectManager && project.projectManager !== "—" && `PM ${project.projectManager}`,
+                  project.sponsor && project.sponsor !== "—" && `Sponsor ${project.sponsor}`,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
               </p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <GenerateDeckButton projectId={project.id} />
+            {dashboardUrl && (
+              <a
+                href={dashboardUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hv-btn whitespace-nowrap border-[1.5px] border-teal bg-teal/20 px-4 py-2 text-[0.82rem] font-semibold text-white transition hover:bg-teal/40"
+              >
+                Live dashboard ↗
+              </a>
+            )}
+            {showMicrosoftLinks && (<>
             <a
               href={project.sharePointUrl}
               target="_blank"
@@ -57,6 +107,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             >
               Power BI ↗
             </a>
+            </>)}
           </div>
         </div>
       </section>
@@ -96,36 +147,32 @@ export default async function ProjectPage({ params }: { params: { id: string } }
         <KpiCard lane="delivery" label="Baseline Finish" value={project.endDate} sub="approved baseline" />
         <KpiCard
           lane="intel"
-          label="AI Forecast Finish"
-          value={project.forecastCompletionDate}
-          tone={project.forecastCompletionDate > project.endDate ? "bad" : "good"}
-          sub={project.forecastCompletionDate > project.endDate ? "behind baseline · ML forecast" : "on baseline · ML forecast"}
+          label="Forecast Finish"
+          value={project.forecastCompletionDate || "—"}
+          tone={finishPassed || project.forecastCompletionDate > project.endDate ? "bad" : "good"}
+          sub={
+            finishPassed
+              ? `date passed · ${project.percentComplete}% complete`
+              : project.forecastCompletionDate > project.endDate
+                ? "behind baseline"
+                : "on baseline"
+          }
         />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <Panel title="AI Executive Summary">
-            <p className="text-sm font-light leading-relaxed text-hv-text">{project.executiveSummary}</p>
-          </Panel>
+          <Suspense fallback={<ProjectNarrativeSkeleton />}>
+            <ProjectNarrativePanels project={project} raid={raid} milestones={milestones} />
+          </Suspense>
 
-          <Panel title="Risk Narrative">
-            <p className="text-sm font-light leading-relaxed text-hv-text">{project.riskNarrative}</p>
-          </Panel>
+          {ownPlan && (
+            <Panel title="Weekly Change Summary">
+              <p className="text-sm font-light leading-relaxed text-hv-muted">{project.weeklyChangeSummary}</p>
+            </Panel>
+          )}
 
-          <Panel title="Recommended Actions (AI)">
-            <ul className="space-y-3">
-              {project.recommendedActions.map((a, i) => (
-                <li key={i} className="flex gap-3 text-sm leading-relaxed text-hv-text">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-teal-tint text-[0.7rem] font-bold text-teal-ink">
-                    {i + 1}
-                  </span>
-                  {a}
-                </li>
-              ))}
-            </ul>
-          </Panel>
-
+          {!ownPlan && (
           <Panel
             title="Milestone Timeline"
             action={
@@ -134,13 +181,14 @@ export default async function ProjectPage({ params }: { params: { id: string } }
               </span>
             }
           >
-            <MilestoneGantt
+            <MilestoneTimeline
               milestones={milestones}
               startDate={project.startDate}
               endDate={project.endDate}
               forecastEndDate={project.forecastCompletionDate}
             />
           </Panel>
+          )}
         </div>
 
         <div className="space-y-6">
@@ -148,26 +196,33 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             <div className="space-y-4">
               <ScoreBar label="Health score" score={project.healthScore} />
               <ScoreBar label="Schedule risk" score={project.scheduleRiskScore} invert />
-              <ScoreBar label="Budget risk" score={project.budgetRiskScore} invert />
+              {project.budget > 0 && <ScoreBar label="Budget risk" score={project.budgetRiskScore} invert />}
             </div>
             <p className="mt-4 border-t border-hv-border pt-3 text-[0.7rem] font-light text-hv-subtle">
-              Scored nightly in Microsoft Fabric. Risk scales are inverted — lower is better.
+              {ownPlan
+                ? "Health score comes from your project database."
+                : fromSharePointLists
+                  ? "Health score is the average of your workstream statuses in the semantic model (Green 85, Amber 65, Red 40); schedule risk is 100 minus health."
+                  : "Scored nightly in Microsoft Fabric."}{" "}
+              Risk scales are inverted — lower is better.
             </p>
           </Panel>
 
-          {project.decisionNeeded && (
+          {decisionNeeded && (
             <section className="rounded-hv border border-amber-500/50 bg-amber-50 p-5 shadow-card">
               <h2 className="mb-3 flex items-center gap-2 border-b border-amber-500/30 pb-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-amber-300">
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
                 Decision Needed
               </h2>
-              <p className="text-sm leading-relaxed text-hv-text">{project.decisionNeeded}</p>
+              <p className="text-sm leading-relaxed text-hv-text">{decisionNeeded}</p>
             </section>
           )}
 
-          <Panel title="Weekly Change Summary">
-            <p className="text-sm font-light leading-relaxed text-hv-muted">{project.weeklyChangeSummary}</p>
-          </Panel>
+          {!ownPlan && (
+            <Panel title="Weekly Change Summary">
+              <p className="text-sm font-light leading-relaxed text-hv-muted">{project.weeklyChangeSummary}</p>
+            </Panel>
+          )}
 
           {/* Milestones live in the timeline in the main column now. */}
           <Panel title="Executive Podcast">
@@ -176,8 +231,34 @@ export default async function ProjectPage({ params }: { params: { id: string } }
         </div>
       </div>
 
+      {ownPlan && <ProjectPlan projectId={project.id} />}
+
       {/* Full width: the editable log needs the whole page for its columns. */}
-      <RaidEditor projectId={project.id} items={raid} editable={isRaidEditable()} />
+      {ownPlan ? (
+        <ProjectDataWorkspace projectId={project.id} dashboardUrl={dashboardUrl} />
+      ) : (
+      <RaidEditor
+        projectId={project.id}
+        items={raid}
+        editable={isRaidEditable() && !fromSharePointLists}
+        sourceLabel={fromSharePointLists ? "RAID Log" : undefined}
+        sourceUrl={fromSharePointLists ? `${siteUrl}/Lists/RaidLog/AllItems.aspx` : undefined}
+      />
+      )}
+
+      {ownPlan && (
+        <>
+          <SupabaseLineage projectName={project.name} lastChange={lastChange} dashboardUrl={dashboardUrl} />
+          <LiveSync projectId={project.id} />
+        </>
+      )}
+
+      {fromSharePointLists && (
+        <>
+          <SharePointLineage siteUrl={siteUrl} freshness={freshness} cadence="every hour" staleAfterMins={120} />
+          <AutoRefresh everyMs={5 * 60_000} />
+        </>
+      )}
 
       <Link
         href="/portal"

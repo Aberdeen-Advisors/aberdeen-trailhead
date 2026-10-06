@@ -4,6 +4,8 @@ import { getSessionUser } from "@/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// AI summaries can take several seconds to write on a cache miss.
+export const maxDuration = 60;
 
 export async function GET(req: Request) {
   const user = await getSessionUser();

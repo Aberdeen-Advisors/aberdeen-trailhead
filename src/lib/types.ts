@@ -74,7 +74,8 @@ export interface PortfolioKpis {
 }
 
 export interface Citation {
-  source: "Semantic Model" | "SharePoint Lists" | "Documents" | "Intelligence Layer";
+  /** Where the answer came from, e.g. "Power BI semantic model", "HorizonView database", "Documents". */
+  source: string;
   detail: string;
 }
 

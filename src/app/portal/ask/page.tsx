@@ -7,7 +7,7 @@ export default function AskPage() {
       <PageHeader
         kicker="Ask Horizon"
         title="Ask Horizon"
-        sub="The HorizonView agent routes questions across the Semantic Model, SharePoint Lists, and your project documents — and always cites its sources."
+        sub="The HorizonView agent answers from each project's live data (the Power BI semantic model, SharePoint Lists or the HorizonView project database) and your project documents, and always cites its sources."
       />
       <Chat />
     </div>

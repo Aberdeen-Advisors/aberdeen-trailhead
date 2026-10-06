@@ -5,6 +5,8 @@ import { runNotebook } from "@/lib/msft/fabric";
 import { chatCompletion } from "@/lib/ai/openai";
 import { hasElevenLabs, renderPodcast } from "@/lib/ai/elevenlabs";
 import { getProject, getProjects, getRaid, getMilestones, getPortfolioKpis } from "@/lib/data/provider";
+import { withLiveNarratives } from "@/lib/ai/project-narrative";
+import { getPortfolioSummary } from "@/lib/ai/portfolio-summary";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // long TTS renders (Vercel caps by plan)
@@ -39,12 +41,25 @@ function systemPrompt(minutes: number, portfolio: boolean): string {
 }
 
 async function portfolioGrounding(): Promise<{ grounding: string; projectCount: number }> {
-  const [kpis, projects, raid] = await Promise.all([getPortfolioKpis(), getProjects(), getRaid()]);
-  const decisions = raid.filter((r) => r.type === "Decision" && r.status !== "Closed");
+  const [kpis, baseProjects, raid, milestones] = await Promise.all([getPortfolioKpis(), getProjects(), getRaid(), getMilestones()]);
+  // Same summary and live-project narratives the portal and SteerCo deck show.
+  const [projects, summary] = await Promise.all([
+    withLiveNarratives(baseProjects, raid, milestones, baseProjects.map((p) => p.id), { fresh: true }),
+    getPortfolioSummary({ projects: baseProjects, raid, kpis }),
+  ]);
+  const seen = new Set<string>();
+  const decisions = raid
+    .filter((r) => r.type === "Decision" && r.status !== "Closed")
+    .filter((r) => {
+      const k = `${r.projectId}|${r.title.trim().toLowerCase()}`;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
   const overdue = raid.filter((r) => r.status === "Overdue");
   const grounding = `SCOPE: Whole portfolio briefing.
 PORTFOLIO: ${kpis.totalProjects} projects — ${kpis.green} Green, ${kpis.amber} Amber, ${kpis.red} Red. Executive health ${kpis.executiveHealthScore}/100. Milestone completion ${kpis.milestoneCompletionPct.toFixed(0)}%. Open RAID items: ${kpis.openRaidCount}. Open decisions: ${kpis.openDecisions}.
-PORTFOLIO SUMMARY: ${kpis.portfolioSummary}
+PORTFOLIO SUMMARY: ${summary.text}
 PROJECTS:
 ${projects.map((p) => `- ${p.name} (${p.status}, health ${p.healthScore}, ${p.percentComplete}% complete): ${p.executiveSummary.slice(0, 220)}`).join("\n")}
 OPEN DECISIONS: ${decisions.slice(0, 6).map((d) => `${d.title} (due ${d.dueDate}${d.status === "Overdue" ? ", OVERDUE" : ""})`).join("; ") || "none"}
@@ -53,12 +68,14 @@ OVERDUE ITEMS: ${overdue.slice(0, 6).map((r) => `[${r.type}] ${r.title}`).join("
 }
 
 async function projectGrounding(projectId: string): Promise<string | null> {
-  const [project, raid, milestones] = await Promise.all([
+  const [base, raid, milestones] = await Promise.all([
     getProject(projectId),
     getRaid(projectId),
     getMilestones(projectId),
   ]);
-  if (!project) return null;
+  if (!base) return null;
+  // Same up-to-date narrative as the project page and SteerCo deck.
+  const [project] = await withLiveNarratives([base], raid, milestones, [projectId], { fresh: true });
   return `SCOPE: Single project briefing.
 PROJECT: ${project.name} (${project.status}, health ${project.healthScore}/100, ${project.percentComplete}% complete, forecast finish ${project.forecastCompletionDate} vs baseline ${project.endDate}).
 EXECUTIVE SUMMARY: ${project.executiveSummary}

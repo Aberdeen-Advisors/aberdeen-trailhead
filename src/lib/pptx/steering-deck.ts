@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { getPortfolioKpis, getProjects, getRaid, getMilestones } from "@/lib/data/provider";
 import { buildDeck } from "@/lib/pptx/report-deck";
+import { getPortfolioSummary } from "@/lib/ai/portfolio-summary";
+import { withLiveNarratives } from "@/lib/ai/project-narrative";
 
 // One-click Steering Committee deck. Gathers the portal's own data and hands it
 // to the deck builder, which lays it out in the Aberdeen deck design system
@@ -33,5 +35,17 @@ export async function buildSteeringDeck(projectId?: string): Promise<Buffer> {
     asset("assets/aberdeen-logo.png"),
   ]);
 
-  return buildDeck({ projects, raid, milestones, kpis, singleProjectId: projectId, logo, cover, mark });
+  // Live projects get their narrative rewritten from the data as it is right
+  // now, so a deck made straight after an edit already reflects it. Portfolio
+  // decks open with the same AI summary as the portal home page.
+  const scopeIds = projectId ? [projectId] : projects.map((p) => p.id);
+  const [narrated, summary] = await Promise.all([
+    withLiveNarratives(projects, raid, milestones, scopeIds, { fresh: true }),
+    projectId ? Promise.resolve(undefined) : getPortfolioSummary({ projects, raid, kpis }),
+  ]);
+
+  return buildDeck({
+    projects: narrated, raid, milestones, kpis, singleProjectId: projectId, logo, cover, mark,
+    summary: summary?.text, summaryByAi: summary?.source === "ai",
+  });
 }

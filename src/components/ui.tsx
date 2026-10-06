@@ -1,4 +1,5 @@
 import type { HealthStatus, MilestoneStatus } from "@/lib/types";
+import { HEALTH_GREEN_AT, HEALTH_RED_BELOW } from "@/lib/health";
 
 export { fmtMoney } from "@/lib/format";
 
@@ -258,8 +259,8 @@ export function PhaseTrack({
 
 export function ScoreBar({ label, score, invert = false }: { label: string; score: number; invert?: boolean }) {
   // invert=true means higher is worse (risk scores)
-  const good = invert ? score < 40 : score >= 75;
-  const bad = invert ? score >= 70 : score < 50;
+  const good = invert ? score < 40 : score >= HEALTH_GREEN_AT;
+  const bad = invert ? score >= 70 : score < HEALTH_RED_BELOW;
   const color = good ? "bg-emerald-500" : bad ? "bg-red-500" : "bg-amber-500";
   return (
     <div>

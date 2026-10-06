@@ -148,7 +148,7 @@ export default async function ReportsPage() {
       <SectionBreak
         kicker="Automated Reporting"
         title="Generated Reports"
-        sub="Executive-ready decks and audio briefings built in one click from the Semantic Model and the latest AI insights — no Report Builder required."
+        sub="Executive-ready decks and audio briefings built in one click from each project's live data and AI summaries — no Report Builder required."
       />
 
       <div className="grid gap-6 lg:grid-cols-2">

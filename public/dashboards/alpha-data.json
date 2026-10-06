@@ -1,0 +1,645 @@
+{
+ "project": {
+  "id": "alpha",
+  "name": "Project Alpha",
+  "code": "ERP-001",
+  "portfolio": "ERP Transformation",
+  "phase": "Build",
+  "status": "Amber",
+  "pm": "M. Chen",
+  "sponsor": "S. Grant (CFO)"
+ },
+ "source": {
+  "system": "Supabase",
+  "database": "HorizonView",
+  "schema": "public",
+  "mode": "sample"
+ },
+ "refreshedAt": null,
+ "kpis": {
+  "healthScore": 68,
+  "percentComplete": 62,
+  "budget": 4200000,
+  "actualsToDate": 2480000,
+  "forecastAtCompletion": 4380000,
+  "openSev2Defects": 9,
+  "goLiveBaseline": "2026-11-30",
+  "goLiveForecast": "2026-12-18"
+ },
+ "budgetBurn": {
+  "months": [
+   "Sep 25",
+   "Oct 25",
+   "Nov 25",
+   "Dec 25",
+   "Jan 26",
+   "Feb 26",
+   "Mar 26",
+   "Apr 26",
+   "May 26",
+   "Jun 26",
+   "Jul 26",
+   "Aug 26",
+   "Sep 26",
+   "Oct 26",
+   "Nov 26",
+   "Dec 26"
+  ],
+  "byWorkstream": {
+   "Finance": {
+    "plan": [
+     26,
+     66,
+     114,
+     167,
+     222,
+     279,
+     337,
+     394,
+     449,
+     504,
+     561,
+     629,
+     713,
+     814,
+     924,
+     null
+    ],
+    "actual": [
+     25,
+     67,
+     115,
+     168,
+     225,
+     283,
+     340,
+     398,
+     455,
+     513,
+     570,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    "forecast": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     570,
+     629,
+     700,
+     778,
+     859,
+     944
+    ]
+   },
+   "Procurement": {
+    "plan": [
+     16,
+     39,
+     68,
+     99,
+     131,
+     165,
+     199,
+     233,
+     265,
+     298,
+     332,
+     372,
+     421,
+     481,
+     546,
+     null
+    ],
+    "actual": [
+     14,
+     38,
+     65,
+     95,
+     127,
+     160,
+     192,
+     225,
+     257,
+     290,
+     322,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    "forecast": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     322,
+     357,
+     400,
+     446,
+     495,
+     546
+    ]
+   },
+   "Supply Chain": {
+    "plan": [
+     22,
+     54,
+     94,
+     137,
+     182,
+     229,
+     275,
+     322,
+     367,
+     412,
+     459,
+     515,
+     583,
+     666,
+     756,
+     null
+    ],
+    "actual": [
+     20,
+     52,
+     90,
+     131,
+     176,
+     221,
+     266,
+     311,
+     356,
+     401,
+     446,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    "forecast": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     446,
+     495,
+     554,
+     618,
+     686,
+     756
+    ]
+   },
+   "Data Conversion": {
+    "plan": [
+     19,
+     48,
+     83,
+     122,
+     162,
+     203,
+     245,
+     286,
+     326,
+     366,
+     408,
+     458,
+     518,
+     592,
+     672,
+     null
+    ],
+    "actual": [
+     18,
+     48,
+     82,
+     120,
+     162,
+     203,
+     244,
+     285,
+     327,
+     368,
+     409,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    "forecast": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     409,
+     468,
+     539,
+     616,
+     698,
+     782
+    ]
+   },
+   "Integration": {
+    "plan": [
+     25,
+     63,
+     109,
+     159,
+     212,
+     267,
+     321,
+     376,
+     429,
+     481,
+     535,
+     600,
+     681,
+     777,
+     882,
+     null
+    ],
+    "actual": [
+     23,
+     59,
+     103,
+     150,
+     202,
+     252,
+     305,
+     355,
+     407,
+     457,
+     510,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    "forecast": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     510,
+     589,
+     669,
+     775,
+     874,
+     942
+    ]
+   },
+   "Reporting": {
+    "plan": [
+     12,
+     30,
+     52,
+     76,
+     101,
+     127,
+     153,
+     179,
+     204,
+     229,
+     255,
+     286,
+     324,
+     370,
+     420,
+     null
+    ],
+    "actual": [
+     10,
+     26,
+     45,
+     66,
+     88,
+     111,
+     133,
+     156,
+     178,
+     201,
+     223,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    "forecast": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     223,
+     252,
+     288,
+     327,
+     368,
+     410
+    ]
+   }
+  },
+  "budgetByWorkstream": {
+   "Finance": 924000,
+   "Procurement": 546000,
+   "Supply Chain": 756000,
+   "Data Conversion": 672000,
+   "Integration": 882000,
+   "Reporting": 420000
+  }
+ },
+ "defects": {
+  "weeks": [
+   "May 18",
+   "May 25",
+   "Jun 1",
+   "Jun 8",
+   "Jun 15",
+   "Jun 22",
+   "Jun 29",
+   "Jul 6",
+   "Jul 13"
+  ],
+  "byWorkstream": {
+   "Finance": [
+    12,
+    15,
+    17,
+    16,
+    16,
+    14,
+    13,
+    13,
+    5
+   ],
+   "Procurement": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "Supply Chain": [
+    2,
+    2,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1
+   ],
+   "Data Conversion": [
+    7,
+    8,
+    9,
+    9,
+    8,
+    8,
+    8,
+    7,
+    3
+   ],
+   "Integration": [
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    1,
+    0
+   ],
+   "Reporting": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  }
+ },
+ "workstreams": [
+  {
+   "name": "Finance",
+   "actual": 58,
+   "plan": 70,
+   "health": 61
+  },
+  {
+   "name": "Procurement",
+   "actual": 71,
+   "plan": 72,
+   "health": 84
+  },
+  {
+   "name": "Supply Chain",
+   "actual": 66,
+   "plan": 68,
+   "health": 78
+  },
+  {
+   "name": "Data Conversion",
+   "actual": 49,
+   "plan": 65,
+   "health": 52
+  },
+  {
+   "name": "Integration",
+   "actual": 63,
+   "plan": 66,
+   "health": 70
+  },
+  {
+   "name": "Reporting",
+   "actual": 55,
+   "plan": 58,
+   "health": 76
+  }
+ ],
+ "milestones": [
+  {
+   "name": "Design Complete",
+   "baseline": "2026-02-27",
+   "forecast": "2026-02-27",
+   "status": "Complete",
+   "workstreams": [
+    "Finance",
+    "Procurement",
+    "Supply Chain",
+    "Data Conversion",
+    "Integration",
+    "Reporting"
+   ]
+  },
+  {
+   "name": "SIT Entry",
+   "baseline": "2026-07-20",
+   "forecast": "2026-08-03",
+   "status": "Late",
+   "workstreams": [
+    "Finance",
+    "Data Conversion",
+    "Integration",
+    "Supply Chain",
+    "Procurement"
+   ]
+  },
+  {
+   "name": "UAT Complete",
+   "baseline": "2026-10-16",
+   "forecast": "2026-10-30",
+   "status": "At Risk",
+   "workstreams": [
+    "Finance",
+    "Procurement",
+    "Supply Chain",
+    "Data Conversion",
+    "Integration",
+    "Reporting"
+   ]
+  },
+  {
+   "name": "Go-Live",
+   "baseline": "2026-11-30",
+   "forecast": "2026-12-18",
+   "status": "At Risk",
+   "workstreams": [
+    "Finance",
+    "Procurement",
+    "Supply Chain",
+    "Data Conversion",
+    "Integration",
+    "Reporting"
+   ]
+  }
+ ],
+ "raid": [
+  {
+   "type": "Risk",
+   "title": "SIT entry slippage cascades into UAT and cutover window",
+   "severity": "High",
+   "owner": "M. Chen",
+   "status": "Open",
+   "workstream": "Integration"
+  },
+  {
+   "type": "Issue",
+   "title": "9 open Sev-2 data conversion defects in finance workstream",
+   "severity": "High",
+   "owner": "SI Partner",
+   "status": "In Progress",
+   "workstream": "Finance"
+  },
+  {
+   "type": "Decision",
+   "title": "Approve $180K contingency draw for extended SI test support",
+   "severity": "High",
+   "owner": "S. Grant",
+   "status": "Overdue",
+   "workstream": "Data Conversion"
+  },
+  {
+   "type": "Dependency",
+   "title": "Bank file format sign-off from Treasury",
+   "severity": "Medium",
+   "owner": "Treasury",
+   "status": "Open",
+   "workstream": "Finance"
+  },
+  {
+   "type": "Risk",
+   "title": "Legacy vendor master has 18% duplicate records",
+   "severity": "Medium",
+   "owner": "Data Lead",
+   "status": "In Progress",
+   "workstream": "Data Conversion"
+  },
+  {
+   "type": "Issue",
+   "title": "EDI 856 mapping fails for two 3PL partners",
+   "severity": "Medium",
+   "owner": "Integration Lead",
+   "status": "Open",
+   "workstream": "Supply Chain"
+  },
+  {
+   "type": "Risk",
+   "title": "Approval workflow redesign not signed off by Procurement",
+   "severity": "Low",
+   "owner": "P. Ortiz",
+   "status": "Open",
+   "workstream": "Procurement"
+  },
+  {
+   "type": "Dependency",
+   "title": "Finance KPI definitions needed before report build",
+   "severity": "Low",
+   "owner": "FP&A",
+   "status": "Open",
+   "workstream": "Reporting"
+  },
+  {
+   "type": "Decision",
+   "title": "Retire 14 legacy reports at go-live",
+   "severity": "Low",
+   "owner": "S. Grant",
+   "status": "Closed",
+   "workstream": "Reporting"
+  }
+ ]
+}
