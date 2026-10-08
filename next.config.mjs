@@ -17,7 +17,10 @@ const nextConfig = {
   },
   async rewrites() {
     // Public marketing site (trAIlhead) served at the root.
-    return [{ source: "/", destination: "/home.html" }];
+    return [
+      { source: "/", destination: "/home.html" },
+      { source: "/compare", destination: "/compare.html" },
+    ];
   },
 };
 
